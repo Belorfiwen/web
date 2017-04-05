@@ -5,7 +5,7 @@
  * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
  */
 
-include('bibli_24sur7_06.php');	// Inclusion de la bibliothéque
+include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 
 fd_html_head('24sur7 | Agenda');
 
