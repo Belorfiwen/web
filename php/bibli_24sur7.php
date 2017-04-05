@@ -53,7 +53,7 @@ define('APP_Z_SUBMIT', 'submit');
 * @return string	Le code HTML de la ligne du tableau
 */
 function fd_form_ligne($gauche, $droite) {
-	return "<tr><td>{$gauche}</td><td>{$droite}</td></tr>";
+	return "<tr><td id=\"tableInscription\">{$gauche}</td><td>{$droite}</td></tr>";
 }
 
 //_______________________________________________________________

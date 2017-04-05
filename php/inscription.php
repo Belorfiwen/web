@@ -49,7 +49,7 @@ if (isset($GLOBALS['bd'])){
 //-----------------------------------------------------
 fd_html_head('24sur7 | Inscription','-');
 
-echo '<h1>Inscription utilisateur</h1>';
+echo '<h2 id="titreInscription">Pour vous inscrire à <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
 
 // Si il y a des erreurs on les affiche
 if ($nbErr > 0) {
@@ -60,21 +60,20 @@ if ($nbErr > 0) {
 }
 
 // Affichage du formulaire
-echo '<form method="POST" action="inscription_08.php">',
+echo '<div class="inscription"><form method="POST" action="inscription_08.php">',
 		'<table border="1" cellpadding="4" cellspacing="0">',
-		fd_form_ligne('Indiquez votre nom', 
-            fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 40)),
-		fd_form_ligne('Indiquez une adresse mail valide', 
-            fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 40)),
-		fd_form_ligne('Choisissez un mot de passe', 
-            fd_form_input(APP_Z_PASS,'txtPasse', '', 20)),
-        fd_form_ligne('R&eacute;p&eacute;tez votre mot de passe', 
-            fd_form_input(APP_Z_PASS,'txtVerif', '', 20)),
-        fd_form_ligne('Pour v&eacute;rification, indiquez la date du jour', 
-            fd_form_date('selDate',$_POST['selDate_j'],$_POST['selDate_m'],$_POST['selDate_a'])),
-         fd_form_ligne('', 
-            fd_form_input(APP_Z_SUBMIT,'btnValider', 'Je m\'inscris')),
-		'</table></form></section>';
+		fd_form_ligne('Nom  ', 
+            fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30)),
+		fd_form_ligne('Mail  ', 
+            fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30)),
+		fd_form_ligne('Mot de passe  ', 
+            fd_form_input(APP_Z_PASS,'txtPasse', '', 30)),
+        fd_form_ligne('Retapez le mot de passe  ', 
+            fd_form_input(APP_Z_PASS,'txtVerif', '', 30)),
+
+         fd_form_ligne(fd_form_input('reset','btnEffacer', 'Annuler'), 
+            fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire')),
+		'</table></form></div></section>';
 		
 		fd_html_pied();
 		

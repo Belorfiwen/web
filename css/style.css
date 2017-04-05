@@ -186,11 +186,34 @@ strong {
 
 #bcContenu {
 	position: relative;
+	top: -10px;
 	background: url(../images/contenu.png) repeat-y;
 	min-height: 500px;
 	padding: 0px 10px;
 }
 
+#titreInscription{
+	text-align: center;
+	position: relative;
+	left: 170px;
+	width: 600px;
+	margin-bottom: 20px;
+	padding-top: 30px;
+}
+
+#tableInscription{
+	padding-right: 10px;
+}
+.inscription{
+	text-align: right;
+	position: relative;
+	left: 220px;
+	width: 600px;
+	height:600px;
+	line-height: 3;
+	border-spacing: 2;
+
+}
 
 #bcGauche {
 	float: left;	
