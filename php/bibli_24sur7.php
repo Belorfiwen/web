@@ -320,9 +320,9 @@ function fd_html_bandeau($page) {
  */
 function fd_html_pied() {
 	echo '<footer id="bcPied">',
-			'<a id="apropos" href="#">A propos</a>',
-			'<a id="confident" href="#">Confidentialité</a>',
-			'<a id="conditions" href="#">Conditions</a>',
+			'<a id="apropos" href="../html/presentation.html">A propos</a>',
+			'<a id="confident" href="../html/presentation.html#confidentialite">Confidentialité</a>',
+			'<a id="conditions" href="../html/presentation.html#respect">Conditions</a>',
 			'<p id="copyright">24sur7 &amp; Partners &copy; 2012</p>',
 		'</footer>';
 

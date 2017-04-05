@@ -60,7 +60,7 @@ if ($nbErr > 0) {
 }
 
 // Affichage du formulaire
-echo '<div class="inscription"><form method="POST" action="inscription_08.php">',
+echo '<div class="inscription"><form method="POST" action="inscription.php">',
 		'<table border="1" cellpadding="4" cellspacing="0">',
 		fd_form_ligne('Nom  ', 
             fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30)),
@@ -71,9 +71,11 @@ echo '<div class="inscription"><form method="POST" action="inscription_08.php">'
         fd_form_ligne('Retapez le mot de passe  ', 
             fd_form_input(APP_Z_PASS,'txtVerif', '', 30)),
 
-         fd_form_ligne(fd_form_input('reset','btnEffacer', 'Annuler'), 
-            fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire')),
-		'</table></form></div></section>';
+         fd_form_ligne("<input type='submit' name='btnValider' value=\"S'inscrire\" size=15 class='boutonInscription'>", 
+            "<input type='reset' name='btnEffacer' value=\"Annuler\" size=15 class='boutonInscription' id='boutonInsAnnuler'>"),
+		'</table></form></div>',
+		'<p class="basInscription"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
+		'<p class="basInscription"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
 		fd_html_pied();
 		
@@ -163,18 +165,6 @@ function fdl_add_utilisateur() {
 		$erreurs[] = 'Le mot de passe est différent dans les 2 zones';
 	}
 
-	// Vérification de la date
-	$selJour = (int) $_POST['selDate_j'];
-	$selMois = (int) $_POST['selDate_m'];
-	$selAnnee = (int) $_POST['selDate_a'];
-	if (! checkdate($selMois, $selJour, $selAnnee)) {
-		$erreurs[] = 'La date n\'est pas valide';
-	} else {
-		$amj = ($selAnnee * 10000) + ($selMois * 100) + $selJour;
-		if ( $amj != date('Ymd')) {
-			$erreurs[] = 'La date doit être celle du jour';
-		}
-	}
 
 	// Si il y a des erreurs, la fonction renvoie le tableau d'erreurs
 	if (count($erreurs) > 0) {
@@ -205,12 +195,12 @@ function fdl_add_utilisateur() {
 	//-----------------------------------------------------
 	session_start();
 	$_SESSION['utiID'] = mysqli_insert_id($GLOBALS['bd']);
-	$_SESSION['utiNom'] = $txtNom;
+	$_SESSION['utiMail'] = $txtMail;
 	
 	// Déconnexion de la base de données
     mysqli_close($GLOBALS['bd']);
 	
-	header ('location: protegee.php');
+	header ('location: agenda.php');
 	exit();			// EXIT : le script est terminé
 }
 

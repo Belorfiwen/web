@@ -136,6 +136,7 @@ strong {
 --------------------------------------------------------------- */
 #bcPied {
 	position: relative;
+	top: -10px;
 	clear: both;
 	height: 156px;
 	background: transparent url(../images/pied.png) no-repeat;		
@@ -195,10 +196,26 @@ strong {
 #titreInscription{
 	text-align: center;
 	position: relative;
-	left: 170px;
-	width: 600px;
-	margin-bottom: 20px;
-	padding-top: 30px;
+	margin: 0px auto 20px auto;
+	padding-top: 20px;
+}
+
+.basInscription{
+	text-align: center;
+	position: relative;
+	margin: 10px auto;
+	padding-top: 10px;
+}
+
+.boutonInscription{
+	background: url(../images/bouton.png);
+	color: white;
+	width: 102px;
+	height: 26px;
+	border: none;
+}
+#boutonInsAnnuler{
+	margin-right: 100px;
 }
 
 #tableInscription{
@@ -207,11 +224,10 @@ strong {
 .inscription{
 	text-align: right;
 	position: relative;
-	left: 220px;
+	left: 310px;
 	width: 600px;
-	height:600px;
-	line-height: 3;
-	border-spacing: 2;
+	height:180px;
+	line-height: 2.5;
 
 }
 
