@@ -542,4 +542,30 @@ function fd_redirige($page) {
 	header("Location: $page");
 	exit();
 }
+
+//___________________________________________________________________
+/**
+ * Protection HTML des chaînes contenues dans un tableau
+ * Le tableau est pass&eacute par r&eacutef&eacuterence.
+ *
+ * @param array     $tab    Tableau des chaînes &agrave prot&eacuteger
+ */
+function ec_htmlProteger (&$tab) {
+    foreach ($tab as $cle => $val) {
+
+	       $tab[$cle] = htmlentities($val, ENT_COMPAT, 'UTF-8');
+	   }
+}
+
+//___________________________________________________________________
+/**
+ * Teste si une valeur est une valeur entière
+ *
+ * @param mixed     $x  valeur à tester
+ * @return boolean  TRUE si entier, FALSE sinon
+ */
+function estEntier($x) {
+    return is_numeric($x) && ($x == (int) $x);
+}
+
 ?>
