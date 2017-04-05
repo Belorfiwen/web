@@ -9,7 +9,7 @@ include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 
 fd_html_head('24sur7 | Agenda');
 
-fd_html_bandeau(APP_PAGE_AGENDA);
+fd_html_bandeau(APP_PAGE_PARAMETRES);
 
 echo '<section id="bcContenu">',
 		'<aside id="bcGauche">';
