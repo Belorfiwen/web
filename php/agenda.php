@@ -1,22 +1,29 @@
 <?php
+/** @file
+ * Page d'accueil de l'application 24sur7
+ *
+ * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
+ */
 
-error_reporting(E_ALL);
-
-include('bibli_24sur7.php'); //inclure la bibliothèque
+include('bibli_24sur7_06.php');	// Inclusion de la bibliothéque
 
 fd_html_head('24sur7 | Agenda');
 
-fd_html_bandeau('recherche');
+fd_html_bandeau(APP_PAGE_AGENDA);
 
 echo '<section id="bcContenu">',
-    	'<aside id="bcGauche">',
-        	'<section id="calendrier">Ici : bloc calendrier pour afficher le mois de février 2015</section>',
-        	'<section id="categories">Ici : bloc catégories pour afficher les catégories de rendez-vous</section>',
-    	'</aside>',
-    	'<section id="bcCentre">Ici : bloc avec le détail des rendez-vous de la semaine du 9 au 15 février 2015',
-    	'</section>',
-      '</section>';
+		'<aside id="bcGauche">';
 
-aj_html_pied();
+fd_html_calendrier(7, 1, 2017);
 
+echo		'<section id="categories">',
+				'Ici : bloc catégories pour afficher les catégories de rendez-vous',
+			'</section>',
+		'</aside>',
+		'<section id="bcCentre">',
+			'Ici : bloc avec le détail des rendez-vous de la semaine du 9 au 15 février 2015',
+		'</section>',
+	'</section>';
+
+fd_html_pied();
 ?>
