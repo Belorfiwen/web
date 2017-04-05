@@ -1,0 +1,49 @@
+<?php
+	ob_start();
+
+
+	include('bibli_24sur7.php');
+
+	// debut de page
+	aj_html_head('Agenda','-');
+
+
+	//connexion bd
+	$bd = aj_db_connexion();
+
+
+	$ret = mysqli_set_charset($bd,"utf8");
+	if($ret === FALSE){
+		aj_bd_erreurExit('erreur de chargement du jeu de caractère utf8');
+	}
+
+
+	// requete
+	$sql = 'SELECT utiID,utiNom,utiMail,utiDateInscription,utiJours,utiHeureMin,utiHeureMax
+		FROM utilisateur
+		ORDER BY utiDateInscription DESC';
+
+	// execution requete
+	$R = mysqli_query($bd,$sql) or aj_bd_erreur($sql);
+
+
+	while($D = mysqli_fetch_assoc($R)){
+
+		
+
+		$remp=aj_date_claire($D['utiDateInscription']);
+
+		echo '<h2> Utilisateur ',htmlentities($D['utiID'],ENT_COMPAT, 'UTF-8'),  '</h2>',
+			'<ul>';
+
+		echo '<li>Nom : ', htmlentities($D['utiNom'],ENT_COMPAT, 'UTF-8'),'</li>';
+		echo '<li>Mail : ', htmlentities($D['utiMail'],ENT_COMPAT, 'UTF-8'),'</li>';
+		echo '<li>Inscription : ', htmlentities($remp,ENT_COMPAT, 'UTF-8'),'</li>';
+		echo '<li>Jours à afficher : ', htmlentities($D['utiJours'],ENT_COMPAT, 'UTF-8'),'</li>';
+		echo '<li>Heure Début : ', htmlentities($D['utiHeureMin'],ENT_COMPAT, 'UTF-8'),'</li>';
+		echo '<li>Heure Fin : ', htmlentities($D['utiHeureMax'],ENT_COMPAT, 'UTF-8'),'</li></ul>';
+	}
+	
+	ob_end_flush();
+
+?>

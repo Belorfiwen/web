@@ -1,0 +1,772 @@
+<?php
+
+	define('APP_PAGE_AGENDA', 'agenda');
+	define('APP_PAGE_RECHERCHE', 'recherche');
+	define('APP_PAGE_ABONNEMENTS', 'abonnements');
+	define('APP_PAGE_PARAMETRES', 'parametres');
+
+
+
+	define('APP_BD_URL','localhost');
+	define('APP_BD_NOM','24sur7_jeanmougin');
+	define('APP_BD_USER','u_jeanmougin');
+	define('APP_BD_PASS','p_jeanmougin');
+
+	define('APP_TEST',TRUE);
+	
+
+//____________________________________________________________________________
+/**
+ * Traitement erreur mysql, affichage et exit.
+ *
+ * @param string	$sql	Requête SQL ou message
+ */
+function aj_bd_erreur($sql) {
+    $errNum = mysqli_errno($GLOBALS['bd']);
+    $errTxt = mysqli_error($GLOBALS['bd']);
+		
+    // Collecte des informations facilitant le debugage
+    $msg = '<h4>Erreur de requ&ecirc;te</h4>'
+        ."<pre><b>Erreur mysql :</b> $errNum"
+        ."<br> $errTxt"
+	        ."<br><br><b>Requ&ecirc;te :</b><br> $sql"
+        .'<br><br><b>Pile des appels de fonction</b>';
+
+    // Récupération de la pile des appels de fonction
+    $msg .= '<table border="1" cellspacing="0" cellpadding="2">'
+                .'<tr><td>Fonction</td><td>Appel&eacute;e ligne</td>'
+                .'<td>Fichier</td></tr>';
+			
+    // http://www.php.net/manual/fr/function.debug-backtrace.php
+    $appels = debug_backtrace();
+    for ($i = 0, $iMax = count($appels); $i < $iMax; $i++) {
+        $msg .= '<tr align="center"><td>'
+                    .$appels[$i]['function'].'</td><td>'
+                    .$appels[$i]['line'].'</td><td>'
+                    .$appels[$i]['file'].'</td></tr>';
+    }
+	
+    $msg .= '</table></pre>';
+
+    aj_bd_erreurExit($msg);
+}
+//___________________________________________________________________
+/**
+ * Arrêt du script si erreur base de données.
+ * Affichage d'un message d'erreur si on est en phase de
+ * développement, sinon stockage dans un fichier log.
+ *
+ * @param string	$msg	Message affiché ou stocké.
+ */
+function aj_bd_erreurExit($msg) {
+    ob_end_clean();		// Supression de tout ce qui a pu être déja généré
+	
+    // Si on est en phase de développement, on affiche le message
+    if (APP_TEST) {
+        echo '<!DOCTYPE html><html><head><meta charset="ISO-8859-1"><title>',
+                'Erreur base de données</title></head><body>',
+                $msg,
+                '</body></html>';
+        exit();
+    }
+		
+    // Si on est en phase de production on stocke les
+    // informations de débuggage dans un fichier d'erreurs
+    // et on affiche un message sibyllin.
+    $buffer = date('d/m/Y H:i:s')."\n$msg\n";
+    error_log($buffer, 3, 'erreurs_bd.txt');
+	
+    // Génération d'une page spéciale erreur
+    aj_html_head('24sur7');
+		
+    echo '<h1>24sur7 est overbook&eacute;</h1>',
+        '<div id="bcDescription">',
+            '<h3 class="gauche">Merci de r&eacute;essayez dans un moment</h3>',
+        '</div>';
+	
+    aj_html_pied();
+	
+    exit();
+}
+
+
+function aj_db_connexion(){
+
+	$bd = mysqli_connect(APP_BD_URL,APP_BD_USER,APP_BD_PASS,APP_BD_NOM);
+		
+	if($bd === FALSE){
+		$msg= 'Erreur de connexion a la base de donnée';
+		aj_bd_erreurExit($msg);
+	}
+	return $bd;
+
+
+
+}
+
+function aj_date_claire($amj){
+	$test=(string)($amj);
+	$jbd = (substr($test,6,2));
+	$abd = substr($test,0,4);
+	
+	$tabmois= array('','Janvier','F&eacute;vrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','D&eacute;cembre');
+	for ($j=1;$j<=31;$j++){
+		if($jbd==$j){
+
+			$jbd=$j;
+
+		}
+
+	}
+
+	$mbd =(substr($test,4,2));
+	for($i=1;$i<=12;$i++){
+		if($mbd==$i){
+			$mbd=$tabmois[$i];
+		}
+	}
+	$test=$jbd.' '.$mbd.' '.$abd;
+	return $test;
+	
+
+}
+
+
+
+
+
+
+
+
+/*vérifie si une année est bissextile
+@param string   $annee    année choisie
+@return int         1 si est bissextile
+*/ 
+
+	function est_bissextile($annee){
+
+		if (($annee%4 == 0)&&(($annee%100!=0)||($annee%400==0))){
+			return 1;
+		}
+		return 0;
+	}
+
+/*tranforme un mois en entier
+@param string   $mois    mois choisi
+*/ 
+
+	function get_mois($mois){
+		$mois=(int)$mois;
+	}
+
+/*tranforme un jour en entier
+@param string   $jour    jour choisi
+*/ 
+
+	function get_jour($jour){
+		$jour=(int)$jour;
+	}
+
+
+/*tranforme une annee en entier
+@param string   $annee    annee choisie
+*/ 
+
+	function get_annee($annee){
+		$annee=(int)$annee;
+	}
+
+
+/*Génère le code html du début des pages
+@param string   $titre    Titre de la page
+@param string   $css      url de la feuille de style liée
+*/ 
+
+	function aj_html_head($titre, $css = '../css/style.css') {
+
+		echo '<!DOCTYPE HTML>',
+			'<html>',
+				'<head>',
+					'<meta charset="UTF-8">',
+					'<title>', $titre, '</title>';
+
+		if($css !== '-'){
+			echo '<link rel="stylesheet" href="', $css, '" type="text/css">';
+		}
+		echo '<link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">',
+
+				'</head>',
+			'<body>',
+				'<main id="bcPage">';
+
+	}
+
+
+/*Génère le code html du bandeau
+@param string   $page    onglet choisi
+*/ 
+
+	function aj_html_bandeau($page){
+
+
+		echo '<header id="bcEntete">',			
+			'<div id="bcLogo"></div>';
+		if($page===APP_PAGE_AGENDA){
+
+			echo '<nav id="bcOnglets">',
+				'<h2>Agenda</h2>',
+				'<a href="#">Recherche</a>',
+				'<a href="#">Abonnements</a>',
+				'<a href="#">Param&egrave;tres</a>',
+			'</nav>';
+		}
+
+		if($page===APP_PAGE_RECHERCHE){
+
+			echo '<nav id="bcOnglets">',
+				'<a href="../html/agenda_TP2.html">Agenda</a>',
+				'<h2>Recherche</h2>',
+				'<a href="#">Abonnements</a>',
+				'<a href="#">Param&egrave;tres</a>',
+			'</nav>';
+		}
+
+		if($page===APP_PAGE_ABONNEMENTS){
+
+			echo '<nav id="bcOnglets">',
+				'<a href="../html/agenda_TP2.html">Agenda</a>',
+				'<a href="#">Recherche</a>',
+				'<h2>Abonnements</h2>',
+				'<a href="#">Param&egrave;tres</a>',
+			'</nav>';
+		}
+
+		if($page===APP_PAGE_PARAMETRES){
+
+			echo '<nav id="bcOnglets">',
+				'<a href="../html/agenda_TP2.html">Agenda</a>',
+				'<a href="#">Recherche</a>',
+				'<a href="#">Abonnements</a>',
+				'<h2>Param&egrave;tres</h2>',
+			'</nav>';
+		}
+				
+		echo'<a href="#" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
+			'</header>';
+
+	}
+
+
+
+
+//Génère le code html du pied de page
+
+	function aj_html_pied(){
+
+		echo '<footer id="bcPied">',
+				'<a id="apropos" href="#">A propos</a>',
+				'<a id="confident" href="#">Confidentialit&eacute;</a>',
+				'<a id="conditions" href="#">Conditions</a>',
+				'<p id="copyright">24sur7 &amp; Partners &copy; 2012</p>',
+			     '</footer>';
+		        
+	}
+
+	
+/*Génère le code html du calendrier
+@param string   $jour    jour choisi
+@param string   $mois    mois choisi
+@param string   $annee    annee choisi
+
+*/ 
+
+	function aj_html_calendrier($jour = 0, $mois = 0, $annee = 0){
+
+		get_jour($jour);
+		get_mois($mois);
+		get_annee($annee);
+
+		$date= getdate();
+
+		echo '<p>',
+				'<a href="#" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>';
+
+		if($annee<2012){
+			$annee=$date['year'];
+			$mois=$date['mon'];
+		}
+
+		if (($mois>12)||($mois<1)){
+			$annee=$date['year'];
+			$mois=$date['mon'];
+		}
+		else{
+			if(($mois==1)||($mois==3)||($mois==5)||($mois==7)||($mois==8)||($mois==10)||($mois==12)){
+				if(($jour>31)||($jour<1)){
+					$annee=$date['year'];
+					$mois=$date['mon'];
+					$jour=$date['mday'];
+				}
+			}
+			if(($mois==4)||($mois==6)||($mois==9)||($mois==11)||($mois==8)){
+				if(($jour>30)||($jour<1)){
+					$annee=$date['year'];
+					$mois=$date['mon'];
+					$jour=$date['mday'];
+				}
+			}
+			if($mois==2){
+				if(est_bissextile($annee)==1){
+					if(($jour>29)||($jour<1)){
+						$annee=$date['year'];
+						$mois=$date['mon'];
+						$jour=$date['mday'];
+					}
+				}
+				else{
+					if(($jour>28)||($jour<1)){
+						$annee=$date['year']; 
+						$mois=$date['mon'];
+						$jour=$date['mday'];
+					}
+				}
+
+
+			}
+
+
+		}
+		
+		
+		$tabmois= array('','Janvier&nbsp;','F&eacute;vrier&nbsp;','Mars&nbsp;','Avril&nbsp;','Mai&nbsp;','Juin&nbsp;','Juillet&nbsp;','Aout&nbsp;','Septembre&nbsp;','Octobre&nbsp;','Novembre&nbsp;','D&eacute;cembre&nbsp;');
+
+		
+
+		
+		
+		echo $tabmois[$mois], $annee;
+
+	
+		
+
+
+			echo
+				'<a href="#" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+			'</p>',
+			'<table>',
+				'<tr>',
+					'<th>Lu</th><th>Ma</th><th>Me</th><th>Je</th><th>Ve</th><th>Sa</th><th>Di</th>',
+				'</tr>';
+
+
+				
+
+
+		$time= mktime(12,0,0,$mois,1,$annee);
+		$premierjour = date('N',$time);
+		$pj = date ('d',$time);
+		$timevar=mktime(12,0,0,$mois,$pj-$premierjour,$annee);
+
+
+			//premiere semaine
+			if(($jour>=1)&&($jour<=7-$premierjour)){      //condition semaine courante
+
+				echo '<tr class="semaineCourante">';
+
+				for($i = 1;$i < $premierjour; $i ++){
+
+					$timevar=mktime(12,0,0,$mois,date('d',$timevar)+1,$annee);
+					echo '<td><a class="lienJourHorsMois" href="#">',date('d',$timevar),'</a></td>';
+					
+					
+				}
+
+				if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+					echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+				} 
+				else {
+					if(($jour==date('d',$time))&&($mois==date('m',$time))){
+						echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+					}
+					else{
+						echo '<td><a href="#">',date('d',$time),'</a></td>';
+					}
+				}	
+
+
+				for($i = $premierjour;$i < 7; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+
+					
+					
+				}
+
+			}
+			else{
+				echo '<tr>';
+				
+
+				for($i = 1;$i < $premierjour; $i ++){
+
+					$timevar=mktime(12,0,0,$mois,date('d',$timevar)+1,$annee);
+					echo '<td><a class="lienJourHorsMois" href="#">',date('d',$timevar),'</a></td>';
+					
+				}
+
+
+				if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+
+
+				for($i = $premierjour;$i < 7; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+					
+				}
+			}
+
+			echo '</tr>';
+
+
+
+
+			//deuxieme semaine
+
+			if(($jour>=date('d',$time)+1)&&($jour<=date('d',$time)+6)){      //condition semaine courante
+
+				echo '<tr class="semaineCourante">';
+
+
+				for($i = 7;$i < 14; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+					
+				}
+
+			}
+			else{
+				echo '<tr>';
+
+				
+				for($i = 7;$i < 14; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+					
+				}
+			}
+
+			echo '</tr>';
+
+
+			// troisième semaine
+
+			if(($jour>=date('d',$time)+1)&&($jour<=date('d',$time)+6)){      //condition semaine courante
+
+				echo '<tr class="semaineCourante">';
+
+
+				for($i = 14;$i < 21; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+					
+				}
+
+			}
+			else{
+				echo '<tr>';
+
+				
+				for($i = 14;$i < 21; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+					
+				}
+			}
+
+
+			echo '</tr>';
+
+
+
+			//quatrieme semaine
+
+
+			if(($jour>=date('d',$time)+1)&&($jour<=date('d',$time)+6)){      //condition semaine courante
+
+				echo '<tr class="semaineCourante">';
+
+
+				for($i = 21;$i < 28; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+					
+				}
+
+			}
+			else{
+				echo '<tr>';
+
+				
+				for($i = 21;$i < 28; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+					}	
+					
+				}
+			}
+
+
+			echo '</tr>';
+
+
+
+			//cinquième semaine
+
+			if(($jour>=date('d',$time)+1)&&($jour<=date('d',$time)+6)){      //condition semaine courante
+
+				echo '<tr class="semaineCourante">';
+
+
+				for($i = 28;$i < 35; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							if(date('d',$time)<15){
+								echo '<td><a class="lienJourHorsMois" href="#">',date('d',$time),'</a></td>';
+							}
+							else{
+								echo '<td><a href="#">',date('d',$time),'</a></td>';
+							}
+						}
+					}	
+					
+				}
+
+			}
+			else{
+				echo '<tr>';
+
+				
+				for($i = 28;$i < 35; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+							echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							if(date('d',$time)<15){
+								echo '<td><a class="lienJourHorsMois" href="#">',date('d',$time),'</a></td>';
+							}
+							else{
+								echo '<td><a href="#">',date('d',$time),'</a></td>';
+							}
+						}
+					}	
+					
+				}
+			}
+
+
+			echo '</tr>';
+
+			
+
+
+				//sixieme semaine
+
+			if(($jour>=date('d',$time)+1)&&($jour<=date('d',$time)+6)){      //condition semaine courante
+
+				echo '<tr class="semaineCourante">';
+	
+
+				for($i = 35;$i < 42; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+	
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+						echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						if(($jour==date('d',$time))&&($mois==date('m',$time))){
+								echo '<td class="jourCourant"><a href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							if(date('d',$time)<15){
+								echo '<td><a class="lienJourHorsMois" href="#">',date('d',$time),'</a></td>';
+							}
+							else{
+								echo '<td><a href="#">',date('d',$time),'</a></td>';
+							}
+						}
+					}	
+					
+				}
+
+			}
+			else{
+				echo '<tr>';
+
+				
+				for($i = 35;$i < 42; $i ++){
+					
+					$time=mktime(12,0,0,$mois,date('d',$time)+1,$annee);
+
+					if(($date['mday']==date('d',$time))&&($date['mon']==date('m',$time))&&($date['year']==date('Y',$time))){
+							echo '<td class="aujourdHui"><a href="#">',date('d',$time),'</a></td>';
+					} 
+					else {
+						
+						if(date('d',$time)<15){
+							echo '<td><a class="lienJourHorsMois" href="#">',date('d',$time),'</a></td>';
+						}
+						else{
+							echo '<td><a href="#">',date('d',$time),'</a></td>';
+						}
+						
+					}	
+					
+				}
+			}
+
+
+				echo '</tr>',
+
+				'</table>';
+		    
+
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?>
