@@ -136,7 +136,7 @@ strong {
 --------------------------------------------------------------- */
 #bcPied {
 	position: relative;
-	top: -10px;
+	top: -20px;
 	clear: both;
 	height: 156px;
 	background: transparent url(../images/pied.png) no-repeat;		
