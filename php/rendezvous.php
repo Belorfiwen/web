@@ -4,6 +4,8 @@
  *
  * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
  */
+// Bufferisation des sorties
+ob_start();
 session_start();
 include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 
@@ -77,7 +79,7 @@ echo		'<section id="categories">',
 			'</table></fieldset></form>';
 			
 
-	ob_end_flush();
+	
 
 	//=================== FIN DU SCRIPT =============================
 
@@ -250,4 +252,5 @@ echo		'<section id="categories">',
 	'</section>';
 
 fd_html_pied();
+ob_end_flush();
 ?>

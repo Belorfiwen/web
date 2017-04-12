@@ -77,10 +77,8 @@ echo '<div class="II"><form method="POST" action="inscription.php">',
 		'<p class="basII"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
 		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
-		fd_html_pied();
-		
-
-ob_end_flush();
+	fd_html_pied();
+	ob_end_flush();
 
 //=================== FIN DU SCRIPT =============================
 

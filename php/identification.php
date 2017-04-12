@@ -72,9 +72,7 @@ echo '<div class="II"><form method="POST" action="identification.php">',
 		'<p class="basII"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
 		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
-		fd_html_pied();
-		
-
+fd_html_pied();
 ob_end_flush();
 
 //=================== FIN DU SCRIPT =============================
