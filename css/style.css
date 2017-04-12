@@ -193,44 +193,6 @@ strong {
 	padding: 0px 10px;
 }
 
-#titreInscription{
-	text-align: center;
-	position: relative;
-	margin: 0px auto 20px auto;
-	padding-top: 20px;
-}
-
-.basInscription{
-	text-align: center;
-	position: relative;
-	margin: 10px auto;
-	padding-top: 10px;
-}
-
-.boutonInscription{
-	background: url(../images/bouton.png);
-	color: white;
-	width: 102px;
-	height: 26px;
-	border: none;
-}
-#boutonInsAnnuler{
-	margin-right: 100px;
-}
-
-#tableInscription{
-	padding-right: 10px;
-}
-.inscription{
-	text-align: right;
-	position: relative;
-	left: 310px;
-	width: 600px;
-	height:180px;
-	line-height: 2.5;
-
-}
-
 #bcGauche {
 	float: left;	
 	width: 250px;
@@ -472,3 +434,44 @@ strong {
 	color: #FFF;
 }
 
+/* ---------------------------------------------------------------
+	PAGE INSCRIPTION et IDENTIFICATION
+--------------------------------------------------------------- */
+
+#titreInscription{
+	text-align: center;
+	position: relative;
+	margin: 0px auto 20px auto;
+	padding-top: 20px;
+}
+
+.basInscription{
+	text-align: center;
+	position: relative;
+	margin: 10px auto;
+	padding-top: 10px;
+}
+
+.boutonInscription{
+	background: url(../images/bouton.png);
+	color: white;
+	width: 102px;
+	height: 26px;
+	border: none;
+}
+#boutonInsAnnuler{
+	margin-right: 100px;
+}
+
+#tableInscription{
+	padding-right: 10px;
+}
+.inscription{
+	text-align: right;
+	position: relative;
+	left: 310px;
+	width: 600px;
+	height:180px;
+	line-height: 2.5;
+
+}

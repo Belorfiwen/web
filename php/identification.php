@@ -60,7 +60,7 @@ if ($nbErr > 0) {
 
 // Affichage du formulaire
 echo '<div class="inscription"><form method="POST" action="identification.php">',
-		'<table border="1" cellpadding="4" cellspacing="0">',
+		'<table>',
 		fd_form_ligne('Mail  ', 
             fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30)),
 		fd_form_ligne('Mot de passe  ', 

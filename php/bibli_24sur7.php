@@ -53,8 +53,8 @@ define('APP_Z_RESET', 'reset');
 *
 * @return string	Le code HTML de la ligne du tableau
 */
-function fd_form_ligne($gauche, $droite) {
-	return "<tr><td id=\"tableInscription\">{$gauche}</td><td>{$droite}</td></tr>";
+function fd_form_ligne($gauche, $droite, $idOrClasse='') {
+	return "<tr><td $idOrClasse>{$gauche}</td><td>{$droite}</td></tr>";
 }
 
 //_______________________________________________________________
