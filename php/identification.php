@@ -48,7 +48,7 @@ if (isset($GLOBALS['bd'])){
 //-----------------------------------------------------
 fd_html_head('24sur7 | Identification','-');
 
-echo '<h2 id="titreInscription">Pour vous connecter, veuillez vous identifier</h2>';
+echo '<h2 id="titreII">Pour vous connecter, veuillez vous identifier</h2>';
 
 // Si il y a des erreurs on les affiche
 if ($nbErr > 0) {
@@ -59,18 +59,18 @@ if ($nbErr > 0) {
 }
 
 // Affichage du formulaire
-echo '<div class="inscription"><form method="POST" action="identification.php">',
+echo '<div class="II"><form method="POST" action="identification.php">',
 		'<table>',
 		fd_form_ligne('Mail  ', 
             fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30)),
 		fd_form_ligne('Mot de passe  ', 
             fd_form_input(APP_Z_PASS,'txtPasse', '', 30)),
 
-        fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'identifier', 15,'class="boutonInscription"'),
-        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonInscription" id="boutonInsAnnuler"')),
+        fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'identifier', 15,'class="boutonII"'),
+        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII" id="boutonIIAnnuler"')),
 		'</table></form></div>',
-		'<p class="basInscription"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
-		'<p class="basInscription"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
+		'<p class="basII"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
+		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
 		fd_html_pied();
 		

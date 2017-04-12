@@ -448,35 +448,35 @@ strong {
 	PAGE INSCRIPTION et IDENTIFICATION
 --------------------------------------------------------------- */
 
-#titreInscription{
+#titreII{
 	text-align: center;
 	position: relative;
 	margin: 0px auto 20px auto;
 	padding-top: 20px;
 }
 
-.basInscription{
+.basII{
 	text-align: center;
 	position: relative;
 	margin: 10px auto;
 	padding-top: 10px;
 }
 
-.boutonInscription{
+.boutonII{
 	background: url(../images/bouton.png);
 	color: white;
 	width: 102px;
 	height: 26px;
 	border: none;
 }
-#boutonInsAnnuler{
+#boutonIIAnnuler{
 	margin-right: 100px;
 }
 
-#tableInscription{
+#tableII{
 	padding-right: 10px;
 }
-.inscription{
+.II{
 	text-align: right;
 	position: relative;
 	left: 310px;

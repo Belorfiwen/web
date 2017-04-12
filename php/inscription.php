@@ -49,7 +49,7 @@ if (isset($GLOBALS['bd'])){
 //-----------------------------------------------------
 fd_html_head('24sur7 | Inscription','-');
 
-echo '<h2 id="titreInscription">Pour vous inscrire à <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
+echo '<h2 id="titreII">Pour vous inscrire à <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
 
 // Si il y a des erreurs on les affiche
 if ($nbErr > 0) {
@@ -60,7 +60,7 @@ if ($nbErr > 0) {
 }
 
 // Affichage du formulaire
-echo '<div class="inscription"><form method="POST" action="inscription.php">',
+echo '<div class="II"><form method="POST" action="inscription.php">',
 		'<table border="1" cellpadding="4" cellspacing="0">',
 		fd_form_ligne('Nom  ', 
             fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30)),
@@ -71,11 +71,11 @@ echo '<div class="inscription"><form method="POST" action="inscription.php">',
         fd_form_ligne('Retapez le mot de passe  ', 
             fd_form_input(APP_Z_PASS,'txtVerif', '', 30)),
 
-        fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire', 15,'class="boutonInscription"'),
-        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonInscription" id="boutonInsAnnuler"')),
+        fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire', 15,'class="boutonII"'),
+        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII" id="boutonIIAnnuler"')),
 		'</table></form></div>',
-		'<p class="basInscription"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
-		'<p class="basInscription"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
+		'<p class="basII"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
+		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
 		fd_html_pied();
 		
