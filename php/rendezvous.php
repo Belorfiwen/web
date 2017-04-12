@@ -60,19 +60,21 @@ echo		'<section id="categories">',
 
 	// Affichage du formulaire
 	echo '<form class="newrdv" method="POST" action="rendezvous.php">',
+		'<fielset>',
+			'<legend> Modification </legend>',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Libellé : ', 
 				fd_form_input(APP_Z_TEXT,'txtLibelle', $_POST['txtLibelle'], 30)),
 			
 			 fd_form_ligne('Date : ', fd_form_date('rdvDate', 1, 1, 2017)),
 			 fd_form_ligne('Catégorie : ', recup_categorie()),
+			 fd_form_ligne('Horaire Début : ', fd_form_heure('rdvDeb',7,0)),
+			 fd_form_ligne('Horaire Fin : ', fd_form_heure('rdvFin',12,0)),
+			 fd_form_ligne('Ou ', '<input type=\'checkbox\' name=\'rdvCheck\' value=\'1\'> Evenement sur une journée'),
 
-			 fd_form_ligne("<input type='submit' name='btnValider' value=\"S'inscrire\" size=15 class='boutonInscription'>", 
-				"<input type='reset' name='btnEffacer' value=\"Annuler\" size=15 class='boutonInscription' id='boutonInsAnnuler'>"),
-			'</table></form></div>',
-			'<p class="basInscription"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
-			'<p class="basInscription"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
-			
+			 fd_form_ligne("<input type='submit' name='btnValider' value=\"Mettre à jour\" size=15 class='boutonInscription'>", 
+				"<input type='reset' name='btnEffacer' value=\"Supprimer\" size=15 class='boutonInscription' id='boutonInsAnnuler'>"),
+			'</table></fieldset></form>';
 			
 
 	ob_end_flush();
@@ -86,17 +88,29 @@ echo		'<section id="categories">',
 
 	
 	
+	/**
+	* Ajout d'une selection dans un formulaire.
+	*
+	* Recherche les categories presentes vers l'utilisateur connecté 
+	* et crée une liste de selection pour choisir la categorie de rendezvous a ajouter
+	*
+	* @global array		$_SESSION		Id de l'utilisateur connecté
+	* @global array		$_GLOBALS		base de bonnées 
+	*
+	* @return chaine 	chaine html d'une partie de formulaire
+	*/
+	
 	function recup_categorie(){
 		fd_bd_connexion();
 			$ch="";
 			$ID = $_SESSION['utiID'];
 
 			$S = "SELECT	catNom
-					FROM	utilisateur, categorie
+					FROM	categorie
 					WHERE	'$ID' = catIDUtilisateur";
 
 			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-			$ch=$ch.'<select name="rdvCat">';
+			$ch=$ch.'<select name="rdvCat" >';
 			$g=0;
 			while($D = mysqli_fetch_assoc($R)){	
 			ec_htmlProteger($D);

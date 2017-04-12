@@ -122,6 +122,42 @@ function fd_form_date($name, $jsel=0, $msel=0, $asel=0){
 	return $res;		
 }
 
+
+
+//_______________________________________________________________
+/**
+* Génére le code pour un ensemble de trois zones de sélection
+* représentant une heure : heures minutes
+*
+* @param string		$name	Préfixe pour les noms des zones
+* @param integer	$hsel 	Lheure sélectionné par défaut
+* @param integer	$msel	Les minutes sélectionné par défaut
+*
+* @return string 	Le code HTML des 2 zones de liste
+*/
+function fd_form_heure($name, $hsel=0, $msel=0){
+	$hsel=(int)$hsel;
+	$msel=(int)$msel;
+
+
+	$res = "<select id='{$name}_h' name='{$name}_h'>";
+	for ($i=0; $i <= 23 ; $i++){
+		if ($i == $hsel)
+			$res .= "<option value='$i' selected>$i</option>";
+		else
+			$res .= "<option value='$i'>$i</option>";
+	}
+	$res .= "</select> <select id='{$name}_m' name='{$name}_m'>"; //l'espace entre les balises  </select> et <select> est utile
+	for ($i=0; $i <= 59 ; $i++){
+		if ($i == $msel)
+			$res .= "<option value='$i' selected>".$i.'</option>';
+		else
+			$res .= "<option value='$i'>".$i.'</option>';
+	}
+	$res .= "</select>" ;
+	return $res;		
+}
+
 //_______________________________________________________________
 /**
 * Vérifie la présence des variables de session indiquant qu'un utilisateur est connecté.
