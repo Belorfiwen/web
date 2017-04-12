@@ -17,7 +17,7 @@ echo '<section id="bcContenu">',
 fd_html_calendrier(7, 1, 2017);
 
 echo		'<section id="categories">',
-				'Ici : bloc catégories pour afficher les catégories de rendez-vous',
+				'<a href="rendezvous.php">acceder ajout rendezvous<a>',
 			'</section>',
 		'</aside>',
 		'<section id="bcCentre">',

@@ -231,6 +231,16 @@ strong {
 
 }
 
+.newrdv{
+	text-align: right;
+	position: relative;
+	left: 250px;
+	width: 600px;
+	height:300px;
+	line-height: 2.5;
+
+}
+
 #bcGauche {
 	float: left;	
 	width: 250px;
