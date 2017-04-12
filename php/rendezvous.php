@@ -72,8 +72,8 @@ echo		'<section id="categories">',
 			 fd_form_ligne('Horaire Fin : ', fd_form_heure('rdvFin',12,0)),
 			 fd_form_ligne('Ou ', '<input type=\'checkbox\' name=\'rdvCheck\' value=\'1\'> Evenement sur une journée'),
 
-			 fd_form_ligne("<input type='submit' name='btnValider' value=\"Mettre à jour\" size=15 class='boutonInscription'>", 
-				"<input type='reset' name='btnEffacer' value=\"Supprimer\" size=15 class='boutonInscription' id='boutonInsAnnuler'>"),
+			 fd_form_ligne("<input type='submit' name='btnValider' value=\"Mettre à jour\" size=15 class='boutonII'>", 
+				"<input type='reset' name='btnEffacer' value=\"Supprimer\" size=15 class='boutonII' id='boutonIIAnnuler'>"),
 			'</table></fieldset></form>';
 			
 
