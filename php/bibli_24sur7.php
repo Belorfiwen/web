@@ -112,7 +112,7 @@ function fd_form_date($name, $jsel=0, $msel=0, $asel=0){
 			$res .= "<option value='$i'>".fd_get_mois($i).'</option>';
 	}
 	$res .= "</select> <select id='{$name}_a' name='{$name}_a'>"; //l'espace entre les balises  </select> et <select> est utile
-	for ($i=$aa; $i >= $aa - 99 ; $i--){
+	for ($i=$aa +5; $i >= $aa - 7 ; $i--){
 		if ($i == $asel)
 			$res .= "<option value='$i' selected>$i</option>";
 		else
@@ -302,7 +302,7 @@ function fd_html_head($titre, $css = '../css/style.css') {
  *
  * @param string	$page		Constante APP_PAGE_xxx
  */
-function fd_html_bandeau($page) {
+function fd_html_bandeau($page="") {
 	echo '<header id="bcEntete">',
 			'<nav id="bcOnglets">',
 				($page == APP_PAGE_AGENDA) ? '<h2>Agenda</h2>' : '<a href="'.APP_PAGE_AGENDA.'">Agenda</a>',
