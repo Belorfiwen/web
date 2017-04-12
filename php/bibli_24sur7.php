@@ -35,6 +35,7 @@ define('APP_PAGE_PARAMETRES', 'parametres.php');
 define('APP_Z_TEXT', 'text');
 define('APP_Z_PASS', 'password');
 define('APP_Z_SUBMIT', 'submit');
+define('APP_Z_RESET', 'reset');
 
 
 
@@ -67,10 +68,11 @@ function fd_form_ligne($gauche, $droite) {
 *
 * @return string	Le code HTML de la zone de formulaire
 */
-function fd_form_input($type, $name, $value, $size=0) {
+function fd_form_input($type, $name, $value, $size=0, $idOrClasse ='') {
    $value = htmlentities($value, ENT_QUOTES, 'UTF-8');
    $size = ($size == 0) ? '' : "size='{$size}'";
-   return "<input type='{$type}' id='{$name}' name='{$name}' {$size} value=\"{$value}\">";
+
+   return "<input $idOrClasse type='{$type}' name='{$name}' {$size} value=\"{$value}\">";
 }
 
 //_______________________________________________________________
@@ -156,7 +158,7 @@ function fd_exit_session() {
          	$cookieParams['httponly']
     	);
 	
-	header('location: inscription_08.php');
+	header('location: identification.php');
 	exit();
 }
 //____________________________________________________________________________

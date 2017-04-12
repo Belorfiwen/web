@@ -66,9 +66,11 @@ echo '<div class="inscription"><form method="POST" action="identification.php">'
 		fd_form_ligne('Mot de passe  ', 
             fd_form_input(APP_Z_PASS,'txtPasse', '', 30)),
 
-         fd_form_ligne(fd_form_input('reset','btnEffacer', 'Annuler'), 
-            fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'identifier')),
-		'</table></form></div></section>';
+        fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'identifier', 15,'class="boutonInscription"'),
+        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonInscription" id="boutonInsAnnuler"')),
+		'</table></form></div>',
+		'<p class="basInscription"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
+		'<p class="basInscription"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
 		fd_html_pied();
 		

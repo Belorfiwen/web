@@ -71,8 +71,8 @@ echo '<div class="inscription"><form method="POST" action="inscription.php">',
         fd_form_ligne('Retapez le mot de passe  ', 
             fd_form_input(APP_Z_PASS,'txtVerif', '', 30)),
 
-         fd_form_ligne("<input type='submit' name='btnValider' value=\"S'inscrire\" size=15 class='boutonInscription'>", 
-            "<input type='reset' name='btnEffacer' value=\"Annuler\" size=15 class='boutonInscription' id='boutonInsAnnuler'>"),
+        fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire', 15,'class="boutonInscription"'),
+        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonInscription" id="boutonInsAnnuler"')),
 		'</table></form></div>',
 		'<p class="basInscription"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
 		'<p class="basInscription"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
