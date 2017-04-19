@@ -7,17 +7,6 @@ ob_start();
 // Inclusion de la bibliothéque
 include('bibli_24sur7.php');
 
-fd_html_head('24sur7 | Connexion');
-
-echo '<header id="bcEntete">',
-			'<nav id="bcOnglets">',
-			'</nav>',
-			'<div id="bcLogo"></div>',
-			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
-		 '</header>',
-		 
-		 '<section id="bcContenu">';
-
 //-----------------------------------------------------
 // Détermination de la phase de traitement :
 // 1er affichage ou soumission du formulaire
@@ -46,9 +35,19 @@ if (isset($GLOBALS['bd'])){
 //-----------------------------------------------------
 // Affichage de la page
 //-----------------------------------------------------
-fd_html_head('24sur7 | Identification','-');
 
-echo '<h2 id="titreII">Pour vous connecter, veuillez vous identifier</h2>';
+fd_html_head('24sur7 | Identification');
+
+echo '<header id="bcEntete">',
+			'<nav id="bcOnglets">',
+			'</nav>',
+			'<div id="bcLogo"></div>',
+			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
+		 '</header>',
+		 
+		 '<section id="bcContenu">';
+
+echo '<h2 id="titreII">Pour vous connecter, veuillez vous identifiez.</h2>';
 
 // Si il y a des erreurs on les affiche
 if ($nbErr > 0) {
@@ -62,12 +61,12 @@ if ($nbErr > 0) {
 echo '<div class="II"><form method="POST" action="identification.php">',
 		'<table>',
 		fd_form_ligne('Mail  ', 
-            fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30)),
+            fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30),'','class="colonneGauche"'),
 		fd_form_ligne('Mot de passe  ', 
-            fd_form_input(APP_Z_PASS,'txtPasse', '', 30)),
+            fd_form_input(APP_Z_PASS,'txtPasse', '', 30),'','class="colonneGauche"'),
 
         fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'identifier', 15,'class="boutonII"'),
-        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII" id="boutonIIAnnuler"')),
+        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII"'),'','class="colonneGauche"','id="boutonIIAnnuler"'),
 		'</table></form></div>',
 		'<p class="basII"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
 		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';

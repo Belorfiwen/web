@@ -6,16 +6,6 @@ ob_start();
 
 // Inclusion de la bibliothéque
 include('bibli_24sur7.php');
-fd_html_head('24sur7 | Inscription');
-
-echo '<header id="bcEntete">',
-			'<nav id="bcOnglets">',
-			'</nav>',
-			'<div id="bcLogo"></div>',
-			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
-		 '</header>',
-		 
-		 '<section id="bcContenu">';
 
 //-----------------------------------------------------
 // Détermination de la phase de traitement :
@@ -47,7 +37,17 @@ if (isset($GLOBALS['bd'])){
 //-----------------------------------------------------
 // Affichage de la page
 //-----------------------------------------------------
-fd_html_head('24sur7 | Inscription','-');
+
+fd_html_head('24sur7 | Inscription');
+
+echo '<header id="bcEntete">',
+			'<nav id="bcOnglets">',
+			'</nav>',
+			'<div id="bcLogo"></div>',
+			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
+		 '</header>',
+		 
+		 '<section id="bcContenu">';
 
 echo '<h2 id="titreII">Pour vous inscrire à <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
 
@@ -63,16 +63,16 @@ if ($nbErr > 0) {
 echo '<div class="II"><form method="POST" action="inscription.php">',
 		'<table border="1" cellpadding="4" cellspacing="0">',
 		fd_form_ligne('Nom  ', 
-            fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30)),
+            fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30),'','class="colonneGauche"'),
 		fd_form_ligne('Mail  ', 
-            fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30)),
+            fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30),'','class="colonneGauche"'),
 		fd_form_ligne('Mot de passe  ', 
-            fd_form_input(APP_Z_PASS,'txtPasse', '', 30)),
+            fd_form_input(APP_Z_PASS,'txtPasse', '', 30),'','class="colonneGauche"'),
         fd_form_ligne('Retapez le mot de passe  ', 
-            fd_form_input(APP_Z_PASS,'txtVerif', '', 30)),
+            fd_form_input(APP_Z_PASS,'txtVerif', '', 30),'','class="colonneGauche"'),
 
         fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire', 15,'class="boutonII"'),
-        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII" id="boutonIIAnnuler"')),
+        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII" id="boutonIIAnnuler"'),'','class="colonneGauche"','id="boutonIIAnnuler"'),
 		'</table></form></div>',
 		'<p class="basII"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
 		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';

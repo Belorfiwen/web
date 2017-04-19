@@ -48,13 +48,16 @@ define('APP_Z_RESET', 'reset');
 * zone de saisie, avec dans la collone de gauche le lable et dans
 * la colonne de droite la zone de saisie.
 *
-* @param string		$gauche		Contenu de la colonne de gauche
-* @param string		$droite		Contenu de la colonne de droite
+* @param string		$gauche				Contenu de la colonne de gauche
+* @param string		$droite				Contenu de la colonne de droite
+* @param string		$idOrClasse			Classe ou id de la ligne
+* @param string		$idOrClasseLeft		Classe ou id de la colonne de gauche (valeur par defaut : '')
+* @param string		$idOrClasseRight	Classe ou id de la colonne de droite (valeur par defaut : '')
 *
 * @return string	Le code HTML de la ligne du tableau
 */
-function fd_form_ligne($gauche, $droite, $idOrClasse='') {
-	return "<tr><td $idOrClasse>{$gauche}</td><td>{$droite}</td></tr>";
+function fd_form_ligne($gauche, $droite, $idOrClasse='', $idOrClasseLeft='', $idOrClasseRight='') {
+	return "<tr $idOrClasse><td $idOrClasseLeft>{$gauche}</td><td $idOrClasseRight>{$droite}</td></tr>";
 }
 
 //_______________________________________________________________
@@ -65,6 +68,7 @@ function fd_form_ligne($gauche, $droite, $idOrClasse='') {
 * @param string		$name	Le nom de l'input
 * @param String		$value	La valeur par défaut
 * @param integer	$size	La taille de l'input
+* @param string		$idOrClasse			Classe ou id du input
 *
 * @return string	Le code HTML de la zone de formulaire
 */

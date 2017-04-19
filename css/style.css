@@ -187,10 +187,11 @@ strong {
 
 #bcContenu {
 	position: relative;
-	top: -10px;
+	top: -10px; 
 	background: url(../images/contenu.png) repeat-y;
 	min-height: 500px;
 	padding: 0px 10px;
+	 /*ajout de -0.5px car mal ajusté(tres fine bande visible entre le bloc d'entete et celui de contenu avec -10px)*/
 }
 
 .newrdv{
@@ -452,13 +453,13 @@ strong {
 	text-align: center;
 	position: relative;
 	margin: 0px auto 20px auto;
-	padding-top: 20px;
+	padding-top: 30px;
 }
 
 .basII{
 	text-align: center;
 	position: relative;
-	margin: 10px auto;
+	margin: 10px auto 0;
 	padding-top: 10px;
 }
 
@@ -470,7 +471,11 @@ strong {
 	border: none;
 }
 #boutonIIAnnuler{
-	margin-right: 100px;
+	text-align: left;
+}
+
+.colonneGauche{
+	padding-right: 10px;
 }
 
 #tableII{
@@ -481,7 +486,6 @@ strong {
 	position: relative;
 	left: 310px;
 	width: 600px;
-	height:180px;
 	line-height: 2.5;
 
 }
