@@ -41,7 +41,7 @@ echo		'<section id="categories">',
 		// => vérification des valeurs reçues et création utilisateur.
 		// Si aucune erreur n'est détectée, fdl_add_utilisateur()
 		// redirige la page sur la page 'protegee.php'
-		$erreurs = fdl_add_utilisateur();
+		$erreurs = fdl_add_rdv();
 		$nbErr = count($erreurs);
 	}
 
@@ -141,68 +141,67 @@ echo		'<section id="categories">',
 	*
 	* @return array 	Tableau des erreurs détectées
 	*/
-	function fdl_add_utilisateur() {
+	function fdl_add_rdv() {
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------
 		$erreurs = array();
 
-		// Vérification du nom
-		$txtNom = trim($_POST['txtNom']);
-		$long = mb_strlen($txtNom, 'UTF-8');
-		if ($long < 4
-		|| $long > 30)
-		{
+		// Vérification du libellé
+		$txtLibelle = trim($_POST['txtLibelle']);
+		$long = mb_strlen($txtLibelle, 'UTF-8');
+		if ($long ==0){
 			$erreurs[] = 'Le nom doit avoir de 4 à 30 caractères';
 		}
 
-		// Vérification du mail
-		$txtMail = trim($_POST['txtMail']);
-		if ($txtMail == '') {
-			$erreurs[] = 'L\'adresse mail est obligatoire';
-		} elseif (mb_strpos($txtMail, '@', 0, 'UTF-8') === FALSE
-				|| mb_strpos($txtMail, '.', 0, 'UTF-8') === FALSE)
-		{
-			$erreurs[] = 'L\'adresse mail n\'est pas valide';
-		} else {
-			// Vérification que le mail n'existe pas dans la BD
-			fd_bd_connexion();
+		// Vérification de la date
+		// Vérification des paramètres
+		$jour = $_POST['rdvDate_j'];
+		$mois = $_POST['rdvDate_m'];
+		$annee = $_POST['rdvDate_a'];
+
+		if (!checkdate($mois, $jour, $annee)) {
+			$erreurs[] = 'La date de rendez-vous est invalide';
+		}
+		
+
+		// Vérification de l'heure du rendez-vous
+		$hDeb=$_POST['rdvDeb_h'];
+		$mDeb=$_POST['rdvDeb_m'];
+		$hFin=$_POST['rdvFin_h'];
+		$mFin=$_POST['rdvFin_m'];
+		
+		if(! isset($_POST['rdvCheck'])){
+		
+			if($hDeb>$hFin){
+				$erreurs[] = 'Durée du rendez-vous invalide';
+			}
 			
-			$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-			if ($ret == FALSE){
-				fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
+			if($hDeb==$hFin){
+				if($mDeb+15>$mFin){
+					$erreurs[] = 'Durée du rendez-vous invalide';
+				}
 			}
-
-			$mail = mysqli_real_escape_string($GLOBALS['bd'], $txtMail);
-
-			$S = "SELECT	count(*)
-					FROM	utilisateur
-					WHERE	utiMail = '$mail'";
-
-			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-
-			$D = mysqli_fetch_row($R);
-
-			if ($D[0] > 0) {
-				$erreurs[] = 'Cette adresse mail est déjà inscrite.';
+			
+			if($hdeb+1==$hFin){
+				$test=1;
+				if($mDeb==0){
+					$test=0;
+				}
+				else{
+					$test=60-$mDeb;
+				}
+				$test2=$mFin;
+				
+				if($test+$test2<15){
+					$erreurs[] = 'Durée du rendez-vous inferieur a 15min';
+				}
 			}
-			// Libère la mémoire associée au résultat $R
-			mysqli_free_result($R);
+		
+		
 		}
-
-		// Vérification du mot de passe
-		$txtPasse = trim($_POST['txtPasse']);
-		$long = mb_strlen($txtPasse, 'UTF-8');
-		if ($long < 4
-		|| $long > 20)
-		{
-			$erreurs[] = 'Le mot de passe doit avoir de 4 à 20 caractères';
-		}
-
-		$txtVerif = trim($_POST['txtVerif']);
-		if ($txtPasse != $txtVerif) {
-			$erreurs[] = 'Le mot de passe est différent dans les 2 zones';
-		}
+		
+		
 
 
 		// Si il y a des erreurs, la fonction renvoie le tableau d'erreurs
@@ -211,36 +210,27 @@ echo		'<section id="categories">',
 		}
 
 		//-----------------------------------------------------
-		// Insertion d'un nouvel utilisateur dans la base de données
+		// Insertion d'un nouvel utilisateur dans la base de données       ========> A finir 
 		//-----------------------------------------------------
-		$txtPasse = mysqli_real_escape_string($GLOBALS['bd'], md5($txtPasse));
-		$nom = mysqli_real_escape_string($GLOBALS['bd'], $txtNom);
-		$txtMail = mysqli_real_escape_string($GLOBALS['bd'], $txtMail);
-		$utiDateInscription = date('Ymd');
-
-		$S = "INSERT INTO utilisateur SET
-				utiNom = '$nom',
-				utiPasse = '$txtPasse',
-				utiMail = '$txtMail',
-				utiDateInscription = $utiDateInscription,
-				utiJours = 127,
-				utiHeureMin = 6,
-				utiHeureMax = 22";
+		$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
+		$rdvDate=(int)($jour.$mois.$annee);
+		$rdvHDeb=(int)($hDeb.$mDeb);
+		$rdvHFin=(int)($hFin.$mFin);
+		
+		$S = "INSERT INTO rendezvous SET
+				rdvDate = '$rdvDate',
+				rdvHeureDebut = '$rdvHDeb',
+				rdvHeureFin = '$rdvHFin',
+				rdvLibelle = '$txtLibelle'";
 
 		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
-		//-----------------------------------------------------
-		// Ouverture de la session et redirection vers la page protégée
-		//-----------------------------------------------------
-		
-		$_SESSION['utiID'] = mysqli_insert_id($GLOBALS['bd']);
-		$_SESSION['utiMail'] = $txtMail;
 		
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		
-		header ('location: agenda.php');
-		exit();			// EXIT : le script est terminé
+	
+		exit();
 	}
 			
 			
