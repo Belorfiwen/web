@@ -60,23 +60,22 @@ echo		'<section id="categories">',
 		}
 	}
 
+	echo '<div class="titrerdv"> Modification </div>';
 	// Affichage du formulaire
 	echo '<form class="newrdv" method="POST" action="rendezvous.php">',
-		'<fielset>',
-			'<legend> Modification </legend>',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Libellé : ', 
-				fd_form_input(APP_Z_TEXT,'txtLibelle', $_POST['txtLibelle'], 30)),
+				fd_form_input(APP_Z_TEXT,'txtLibelle', $_POST['txtLibelle'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
-			 fd_form_ligne('Date : ', fd_form_date('rdvDate', 1, 1, 2017)),
-			 fd_form_ligne('Catégorie : ', recup_categorie()),
-			 fd_form_ligne('Horaire Début : ', fd_form_heure('rdvDeb',7,0)),
-			 fd_form_ligne('Horaire Fin : ', fd_form_heure('rdvFin',12,0)),
-			 fd_form_ligne('Ou ', '<input type=\'checkbox\' name=\'rdvCheck\' value=\'1\'> Evenement sur une journée'),
+			 fd_form_ligne('Date : ', fd_form_date('rdvDate', 1, 1, 2017),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Catégorie : ', recup_categorie(),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Horaire Début : ', fd_form_heure('rdvDeb',7,0),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Horaire Fin : ', fd_form_heure('rdvFin',12,0),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Ou ', '<input type=\'checkbox\' name=\'rdvCheck\' value=\'1\'> Evenement sur une journée','','class="colonneGauche"','class="boutonIIAnnuler"'),
 
 			 fd_form_ligne("<input type='submit' name='btnValider' value=\"Mettre à jour\" size=15 class='boutonII'>", 
-				"<input type='reset' name='btnEffacer' value=\"Supprimer\" size=15 class='boutonII' id='boutonIIAnnuler'>"),
-			'</table></fieldset></form>';
+				"<input type='reset' name='btnEffacer' value=\"Supprimer\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			'</table></form>';
 			
 
 	
@@ -238,7 +237,8 @@ echo		'<section id="categories">',
 			
 			
 			
-		echo '</section>',
+		echo '<p><a href="agenda.php"> Retour à l\'agenda </a></p>',
+			'</section>',
 	'</section>';
 
 fd_html_pied();

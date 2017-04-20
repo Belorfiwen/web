@@ -197,11 +197,22 @@ strong {
 .newrdv{
 	text-align: right;
 	position: relative;
-	left: 250px;
+	left: 230px;
 	width: 600px;
 	height:300px;
 	line-height: 2.5;
+	top: 40px;
 
+}
+
+.titrerdv{
+	position: relative;
+	line-height: 1.2;
+	left: 100px;
+	top: 20px;
+	font-size: 18px; 
+	border-bottom: 2px solid black;
+	width: 550px;
 }
 
 #bcGauche {
@@ -469,7 +480,7 @@ strong {
 	height: 26px;
 	border: none;
 }
-#boutonIIAnnuler{
+.boutonIIAnnuler{
 	text-align: left;
 }
 
