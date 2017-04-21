@@ -1,6 +1,5 @@
 <?php
 
-
 // Bufferisation des sorties
 ob_start();
 
@@ -47,7 +46,7 @@ echo '<header id="bcEntete">',
 		 
 		 '<section id="bcContenu">';
 
-echo '<h2 id="titreII">Pour vous connecter, veuillez vous identifiez.</h2>';
+echo '<h2 id="titreII" class="titreIdentifi">Pour vous connecter, veuillez vous identifiez.</h2>';
 
 // Si il y a des erreurs on les affiche
 if ($nbErr > 0) {
@@ -66,7 +65,7 @@ echo '<div class="II"><form method="POST" action="identification.php">',
             fd_form_input(APP_Z_PASS,'txtPasse', '', 30),'','class="colonneGauche"'),
 
         fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'identifier', 15,'class="boutonII"'),
-        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII"'),'','class="colonneGauche"','id="boutonIIAnnuler"'),
+        	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII"'),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 		'</table></form></div>',
 		'<p class="basII"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
 		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';

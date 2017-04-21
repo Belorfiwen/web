@@ -64,7 +64,7 @@ echo '<div class="II"><form method="POST" action="inscription.php">',
 		'<table border="1" cellpadding="4" cellspacing="0">',
 		fd_form_ligne('Nom  ', 
             fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30),'','class="colonneGauche"'),
-		fd_form_ligne('Mail  ', 
+		fd_form_ligne('Email  ', 
             fd_form_input(APP_Z_TEXT,'txtMail', $_POST['txtMail'], 30),'','class="colonneGauche"'),
 		fd_form_ligne('Mot de passe  ', 
             fd_form_input(APP_Z_PASS,'txtPasse', '', 30),'','class="colonneGauche"'),
@@ -187,6 +187,12 @@ function fdl_add_utilisateur() {
 			utiHeureMax = 22";
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+
+
+	$S = "INSERT INTO categorie (catNom,catCouleurFond,catCouleurBordure,catIDUtilisateur,catPublic)
+  		VALUES ('Défaut','FFFFFF','000000',(SELECT utiID FROM utilisateur ORDER BY utiID DESC LIMIT 1),0)";
+
+  	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
 	//-----------------------------------------------------
 	// Ouverture de la session et redirection vers la page protégée
