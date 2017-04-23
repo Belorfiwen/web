@@ -471,9 +471,9 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	// Affichage du titre du calendrier
 	echo '<section id="calendrier">',
 	'<p>',
-	'<a href="#" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
+	'<a href="?mois=',$mois-1,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 	fd_get_mois($mois), ' ', $annee,
-	'<a href="#" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+	'<a href="?mois=',$mois+1,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 	'</p>';
 	
 	// Affichage des jours du calendrier
@@ -499,10 +499,10 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 				echo '<td>';
 			}
 			if ($moisAff == $mois){
-              echo '<a href="#">', $jourAff, '</a></td>';
+              echo '<a href="?jour=',$jourAff,'">', $jourAff, '</a></td>';
             }
             else{
-              echo '<a class="lienJourHorsMois" href="#">', $jourAff, '</a></td>';
+              echo '<a class="lienJourHorsMois" href="?jour=',$jourAff,'&mois=',$moisAff,'">', $jourAff, '</a></td>';
             }
 			$jourAff++;
 			if ($jourAff > $dernierJourMoisAff){
@@ -528,6 +528,92 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 		echo '</tr>';
 	}
 	echo '</table></section>';
+}
+
+
+
+//_______________________________________________________________
+
+/**
+ * Genere le code html pour l'affichage des agendas et categories.
+ *
+ */
+function ec_html_categorie() {
+
+	// Connexion à la base de données
+	fd_bd_connexion();
+
+	// Requête de sélection des utilisateurs
+	$sql = "SELECT utiID, utiNom, catNom, catCouleurFond, catCouleurBordure
+			FROM utilisateur LEFT OUTER JOIN categorie
+			ON utilisateur.utiID = catIDUtilisateur
+			WHERE utiID = {$_SESSION['utiID']}";
+
+	// Exécution de la requête
+	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
+
+	// Boucle de traitement
+	$count = 0;
+	while ($D = mysqli_fetch_assoc($R)) 
+	{
+		if ($count == 0) 
+		{
+			echo '<section id="categories">',
+					'<h3>Vos agendas</h3>',
+					'<p>',
+						'<a href="?uti=',$D['utiID'],'">',$D['utiNom'],'</a> ',
+					'</p>',
+					'<ul id="mine">';
+			$count++;
+		}
+
+		echo 			'<li> <div class="categorie" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',htmlentities($D['catNom'], ENT_QUOTES, 'UTF-8');
+	}
+
+	echo 			'</ul>';
+
+// Requête de sélection des utilisateurs
+	$sql = "SELECT utiID, utiNom, catNom, catCouleurFond, catCouleurBordure
+			FROM utilisateur, suivi
+			LEFT OUTER JOIN categorie
+			ON categorie.catIDUtilisateur = suivi.suiIDSuivi
+			WHERE suiIDSuiveur = {$_SESSION['utiID']}
+			AND catPublic = 1
+            AND suivi.suiIDSuivi = utilisateur.utiID";
+
+	// Exécution de la requête
+	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
+
+	// Boucle de traitement
+	$prev = -1;
+	$count = 0;
+	while ($D = mysqli_fetch_assoc($R)) 
+	{	
+		if ($count == 0) {
+			echo '<p>Agendas suivis :</p>';
+			$count++;
+		}
+		if ($prev != $D['utiID']) 
+		{
+			echo 	'<p>',
+						'<a href="?uti=',$D['utiID'],'">',$D['utiNom'],'</a> ',
+					'</p>',
+					'<ul id="mine">';
+		}
+		
+		echo 			'<li> <div class="categorie" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',htmlentities($D['catNom'], ENT_QUOTES, 'UTF-8');
+		$prev = $D['utiID'];
+	}
+
+	echo			'</ul>',
+				'</section>';
+
+	// Libère la mémoire associée au résultat $R
+	mysqli_free_result($R);
+
+	// Déconnexion de la base de données
+	mysqli_close($GLOBALS['bd']);
+
 }
 
 //_______________________________________________________________
