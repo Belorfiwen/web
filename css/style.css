@@ -341,7 +341,17 @@ strong {
 	margin: 0px 5px 0px 20px; 
 	width: 10px; 
 	height: 10px; 
-}							  				 
+}
+
+.categorieSui {
+	margin: 0px 5px 0px 40px; 
+}	
+
+.catSui {
+	background-image: url(../images/puce.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}					  				 
 
 .groupeA {
 	border: solid 2px #00DD00; 

@@ -561,9 +561,9 @@ function ec_html_categorie() {
 			echo '<section id="categories">',
 					'<h3>Vos agendas</h3>',
 					'<p>',
-						'<a href="?uti=',$D['utiID'],'">',$D['utiNom'],'</a> ',
+						'<a href="?uti=',$D['utiID'],'">Agenda de ',$D['utiNom'],'</a> ',
 					'</p>',
-					'<ul id="mine">';
+					'<ul>';
 			$count++;
 		}
 
@@ -590,18 +590,18 @@ function ec_html_categorie() {
 	while ($D = mysqli_fetch_assoc($R)) 
 	{	
 		if ($count == 0) {
-			echo '<p>Agendas suivis :</p>';
+			echo 	'<p>Agendas suivis :</p>',
+					'<ul>';
 			$count++;
 		}
 		if ($prev != $D['utiID']) 
 		{
 			echo 	'<p>',
-						'<a href="?uti=',$D['utiID'],'">',$D['utiNom'],'</a> ',
-					'</p>',
-					'<ul id="mine">';
+						'<a class="catSui" href="?uti=',$D['utiID'],'">',$D['utiNom'],'</a> ',
+					'</p>';
 		}
 		
-		echo 			'<li> <div class="categorie" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',htmlentities($D['catNom'], ENT_QUOTES, 'UTF-8');
+		echo 			'<li> <div class="categorie categorieSui" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',htmlentities($D['catNom'], ENT_QUOTES, 'UTF-8');
 		$prev = $D['utiID'];
 	}
 
