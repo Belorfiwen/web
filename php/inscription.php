@@ -198,7 +198,7 @@ function fdl_add_utilisateur() {
 	// Ouverture de la session et redirection vers la page protégée
 	//-----------------------------------------------------
 	session_start();
-	$_SESSION['utiID'] = mysqli_insert_id($GLOBALS['bd']);
+	$_SESSION['utiID'] = mysqli_insert_id($GLOBALS['bd'])-10;
 	$_SESSION['utiMail'] = $txtMail;
 	
 	// Déconnexion de la base de données

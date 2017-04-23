@@ -540,6 +540,9 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
  */
 function ec_html_categorie() {
 
+	echo 		'<section id="categories">',
+					'<h3>Vos agendas</h3>';
+
 	// Connexion à la base de données
 	fd_bd_connexion();
 
@@ -558,9 +561,7 @@ function ec_html_categorie() {
 	{
 		if ($count == 0) 
 		{
-			echo '<section id="categories">',
-					'<h3>Vos agendas</h3>',
-					'<p>',
+			echo 	'<p>',
 						'<a href="?uti=',$D['utiID'],'">Agenda de ',$D['utiNom'],'</a> ',
 					'</p>',
 					'<ul>';
