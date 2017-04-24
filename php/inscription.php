@@ -188,6 +188,7 @@ function fdl_add_utilisateur() {
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
+	$idInscr = mysqli_insert_id($GLOBALS['bd']);
 
 	$S = "INSERT INTO categorie (catNom,catCouleurFond,catCouleurBordure,catIDUtilisateur,catPublic)
   		VALUES ('Défaut','FFFFFF','000000',(SELECT utiID FROM utilisateur ORDER BY utiID DESC LIMIT 1),0)";
@@ -198,7 +199,7 @@ function fdl_add_utilisateur() {
 	// Ouverture de la session et redirection vers la page protégée
 	//-----------------------------------------------------
 	session_start();
-	$_SESSION['utiID'] = mysqli_insert_id($GLOBALS['bd'])-10;
+	$_SESSION['utiID'] = $idInscr;
 	$_SESSION['utiMail'] = $txtMail;
 	
 	// Déconnexion de la base de données

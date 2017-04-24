@@ -7,7 +7,6 @@
 
 include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 session_start();
-
 $jour = 0;
 $mois = 0;
 $annee = 0;
