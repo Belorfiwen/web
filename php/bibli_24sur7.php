@@ -559,6 +559,8 @@ function ec_html_categorie() {
 	$count = 0;
 	while ($D = mysqli_fetch_assoc($R)) 
 	{
+		ec_htmlProteger ($D);
+
 		if ($count == 0) 
 		{
 			echo 	'<p>',
@@ -568,10 +570,12 @@ function ec_html_categorie() {
 			$count++;
 		}
 
-		echo 			'<li> <div class="categorie" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',htmlentities($D['catNom'], ENT_QUOTES, 'UTF-8');
+		echo 			'<li> <div class="categorie" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',$D['catNom'];
 	}
 
 	echo 			'</ul>';
+
+	mysqli_free_result($R);
 
 // Requête de sélection des utilisateurs
 	$sql = "SELECT utiID, utiNom, catNom, catCouleurFond, catCouleurBordure
@@ -590,6 +594,9 @@ function ec_html_categorie() {
 	$count = 0;
 	while ($D = mysqli_fetch_assoc($R)) 
 	{	
+
+		ec_htmlProteger ($D);
+
 		if ($count == 0) {
 			echo 	'<p>Agendas suivis :</p>',
 					'<ul>';
@@ -602,7 +609,7 @@ function ec_html_categorie() {
 					'</p>';
 		}
 		
-		echo 			'<li> <div class="categorie categorieSui" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',htmlentities($D['catNom'], ENT_QUOTES, 'UTF-8');
+		echo 			'<li> <div class="categorie categorieSui" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',$D['catNom'];
 		$prev = $D['utiID'];
 	}
 
@@ -610,6 +617,137 @@ function ec_html_categorie() {
 				'</section>';
 
 	// Libère la mémoire associée au résultat $R
+	mysqli_free_result($R);
+
+	// Déconnexion de la base de données
+	mysqli_close($GLOBALS['bd']);
+
+}
+
+//_______________________________________________________________
+
+/**
+ * Genere le code html pour l'affichage du semenier.
+ *
+ */
+function ec_html_semenier() {
+
+	// Connexion à la base de données
+	fd_bd_connexion();
+
+	// Requête de sélection des utilisateurs
+	$sql = "SELECT utiJours, utiHeureMin, utiHeureMax
+			FROM utilisateur
+			WHERE utiID = {$_SESSION['utiID']}";
+
+	// Exécution de la requête
+	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
+
+	// traitement
+	$D = mysqli_fetch_assoc($R);
+
+	ec_htmlProteger ($D);
+
+	$utiJours = decbin($D['utiJours']);
+	$utiHeureMin =$D['utiHeureMin'];
+	$utiHeureMax =$D['utiHeureMax'];
+
+
+	echo '<section id="bcCentre">',
+			'<p id="titreAgenda">',
+				'<a href="#" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
+				'<strong>Semaine du 9  au 15 F&eacute;vrier</strong> pour <strong>les L2</strong>',
+				'<a href="#" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+			'</p>',
+			'<section id="agenda">',
+				'<div id="intersection"></div>',
+				'<div class="case-jour border-TRB border-L">Lundi 9</div>',
+				'<div class="case-jour border-TRB">Mardi 10</div>',
+				'<div class="case-jour border-TRB">Mercredi 11</div>',
+				'<div class="case-jour border-TRB">Jeudi 12</div>',
+				'<div class="case-jour border-TRB">Vendredi 13</div>',
+				'<div class="case-jour border-TRB">Samedi 14</div>',
+				'<div class="case-jour border-TRB">Dimanche 15</div>',
+				'<div id="col-heures">';
+
+	for ($i=$utiHeureMin; $i <= $utiHeureMax; $i++) { 
+		echo 		'<div>',$i,'h</div>';
+	}
+	echo		'</div>';
+
+	if (mb_substr($utiJours, 0, 1) == 1) {
+
+		echo	'<div class="col-jour border-TRB border-L">';
+		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
+			echo	'<a href="#"></a>';
+		}
+		echo 		'<a href="#" class="case-heure-bas"></a>
+				</div>';
+	}
+
+	if (mb_substr($utiJours, 1, 1) == 1) {
+
+		echo	'<div class="col-jour border-TRB">';
+		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
+			echo	'<a href="#"></a>';
+		}
+		echo 		'<a href="#" class="case-heure-bas"></a>',
+				'</div>';
+	}
+
+	if (mb_substr($utiJours, 2, 1) == 1) {
+
+		echo	'<div class="col-jour border-TRB">';
+		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
+			echo	'<a href="#"></a>';
+		}
+		echo 		'<a href="#" class="case-heure-bas"></a>',
+				'</div>';
+	}
+
+	if (mb_substr($utiJours, 3, 1) == 1) {
+
+		echo	'<div class="col-jour border-TRB">';
+		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
+			echo	'<a href="#"></a>';
+		}
+		echo 		'<a href="#" class="case-heure-bas"></a>',
+				'</div>';
+	}
+
+	if (mb_substr($utiJours, 4, 1) == 1) {
+
+		echo	'<div class="col-jour border-TRB">';
+		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
+			echo	'<a href="#"></a>';
+		}
+		echo 		'<a href="#" class="case-heure-bas"></a>',
+				'</div>';
+	}
+
+	if (mb_substr($utiJours, 5, 1) == 1) {
+
+		echo	'<div class="col-jour border-TRB">';
+		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
+			echo	'<a href="#"></a>';
+		}
+		echo 		'<a href="#" class="case-heure-bas"></a>',
+				'</div>';
+	}
+
+	if (mb_substr($utiJours, 6, 1) == 1) {
+
+		echo	'<div class="col-jour border-TRB">';
+		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
+			echo	'<a href="#"></a>';
+		}
+		echo 		'<a href="#" class="case-heure-bas"></a>',
+				'</div>';
+	}
+
+	echo	'</section>';
+
+				// Libère la mémoire associée au résultat $R
 	mysqli_free_result($R);
 
 	// Déconnexion de la base de données
