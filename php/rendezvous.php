@@ -1,9 +1,5 @@
 <?php
-/** @file
- * Page d'accueil de l'application 24sur7
- *
- * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
- */
+
 // Bufferisation des sorties
 ob_start();
 session_start();
@@ -18,9 +14,9 @@ echo '<section id="bcContenu">',
 
 fd_html_calendrier(7, 1, 2017);
 
-echo		'<section id="categories">',
-				'Ici : bloc catégories pour afficher les catégories de rendez-vous',
-			'</section>',
+	ec_html_categorie();
+		
+echo	
 		'</aside>',
 		'<section id="bcCentre">';
 			
@@ -44,12 +40,6 @@ echo		'<section id="categories">',
 		$erreurs = fdl_add_rdv();
 		$nbErr = count($erreurs);
 	}
-
-	if (isset($GLOBALS['bd'])){
-		// Déconnexion de la base de données
-		mysqli_close($GLOBALS['bd']);
-	}
-
 
 
 	// Si il y a des erreurs on les affiche
@@ -154,16 +144,9 @@ echo		'<section id="categories">',
 		// Vérification des zones
 		//-----------------------------------------------------
 		$erreurs = array();
-
-		// Vérification du libellé
-		$txtLibelle = trim($_POST['txtLibelle']);
-		$long = mb_strlen($txtLibelle, 'UTF-8');
-		if ($long ==0){
-			$erreurs[] = 'Le nom doit avoir de 4 à 30 caractères';
-		}
-
+		
 		// Vérification de la date
-		// Vérification des paramètres
+
 		$jour = $_POST['rdvDate_j'];
 		$mois = $_POST['rdvDate_m'];
 		$annee = $_POST['rdvDate_a'];
@@ -172,7 +155,6 @@ echo		'<section id="categories">',
 			$erreurs[] = 'La date de rendez-vous est invalide';
 		}
 		
-
 		// Vérification de l'heure du rendez-vous
 		$hDeb=$_POST['rdvDeb_h'];
 		$mDeb=$_POST['rdvDeb_m'];
@@ -210,6 +192,72 @@ echo		'<section id="categories">',
 		
 		}
 		
+
+		// test jours
+		if($jour<10){
+			$jour='0'.$jour;
+		}
+		
+		if($mois<10){
+			$mois='0'.$mois;
+		}
+		
+		
+		if($mDeb<10){
+			$mDeb='0'.$mDeb;
+		}
+		
+		
+		if($mFin<10){
+			$mFin='0'.$mFin;
+		}
+		
+		$rdvDate=$annee.$mois.$jour;
+		$rdvHDeb=$hDeb.$mDeb;
+		$rdvHFin=$hFin.$mFin;
+		$Cat=$_POST['rdvCat'];
+
+		// Vérification du libellé
+		$txtLibelle = trim($_POST['txtLibelle']);
+		$long = mb_strlen($txtLibelle, 'UTF-8');
+		if ($long ==0){
+			$erreurs[] = 'Le nom doit avoir de 4 à 30 caractères';
+		}
+
+		
+		
+		// Vérification du rendez-vous
+		
+		$ID = $_SESSION['utiID'];
+
+		$S = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
+				FROM	rendezvous
+				WHERE	'$ID' = rdvIDUtilisateur
+				AND		'$rdvDate' = rdvDate";
+
+		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+		
+		while($D = mysqli_fetch_assoc($R)){	
+			if($D['rdvHeureDebut'] <= $rdvHDeb){
+				if($D['rdvHeureFin'] >= $rdvHDeb){
+					$erreurs[] = 'Le rendez-vous commence pendant un autre en cours';
+				}
+			}
+				
+			if($D['rdvHeureDebut'] <= $rdvHFin){
+				if($D['rdvHeureFin'] >= $rdvHFin){
+					$erreurs[] = 'Le rendez-vous fini apres le debut d\'un autre';
+				}
+			}
+				
+			if(($D['rdvHeureDebut'] >= $rdvHDeb)&&($D['rdvHeureFin']<=$rdvHFin)){
+				$erreurs[] = 'Le rendez-vous en remplace un autre';
+			}	
+		}
+		
+		mysqli_free_result($R);
+
+		
 		
 
 
@@ -222,10 +270,12 @@ echo		'<section id="categories">',
 		// Insertion d'un nouvel utilisateur dans la base de données       ========> A finir 
 		//-----------------------------------------------------
 		$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
-		$rdvDate=(int)($jour.$mois.$annee);
-		$rdvHDeb=(int)($hDeb.$mDeb);
-		$rdvHFin=(int)($hFin.$mFin);
+
+		$rdvDate=$annee.$mois.$jour;
+		$rdvHDeb=$hDeb.$mDeb;
+		$rdvHFin=$hFin.$mFin;
 		$Cat=$_POST['rdvCat'];
+		
 		
 		if(! isset($_POST['rdvCheck'])){
 			$S = "INSERT INTO rendezvous SET
@@ -252,12 +302,10 @@ echo		'<section id="categories">',
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		
-	
+		header ('location: agenda.php');
 		exit();
 	}
-			
-			
-			
+				
 			
 			
 			
