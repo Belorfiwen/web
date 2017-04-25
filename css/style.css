@@ -394,7 +394,7 @@ strong {
 
 #agenda { 
  	position: relative;
- 	margin: 0 auto 0px auto;
+ 	margin: 0 auto 0px;
  	width: 746px;
  	height: 540px;
  } 
@@ -450,17 +450,37 @@ strong {
 .col-jour { 
 	margin-top: 1px; 
 	float: left; 
-	width: 112px; 
 }
 
 .case-jour { 
 	background-color: #5555FF;
 	float: left; 
-	width: 112px; 
 	height: 20px; 
 	padding-top: 2px;
 	text-align: center; 
 	color: #FFF;
+}
+
+.taille1 {
+	width: 672px;
+}
+.taille2 {
+	width: 336px;
+}
+.taille3 {
+	width: 224px;
+}
+.taille4 {
+	width: 168px;
+}
+.taille5 {
+	width: 134.4px;
+}
+.taille6 {
+	width: 112px;
+}
+.taille7 {
+	width: 96px;
 }
 
 /* ---------------------------------------------------------------

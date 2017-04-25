@@ -649,8 +649,43 @@ function ec_html_semenier() {
 	ec_htmlProteger ($D);
 
 	$utiJours = decbin($D['utiJours']);
+
+	$n = mb_strlen($utiJours);
+	if ($n < 7) {
+		for ($i=0; $i < 7-$n ; $i++) { 
+			$utiJours = '0'.$utiJours;
+		}
+	}
+	$nbJours = mb_substr_count($utiJours, '1');
 	$utiHeureMin =$D['utiHeureMin'];
 	$utiHeureMax =$D['utiHeureMax'];
+
+	$count = 0;
+
+	switch ($nbJours) {
+		case 1:
+			$classColonne = 'taille1';
+			break;
+		case 2:
+			$classColonne = 'taille2';
+			break;
+		case 3:
+			$classColonne = 'taille3';
+			break;
+		case 4:
+			$classColonne = 'taille4';
+			break;
+		case 5:
+			$classColonne = 'taille5';
+			break;
+		case 6:
+			$classColonne = 'taille6';
+			break;
+		
+		default:
+			$classColonne = 'taille7';
+			break;
+	}
 
 
 	echo '<section id="bcCentre">',
@@ -660,89 +695,77 @@ function ec_html_semenier() {
 				'<a href="#" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 			'</p>',
 			'<section id="agenda">',
-				'<div id="intersection"></div>',
-				'<div class="case-jour border-TRB border-L">Lundi 9</div>',
-				'<div class="case-jour border-TRB">Mardi 10</div>',
-				'<div class="case-jour border-TRB">Mercredi 11</div>',
-				'<div class="case-jour border-TRB">Jeudi 12</div>',
-				'<div class="case-jour border-TRB">Vendredi 13</div>',
-				'<div class="case-jour border-TRB">Samedi 14</div>',
-				'<div class="case-jour border-TRB">Dimanche 15</div>',
-				'<div id="col-heures">';
+				'<div id="intersection"></div>';
+
+	for ($i=0; $i < 7; $i++) { 
+		if (mb_substr($utiJours, $i, 1) == 1) {	
+			switch ($i) {
+				case 0:
+					$day = 'Lundi';
+					break;
+				case 1:
+					$day = 'Mardi';
+					break;
+				case 2:
+					$day = 'Mercredi';
+					break;
+				case 3:
+					$day = 'Jeudi';
+					break;
+				case 4:
+					$day = 'Vendredi';
+					break;
+				case 5:
+					$day = 'Samedi';
+					break;
+				
+				default:
+					$day = 'Dimanche';
+					break;
+			}		
+			if ($count == 0) {
+				$count++;
+				echo '<div class="case-jour border-TRB ',$classColonne,' border-L">',$day,' 9</div>';
+			}
+			else
+			{
+				echo	'<div class="case-jour border-TRB ',$classColonne,'">',$day,' 9</div>';
+			}
+		}
+	}
+	
+
+				
+	echo		'<div id="col-heures">';
 
 	for ($i=$utiHeureMin; $i <= $utiHeureMax; $i++) { 
 		echo 		'<div>',$i,'h</div>';
 	}
 	echo		'</div>';
 
-	if (mb_substr($utiJours, 0, 1) == 1) {
+	$count = 0;
 
-		echo	'<div class="col-jour border-TRB border-L">';
-		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
-			echo	'<a href="#"></a>';
+	for ($j=0; $j < 7; $j++) { 
+
+		if (mb_substr($utiJours, $j, 1) == 1) {
+
+			if ($count == 0) 
+			{
+				$count++;
+				echo'<div class="col-jour border-TRB ',$classColonne,' border-L">';
+			}
+			else
+			{
+				echo'<div class="col-jour border-TRB ',$classColonne,'">';
+			}
+
+			for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) 
+			{ 
+				echo	'<a href="#"></a>';
+			}
+			echo 		'<a href="#" class="case-heure-bas"></a>
+					</div>';
 		}
-		echo 		'<a href="#" class="case-heure-bas"></a>
-				</div>';
-	}
-
-	if (mb_substr($utiJours, 1, 1) == 1) {
-
-		echo	'<div class="col-jour border-TRB">';
-		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
-			echo	'<a href="#"></a>';
-		}
-		echo 		'<a href="#" class="case-heure-bas"></a>',
-				'</div>';
-	}
-
-	if (mb_substr($utiJours, 2, 1) == 1) {
-
-		echo	'<div class="col-jour border-TRB">';
-		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
-			echo	'<a href="#"></a>';
-		}
-		echo 		'<a href="#" class="case-heure-bas"></a>',
-				'</div>';
-	}
-
-	if (mb_substr($utiJours, 3, 1) == 1) {
-
-		echo	'<div class="col-jour border-TRB">';
-		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
-			echo	'<a href="#"></a>';
-		}
-		echo 		'<a href="#" class="case-heure-bas"></a>',
-				'</div>';
-	}
-
-	if (mb_substr($utiJours, 4, 1) == 1) {
-
-		echo	'<div class="col-jour border-TRB">';
-		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
-			echo	'<a href="#"></a>';
-		}
-		echo 		'<a href="#" class="case-heure-bas"></a>',
-				'</div>';
-	}
-
-	if (mb_substr($utiJours, 5, 1) == 1) {
-
-		echo	'<div class="col-jour border-TRB">';
-		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
-			echo	'<a href="#"></a>';
-		}
-		echo 		'<a href="#" class="case-heure-bas"></a>',
-				'</div>';
-	}
-
-	if (mb_substr($utiJours, 6, 1) == 1) {
-
-		echo	'<div class="col-jour border-TRB">';
-		for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) { 
-			echo	'<a href="#"></a>';
-		}
-		echo 		'<a href="#" class="case-heure-bas"></a>',
-				'</div>';
 	}
 
 	echo	'</section>';
