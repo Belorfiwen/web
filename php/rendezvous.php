@@ -60,7 +60,7 @@ echo		'<section id="categories">',
 		}
 	}
 
-	echo '<div class="titrerdv"> Modification </div>';
+	echo '<div class="titrerdv">Modification </div>';
 	// Affichage du formulaire
 	echo '<form class="newrdv" method="POST" action="rendezvous.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
@@ -106,7 +106,7 @@ echo		'<section id="categories">',
 			$ch="";
 			$ID = $_SESSION['utiID'];
 
-			$S = "SELECT	catNom
+			$S = "SELECT	catNom, catID
 					FROM	categorie
 					WHERE	'$ID' = catIDUtilisateur";
 
@@ -114,17 +114,19 @@ echo		'<section id="categories">',
 			$ch=$ch.'<select name="rdvCat" >';
 			$g=0;
 			while($D = mysqli_fetch_assoc($R)){	
-			ec_htmlProteger($D);
+				ec_htmlProteger($D);
 				if($g==0){
-					$ch=$ch.'<option value="'.$D['catNom'].'" selected>'.$D['catNom'].'</option>';
+					$ch=$ch.'<option value="'.$D['catID'].'" selected>'.$D['catNom'].'</option>';
 					$g++;
 				}
 				else{
-					$ch=$ch.'<option value="'.$D['catNom'].'">'.$D['catNom'].'</option>';	
+					$ch=$ch.'<option value="'.$D['catID'].'">'.$D['catNom'].'</option>';	
 				}
 			}
 			$ch=$ch.'</select>';
 			return $ch;
+			mysqli_free_result($R);
+			mysqli_close($GLOBALS['bd']);
 	}
 	
 	/**
@@ -141,6 +143,13 @@ echo		'<section id="categories">',
 	* @return array 	Tableau des erreurs détectées
 	*/
 	function fdl_add_rdv() {
+		
+		fd_bd_connexion();
+		
+		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
+        if ($ret == FALSE){
+            fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
+        }
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------
@@ -172,6 +181,7 @@ echo		'<section id="categories">',
 		
 		if(! isset($_POST['rdvCheck'])){
 		
+		
 			if($hDeb>$hFin){
 				$erreurs[] = 'Durée du rendez-vous invalide';
 			}
@@ -182,7 +192,7 @@ echo		'<section id="categories">',
 				}
 			}
 			
-			if($hdeb+1==$hFin){
+			if($hDeb+1==$hFin){
 				$test=1;
 				if($mDeb==0){
 					$test=0;
@@ -215,16 +225,30 @@ echo		'<section id="categories">',
 		$rdvDate=(int)($jour.$mois.$annee);
 		$rdvHDeb=(int)($hDeb.$mDeb);
 		$rdvHFin=(int)($hFin.$mFin);
+		$Cat=$_POST['rdvCat'];
 		
-		$S = "INSERT INTO rendezvous SET
-				rdvDate = '$rdvDate',
-				rdvHeureDebut = '$rdvHDeb',
-				rdvHeureFin = '$rdvHFin',
-				rdvLibelle = '$txtLibelle'";
+		if(! isset($_POST['rdvCheck'])){
+			$S = "INSERT INTO rendezvous SET
+					rdvDate = '$rdvDate',
+					rdvHeureDebut = '$rdvHDeb',
+					rdvHeureFin = '$rdvHFin',
+					rdvIDUtilisateur = {$_SESSION['utiID']},
+					rdvIDCategorie = '$Cat',
+					rdvLibelle = '$txtLibelle'";
 
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+		}
+		else{
+			$S = "INSERT INTO rendezvous SET
+					rdvDate = '$rdvDate',
+					rdvHeureDebut = -1,
+					rdvHeureFin = -1,
+					rdvIDUtilisateur = {$_SESSION['utiID']},
+					rdvIDCategorie = '$Cat',
+					rdvLibelle = '$txtLibelle'";
 
-		
+			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+		}	
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		
