@@ -1,21 +1,24 @@
 <?php
-/** @file
- * Page d'accueil de l'application 24sur7
+/** 
+ * Page Agenda de l'application 24sur7
  *
- * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
  */
 
 include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 session_start();
+
 $jour = 0;
 $mois = 0;
 $annee = 0;
+
 if (isset($_GET['jour'])) {
 	$jour = $_GET['jour'];
 }
+
 if (isset($_GET['mois'])) {
 	$mois = $_GET['mois'];
 }
+
 if (isset($_GET['annee'])) {
 	$annee = $_GET['annee'];
 }

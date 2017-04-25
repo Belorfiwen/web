@@ -665,25 +665,32 @@ function ec_html_semenier() {
 	switch ($nbJours) {
 		case 1:
 			$classColonne = 'taille1';
+			$classeRDV = 'taille1RDV';
 			break;
 		case 2:
 			$classColonne = 'taille2';
+			$classeRDV = 'taille2RDV';
 			break;
 		case 3:
 			$classColonne = 'taille3';
+			$classeRDV = 'taille3RDV';
 			break;
 		case 4:
 			$classColonne = 'taille4';
+			$classeRDV = 'taille4RDV';
 			break;
 		case 5:
 			$classColonne = 'taille5';
+			$classeRDV = 'taille5RDV';
 			break;
 		case 6:
 			$classColonne = 'taille6';
+			$classeRDV = 'taille6RDV';
 			break;
 		
 		default:
 			$classColonne = 'taille7';
+			$classeRDV = 'taille7RDV';
 			break;
 	}
 
@@ -698,7 +705,8 @@ function ec_html_semenier() {
 				'<div id="intersection"></div>';
 
 	for ($i=0; $i < 7; $i++) { 
-		if (mb_substr($utiJours, $i, 1) == 1) {	
+		if (mb_substr($utiJours, $i, 1) == 1) 
+		{	
 			switch ($i) {
 				case 0:
 					$day = 'Lundi';
@@ -723,7 +731,8 @@ function ec_html_semenier() {
 					$day = 'Dimanche';
 					break;
 			}		
-			if ($count == 0) {
+			if ($count == 0) 
+			{
 				$count++;
 				echo '<div class="case-jour border-TRB ',$classColonne,' border-L">',$day,' 9</div>';
 			}

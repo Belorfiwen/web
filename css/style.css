@@ -377,8 +377,7 @@ strong {
 	position: absolute; 
     margin: 1px; 
     padding: 2px 0px 0px 2px; 
-    color: #000000;
-    width: 104px; 							          
+    color: #000000;					          
 }
 
 
@@ -464,24 +463,52 @@ strong {
 .taille1 {
 	width: 672px;
 }
+.taille1RDV{
+	width: 664px;
+}
+
 .taille2 {
 	width: 336px;
 }
+.taille2RDV{
+	width: 328px;
+}
+
 .taille3 {
 	width: 224px;
 }
+.taille3RDV{
+	width: 216px;
+}
+
 .taille4 {
 	width: 168px;
 }
+.taille4RDV{
+	width: 160px;
+}
+
 .taille5 {
 	width: 134.4px;
 }
+.taille5RDV{
+	width: 126.4px;
+}
+
 .taille6 {
 	width: 112px;
 }
+.taille6RDV{
+	width: 104px;
+}
+
 .taille7 {
 	width: 96px;
 }
+.taille7RDV{
+	width: 88px;
+}
+
 
 /* ---------------------------------------------------------------
 	PAGE INSCRIPTION et IDENTIFICATION
