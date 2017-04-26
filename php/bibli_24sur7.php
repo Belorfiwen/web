@@ -152,7 +152,7 @@ function fd_form_heure($name, $hsel=0, $msel=0){
 			$res .= "<option value='$i'>$i</option>";
 	}
 	$res .= "</select> : <select id='{$name}_m' name='{$name}_m'>"; //l'espace entre les balises  </select> et <select> est utile
-	for ($i=0; $i <= 59 ; $i++){
+	for ($i=0; $i <= 59 ; $i=$i+15){
 		if ($i == $msel){
 			if($i<10){
 				$res .= "<option value='$i' selected>".'0'.$i.'</option>';
@@ -173,6 +173,26 @@ function fd_form_heure($name, $hsel=0, $msel=0){
 	$res .= "</select>" ;
 	return $res;		
 }
+
+
+
+
+function heure_min_max($name, $hsel=0){
+	$hsel=(int)$hsel;
+
+
+	$res = "<select id='{$name}' name='{$name}'>";
+	for ($i=0; $i <= 23 ; $i++){
+		if ($i == $hsel)
+			$res .= "<option value='$i' selected>$i:00</option>";
+		else
+			$res .= "<option value='$i'>$i:00</option>";
+	}
+	$res .= "</select>";
+	return $res;		
+}
+
+
 
 //_______________________________________________________________
 /**

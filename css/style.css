@@ -191,26 +191,7 @@ strong {
 	padding: 0px 10px;
 }
 
-.newrdv{
-	text-align: right;
-	position: relative;
-	left: 230px;
-	width: 600px;
-	height:300px;
-	line-height: 2.5;
-	top: 40px;
 
-}
-
-.titrerdv{
-	position: relative;
-	line-height: 1.2;
-	left: 100px;
-	top: 20px;
-	font-size: 18px; 
-	border-bottom: 2px solid black;
-	width: 550px;
-}
 
 #bcGauche {
 	float: left;	
@@ -378,6 +359,27 @@ strong {
     margin: 1px; 
     padding: 2px 0px 0px 2px; 
     color: #000000;					          
+}
+
+.newrdv{
+	text-align: right;
+	position: relative;
+	left: 230px;
+	width: 600px;
+	height:300px;
+	line-height: 2.5;
+	top: 40px;
+
+}
+
+.titrerdv{
+	position: relative;
+	line-height: 1.2;
+	left: 100px;
+	top: 20px;
+	font-size: 18px; 
+	border-bottom: 2px solid black;
+	width: 550px;
 }
 
 
@@ -554,5 +556,54 @@ strong {
 	left: 310px;
 	width: 600px;
 	line-height: 2.5;
+
+}
+
+
+/* ---------------------------------------------------------------
+	PAGE PARAMETRES
+--------------------------------------------------------------- */
+
+.titreparam1{
+	position: relative;
+	line-height: 1.2;
+	font-size: 18px; 
+	border-bottom: 2px solid black;
+	width: 800px;
+	padding-top: 20px;
+	margin: 0px auto;
+
+}
+
+.titreparam2{
+	position: relative;
+	line-height: 1.2;
+	font-size: 18px; 
+	border-bottom: 2px solid black;
+	width: 800px;
+	padding-top: 40px;
+	margin: 0px auto;
+}
+
+.newparamUtilisateur{
+	text-align: right;
+	position: relative;
+	margin: 10px 0px;
+	width: 380px;
+	height:180px;
+	left: 320px;
+	line-height: 2.5;
+
+}
+
+.newparamCalendrier{
+	text-align: right;
+	position: relative;
+	margin: 10px 0px 0px 0px;
+	left: 380px;
+	width: 400px;
+	height:180px;
+	line-height: 2.5;
+	border: 1px solid black;
 
 }
