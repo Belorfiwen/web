@@ -487,13 +487,22 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 		$jourAujourdhui = ($timeAujourdHui < $timePremierJourAffMoisPrecedent ||
 				$timeAujourdHui > $timeDernierJourMoisPrecedent) ? 0 : $JJ;
 	}
+
+	$returnDateMoins = 'mois='.($mois-1).'&annee='.($annee);
+	$returnDatePlus = 'mois='.($mois+1).'&annee='.($annee);
+	if ($mois - 1 == 0) {
+		$returnDateMoins = 'mois=12&annee='.($annee-1);
+	}
+	if ($mois + 1 == 13) {
+		$returnDatePlus = 'mois=1&annee='.($annee+1);
+	}
 		
 	// Affichage du titre du calendrier
 	echo '<section id="calendrier">',
 	'<p>',
-	'<a href="?mois=',$mois-1,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
+	'<a href="?',$returnDateMoins,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 	fd_get_mois($mois), ' ', $annee,
-	'<a href="?mois=',$mois+1,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+	'<a href="?',$returnDatePlus,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 	'</p>';
 	
 	// Affichage des jours du calendrier
@@ -503,26 +512,47 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	'</tr>';
 	
 	
-	for ($sem = $semaineDebut ; $sem <= $semaineFin; $sem++){
-		if ($sem == $semaineCourante){
+	for ($sem = $semaineDebut ; $sem <= $semaineFin; $sem++)
+	{
+		if ($sem == $semaineCourante)
+		{
 			echo '<tr class="semaineCourante">';
 		}
 		else{
 			echo '<tr>';
 		}
-		for($i = 1; $i <= 7 ; $i++){
-			if ($jourAff == $jourAujourdhui) {
+		for($i = 1; $i <= 7 ; $i++)
+		{
+			if ($jourAff == $jourAujourdhui) 
+			{
 				echo '<td class="aujourdHui">';
-			} elseif ($jourAff == $jourCourant) {
+			} elseif ($jourAff == $jourCourant) 
+			{
 				echo '<td class="jourCourant">';
-			} else {
+			} else 
+			{
 				echo '<td>';
 			}
-			if ($moisAff == $mois){
-              echo '<a href="?jour=',$jourAff,'">', $jourAff, '</a></td>';
+
+			$returnDate = 'jour='.$jourAff.'&mois='.$moisAff.'&annee='.($annee);
+
+			if ($moisAff == $mois)
+			{
+              echo '<a href="?',$returnDate,'">', $jourAff, '</a></td>';
             }
-            else{
-              echo '<a class="lienJourHorsMois" href="?jour=',$jourAff,'&mois=',$moisAff,'">', $jourAff, '</a></td>';
+            else
+            {
+            	$returnDate = 'jour='.$jourAff.'&mois='.$moisAff.'&annee='.($annee);
+            	if ($moisAff == 0) 
+            	{
+					$returnDate = 'jour='.$jourAff.'&mois=12&annee='.($annee-1);
+				}
+				if ($moisAff == 13) 
+				{
+					$returnDate = 'jour='.$jourAff.'&mois=1&annee='.($annee+1);
+				}
+
+              echo '<a class="lienJourHorsMois" href="?',$returnDate,'">', $jourAff, '</a></td>';
             }
 			$jourAff++;
 			if ($jourAff > $dernierJourMoisAff){
@@ -650,7 +680,40 @@ function ec_html_categorie() {
  * Genere le code html pour l'affichage du semenier.
  *
  */
-function ec_html_semenier() {
+function ec_html_semainier($jour, $mois, $annee) {
+	$date = mktime(0,0,0,$mois,$jour,$annee);
+	$numJourSem = date('w',$date);
+	if ($numJourSem == 0) 
+	{
+		$numJourSem = 7;
+	}
+	$numJourSem--;
+
+	$date = mktime(0,0,0,$mois,$jour-$numJourSem,$annee);
+
+	$numMoisDate1 = date('n',$date);
+	$moisDate1 = fd_get_mois($numMoisDate1);
+	$jourDate1 = date('j',$date);
+	$anneeDate1 = date('Y',$date);
+
+	$numMoisDate2 = date('n',$date+86400*6);
+	$moisDate2 = fd_get_mois($numMoisDate2);
+	$jourDate2 = date('j',$date+86400*6);
+	$anneeDate2 = date('Y',$date+86400*6);
+
+	if ($numMoisDate1 != $numMoisDate2) {
+		if ($anneeDate1 != $anneeDate2) {
+			$affDate = $jourDate1.' '.$moisDate1.' '.$anneeDate1.' au '.$jourDate2.' '.$moisDate2.' '.$anneeDate2;
+		}
+		else
+		{
+			$affDate = $jourDate1.' '.$moisDate1.' au '.$jourDate2.' '.$moisDate2;
+		}
+	}
+	else
+	{
+		$affDate = $jourDate1.' au '.$jourDate2.' '.$moisDate1;
+	}
 
 	// Connexion à la base de données
 	fd_bd_connexion();
@@ -718,7 +781,7 @@ function ec_html_semenier() {
 	echo '<section id="bcCentre">',
 			'<p id="titreAgenda">',
 				'<a href="#" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
-				'<strong>Semaine du 9  au 15 F&eacute;vrier</strong> pour <strong>les L2</strong>',
+				'<strong>Semaine du ',$affDate,'</strong> pour <strong>les L2</strong>',
 				'<a href="#" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 			'</p>',
 			'<section id="agenda">',
@@ -754,16 +817,14 @@ function ec_html_semenier() {
 			if ($count == 0) 
 			{
 				$count++;
-				echo '<div class="case-jour border-TRB ',$classColonne,' border-L">',$day,' 9</div>';
+				echo '<div class="case-jour border-TRB ',$classColonne,' border-L">',$day,' ',date('j',$date+$i*86400),'</div>';
 			}
 			else
 			{
-				echo	'<div class="case-jour border-TRB ',$classColonne,'">',$day,' 9</div>';
+				echo	'<div class="case-jour border-TRB ',$classColonne,'">',$day,' ',date('j',$date+$i*86400),'</div>';
 			}
 		}
 	}
-	
-
 				
 	echo		'<div id="col-heures">';
 

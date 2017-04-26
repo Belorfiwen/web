@@ -58,8 +58,6 @@ while ($D = mysqli_fetch_assoc($R))
 
 
 ?>
-<a style="background-color: #00FF00;',
+echo '<div id=jEntier><a style="background-color: #00FF00;',
     						  'border: solid 2px #00DD00;',
-							  'color: #000000;',
-							  'top: 28px;', 
-					          'height: 34px;" class="rendezvous ',$classeRDV,'" href="rendezvous.php">TP LW</a>
+							  'color: #000000;height: auto;left: 259px;" class="rendezvous ',$classeRDV,'" id="rdvJEntier" href="rendezvous.php">TP L salut coucou coucouc coucocu coucouco coucouc coucocuhhgeuhiudoieoi</a></div>';

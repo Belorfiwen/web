@@ -36,7 +36,7 @@ ec_html_categorie();
 
 echo	'</aside>';
 
-ec_html_semenier();
+ec_html_semainier($jour, $mois, $annee);
 
 echo	'</section><div style="clear: both;"> </div>
 	</section>';

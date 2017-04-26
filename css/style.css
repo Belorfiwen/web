@@ -360,6 +360,12 @@ strong {
     padding: 2px 0px 0px 2px; 
     color: #000000;					          
 }
+#rdvJEntier {
+	position: relative;
+	margin: 0px;
+	word-wrap: break-word;  
+	padding: 2px 2px 2px 2px;
+}
 
 .newrdv{
 	text-align: right;
@@ -460,6 +466,14 @@ strong {
 	padding-top: 2px;
 	text-align: center; 
 	color: #FFF;
+}
+
+#jEntier{
+	float: right;
+	width: 732px;
+	min-height: 22px;
+	padding: 2px 0 1px;
+	
 }
 
 .taille1 {
