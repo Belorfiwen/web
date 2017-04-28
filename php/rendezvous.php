@@ -5,16 +5,32 @@ ob_start();
 session_start();
 include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 
-fd_html_head('24sur7 | Agenda');
+$jour = 0;
+$mois = 0;
+$annee = 0;
+
+if (isset($_GET['jour'])) {
+	$jour = $_GET['jour'];
+}
+
+if (isset($_GET['mois'])) {
+	$mois = $_GET['mois'];
+}
+
+if (isset($_GET['annee'])) {
+	$annee = $_GET['annee'];
+}
+
+fd_html_head('24sur7 | Rendez-vous');
 
 fd_html_bandeau();
 
 echo '<section id="bcContenu">',
 		'<aside id="bcGauche">';
 
-fd_html_calendrier(7, 1, 2017);
+fd_html_calendrier($jour, $mois, $annee);
 
-	ec_html_categorie();
+ec_html_categorie();
 		
 echo	
 		'</aside>',

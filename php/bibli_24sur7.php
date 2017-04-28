@@ -679,9 +679,32 @@ function ec_html_categorie() {
 /**
  * Genere le code html pour l'affichage du semenier.
  *
+ * @param integer	$jour		Numéro du jour à afficher
+ * @param integer	$mois		Numéro du mois à afficher
+ * @param integer	$annee		Année à afficher
+ *
  */
 function ec_html_semainier($jour, $mois, $annee) {
+
+	list($JJ, $MM, $AA) = explode('-', date('j-n-Y'));
+
+	// Vérification des paramètres
+	$jour = (int) $jour;
+	$mois = (int) $mois;
+	$annee = (int) $annee;
+	($jour == 0) && $jour = $JJ;
+	($mois == 0) && $mois = $MM;
+	($annee < 2012) && $annee = $AA;
+
+	if (!checkdate($mois, $jour, $annee)) {
+		$jour = $JJ;
+		$mois = $MM;
+		$annee = $AA;
+	}
+
+
 	$date = mktime(0,0,0,$mois,$jour,$annee);
+	echo date('r',$date);
 	$numJourSem = date('w',$date);
 	if ($numJourSem == 0) 
 	{
@@ -851,9 +874,9 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 			for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) 
 			{ 
-				echo	'<a href="#"></a>';
+				echo	'<a href="rendezvous.php?jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
 			}
-			echo 		'<a href="#" class="case-heure-bas"></a>
+			echo 		'<a href="rendezvous.php?jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>
 					</div>';
 		}
 	}

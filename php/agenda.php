@@ -3,9 +3,10 @@
  * Page Agenda de l'application 24sur7
  *
  */
-
-include('bibli_24sur7.php');	// Inclusion de la bibliothéque
+// Bufferisation des sorties
+ob_start();
 session_start();
+include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 
 $jour = 0;
 $mois = 0;
