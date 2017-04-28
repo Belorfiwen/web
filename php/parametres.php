@@ -20,15 +20,9 @@ echo	'<section>';
 $nbErr2=0;		
 			
 if (! isset($_POST['btnValider1'])) {
-	// On n'est dans un premier affichage de la page.
 	// => On intialise les zones de saisie.
 	
 	fd_bd_connexion();
-		
-	$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-    if ($ret == FALSE){
-		fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-    }
 	
 	$S = "SELECT	utiNom, utiID
 					FROM	utilisateur
@@ -46,9 +40,8 @@ if (! isset($_POST['btnValider1'])) {
 
 } else {
 	// On est dans la phase de soumission du formulaire :
-	// => vérification des valeurs reçues et création utilisateur.
-	// Si aucune erreur n'est détectée, fdl_add_utilisateur()
-	// redirige la page sur la page 'protegee.php'
+	// => vérification des valeurs reçues
+	// Si aucune erreur n'est détectée, fdl_modification_utilisateur()
 	$erreurs = fdl_modification_utilisateur();
 	$nbErr = count($erreurs);
 	
@@ -59,14 +52,13 @@ if (! isset($_POST['btnValider1'])) {
 
 
 if (! isset($_POST['btnValider2'])) {
-	// On n'est dans un premier affichage de la page.
 	// => On intialise les zones de saisie.
 	
 	fd_bd_connexion();
 		
 	$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
     if ($ret == FALSE){
-		fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
+		fd_bd_erreurExit('Erreur lors du chargement du jeu de caract&egrave;res utf8');
     }
 	
 	$S = "SELECT	utiID,utiHeureMin, utiHeureMax
@@ -84,8 +76,7 @@ if (! isset($_POST['btnValider2'])) {
 } else {
 	// On est dans la phase de soumission du formulaire :
 	// => vérification des valeurs reçues et création utilisateur.
-	// Si aucune erreur n'est détectée, fdl_add_utilisateur()
-	// redirige la page sur la page 'protegee.php'
+	// Si aucune erreur n'est détectée, fdl_modification_affichage_calendrier
 	$erreurs2 = fdl_modification_affichage_calendrier();
 	$nbErr2 = count($erreurs2);
 	
@@ -99,14 +90,14 @@ if (! isset($_POST['btnValider2'])) {
 // Si il y a des erreurs on les affiche
 
 if ($nbErr > 0) {
-	echo '<strong>Les erreurs suivantes ont été détectées</strong>';
+	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
 	for ($i = 0; $i < $nbErr; $i++) {
 		echo '<br>', $erreurs[$i];
 	}
 }
 
 if ($nbErr2 > 0) {
-	echo '<strong>Les erreurs suivantes ont été détectées</strong>';
+	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
 	for ($i = 0; $i < $nbErr2; $i++) {
 		echo '<br>', $erreurs2[$i];
 	}
@@ -123,7 +114,7 @@ echo '<div class="titreparam1"> Informations sur votre compte </div>';
 			fd_form_ligne('Mot de passe ', fd_form_input(APP_Z_PASS,'txtPasse', $_POST['txtPasse'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			fd_form_ligne('Retapez le mot de passe ', fd_form_input(APP_Z_PASS,'txtVerif', $_POST['txtVerif'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 						
-			fd_form_ligne("<input type='submit' name='btnValider1' value=\"Mettre à jour\" size=15 class='boutonII'>", 
+			fd_form_ligne("<input type='submit' name='btnValider1' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer1' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 			
@@ -132,7 +123,7 @@ echo '<div class="titreparam2"> Options d\'affichage du calendrier </div>';
 	// Affichage du formulaire
 	echo '<form class="newparamCalendrier" method="POST" action="parametres.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
-			fd_form_ligne('Jours affichés ', '<input type=\'checkbox\' name=\'checkLundi\' value=\'1\' checked> Lundi
+			fd_form_ligne('Jours affich&eacute;s ', '<input type=\'checkbox\' name=\'checkLundi\' value=\'1\' checked> Lundi
 												<input type=\'checkbox\' name=\'checkMardi\' value=\'1\' checked> Mardi
 												<input type=\'checkbox\' name=\'checkMercredi\' value=\'1\' checked> Mercredi
 												<input type=\'checkbox\' name=\'checkJeudi\' value=\'1\' checked> Jeudi
@@ -144,22 +135,28 @@ echo '<div class="titreparam2"> Options d\'affichage du calendrier </div>';
 			fd_form_ligne('Heure minimale ', heure_min_max('hMin',6),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			fd_form_ligne('Heure maximale ', heure_min_max('hMax',22),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
-			fd_form_ligne("<input type='submit' name='btnValider2' value=\"Mettre à jour\" size=15 class='boutonII'>", 
+			fd_form_ligne("<input type='submit' name='btnValider2' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 			
 			
-			
-			
-			
-function fdl_modification_utilisateur() {
+	/**
+	* Validation de la saisie et modification d'un utilisateur.
+	*
+	* Les zones reçues du formulaires de saisie sont vérifiées. Si
+	* des erreurs sont détectées elles sont renvoyées sous la forme
+	* d'un tableau. Si il n'y a pas d'erreurs,
+	* une modification est faite si le rendez vous existe.
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*
+	* @return array 	Tableau des erreurs détectées
+	*/		
+	function fdl_modification_utilisateur() {
 		
 		fd_bd_connexion();
 		
-		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-        if ($ret == FALSE){
-            fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-        }
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------
@@ -171,7 +168,7 @@ function fdl_modification_utilisateur() {
 		if ($long < 4
 		|| $long > 30)
 		{
-			$erreurs[] = 'Le nom doit avoir de 4 à 30 caractères';
+			$erreurs[] = 'Le nom doit avoir de 4 &agrave; 30 caract&egrave;res';
 		}
 
 		// Vérification du mail
@@ -195,7 +192,7 @@ function fdl_modification_utilisateur() {
 			$D = mysqli_fetch_row($R);
 
 			if ($D[0] > 0) {
-				$erreurs[] = 'Cette adresse mail est déjà inscrite.';
+				$erreurs[] = 'Cette adresse mail est d&eacute;j&agrave; inscrite.';
 			}
 			mysqli_free_result($R);
 		}
@@ -207,12 +204,12 @@ function fdl_modification_utilisateur() {
 			$txtPasse = trim($_POST['txtPasse']);
 			$long = mb_strlen($txtPasse, 'UTF-8');
 			if ($long < 4 || $long > 20){
-				$erreurs[] = 'Le mot de passe doit avoir de 4 à 20 caractères';
+				$erreurs[] = 'Le mot de passe doit avoir de 4 &agrave; 20 caract&egrave;res';
 			}
 
 			$txtVerif = trim($_POST['txtVerif']);
 			if ($txtPasse != $txtVerif) {
-				$erreurs[] = 'Le mot de passe est différent dans les 2 zones';
+				$erreurs[] = 'Le mot de passe est diff&eacute;rent dans les 2 zones';
 			}
 			$mdp=1;
 		}
@@ -223,7 +220,7 @@ function fdl_modification_utilisateur() {
 		}
 
 		//-----------------------------------------------------
-		// Insertion d'un nouvel utilisateur dans la base de données       ========> A finir 
+		// Modification des paramètres du compte  
 		//-----------------------------------------------------
 		$txtNom = mysqli_real_escape_string($GLOBALS['bd'], $_POST['txtNom']);
 
@@ -257,16 +254,22 @@ function fdl_modification_utilisateur() {
 
 
 
-
-
+/**
+	* Validation de la saisie et modification de l'affichage du calendrier.
+	*
+	* Les zones reçues du formulaires de saisie sont vérifiées. Si
+	* des erreurs sont détectées elles sont renvoyées sous la forme
+	* d'un tableau. Si il n'y a pas d'erreurs,une modification est faite dans la table utilisateur.
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*
+	* @return array 	Tableau des erreurs détectées
+	*/
 function fdl_modification_affichage_calendrier() {
 		
 		fd_bd_connexion();
 		
-		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-        if ($ret == FALSE){
-            fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-        }
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------

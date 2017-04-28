@@ -49,7 +49,7 @@ echo '<header id="bcEntete">',
 		 
 		 '<section id="bcContenu">';
 
-echo '<h2 id="titreII">Pour vous inscrire à <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
+echo '<h2 id="titreII">Pour vous inscrire &agrave; <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
 
 // Si il y a des erreurs on les affiche
 if ($nbErr > 0) {
@@ -74,8 +74,8 @@ echo '<div class="II"><form method="POST" action="inscription.php">',
         fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire', 15,'class="boutonII"'),
         	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII"'),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 		'</table></form></div>',
-		'<p class="basII"> Déjà inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
-		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
+		'<p class="basII"> Déj&agrave; inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
+		'<p class="basII"> Vous hésitez &agrave; vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
 	fd_html_pied();
 	ob_end_flush();
@@ -112,7 +112,7 @@ function fdl_add_utilisateur() {
 	if ($long < 4
 	|| $long > 30)
 	{
-		$erreurs[] = 'Le nom doit avoir de 4 à 30 caractères';
+		$erreurs[] = 'Le nom doit avoir de 4 &agrave; 30 caract&egrave;res';
 	}
 
 	// Vérification du mail
@@ -129,7 +129,7 @@ function fdl_add_utilisateur() {
 		
 		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
         if ($ret == FALSE){
-            fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
+            fd_bd_erreurExit('Erreur lors du chargement du jeu de caract&egrave;res utf8');
         }
 
 		$mail = mysqli_real_escape_string($GLOBALS['bd'], $txtMail);
@@ -143,7 +143,7 @@ function fdl_add_utilisateur() {
 		$D = mysqli_fetch_row($R);
 
 		if ($D[0] > 0) {
-			$erreurs[] = 'Cette adresse mail est déjà inscrite.';
+			$erreurs[] = 'Cette adresse mail est déj&agrave; inscrite.';
 		}
 		// Libère la mémoire associée au résultat $R
         mysqli_free_result($R);
@@ -155,7 +155,7 @@ function fdl_add_utilisateur() {
 	if ($long < 4
 	|| $long > 20)
 	{
-		$erreurs[] = 'Le mot de passe doit avoir de 4 à 20 caractères';
+		$erreurs[] = 'Le mot de passe doit avoir de 4 &agrave; 20 caract&egrave;res';
 	}
 
 	$txtVerif = trim($_POST['txtVerif']);
