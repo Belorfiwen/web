@@ -42,11 +42,25 @@ echo
 				// => On intialise les zones de saisie.
 				$nbErr = 0;
 				$_POST['txtLibelle']='';
-				$_POST['rdvDate_a'] = 2000;
+				$_POST['rdvDate_a'] = date('Y');
 				$_POST['rdvDate_m'] = $_POST['rdvDate_j'] = 1;
 				$_POST['rdvDeb_h']=7;
 				$_POST['rdvFin_h']=12;
 				$_POST['rdvDeb_m']=$_POST['rdvFin_m']=00;
+
+				if (estEntier($annee) && $annee <= $_POST['rdvDate_a'] +5 && $annee >= $_POST['rdvDate_a'] -7) {
+					$_POST['rdvDate_a'] = $annee;
+				}
+				if (estEntier($mois) && $mois <= 12 && $mois >= 1) {
+					$_POST['rdvDate_m'] = $mois;
+				}
+				if (estEntier($jour) && $jour <= 31 && $jour >= 1 && checkdate($_POST['rdvDate_m'], $jour, $_POST['rdvDate_a'])) {
+					$_POST['rdvDate_j'] = $jour;
+				}
+				if (isset($_GET['heure']) && estEntier($_GET['heure']) && $_GET['heure'] <= 24 && $_GET['heure'] >= 0) {
+					$_POST['rdvDeb_h'] = $_GET['heure'];
+					$_POST['rdvFin_h'] = $_GET['heure']+1;
+				}
 
 		} else {
 		// On est dans la phase de soumission du formulaire :
@@ -66,22 +80,35 @@ echo
 		}
 	}
 
-	echo '<div class="titrerdv">Modification </div>';
+	if ($_GET['mode'] == -1) {
+		echo '<div class="titrerdv">Nouvelle saisie </div>';
+	}
+	else
+	{
+		echo '<div class="titrerdv">Modification </div>';
+	}
+
 	// Affichage du formulaire
 	echo '<form class="newrdv" method="POST" action="rendezvous.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Libellé : ', 
 				fd_form_input(APP_Z_TEXT,'txtLibelle', $_POST['txtLibelle'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
-			 fd_form_ligne('Date : ', fd_form_date('rdvDate', 1, 1, 2017),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Date : ', fd_form_date('rdvDate', $_POST['rdvDate_j'], $_POST['rdvDate_m'], $_POST['rdvDate_a']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			 fd_form_ligne('Catégorie : ', recup_categorie(),'','class="colonneGauche"','class="boutonIIAnnuler"'),
-			 fd_form_ligne('Horaire Début : ', fd_form_heure('rdvDeb',7,0),'','class="colonneGauche"','class="boutonIIAnnuler"'),
-			 fd_form_ligne('Horaire Fin : ', fd_form_heure('rdvFin',12,0),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Horaire Début : ', fd_form_heure('rdvDeb',$_POST['rdvDeb_h'],$_POST['rdvDeb_h']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Horaire Fin : ', fd_form_heure('rdvFin',$_POST['rdvFin_h'],$_POST['rdvFin_m']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			 fd_form_ligne('Ou ', '<input type=\'checkbox\' name=\'rdvCheck\' value=\'1\'> Evenement sur une journée','','class="colonneGauche"','class="boutonIIAnnuler"'),
 
 			 fd_form_ligne("<input type='submit' name='btnValider' value=\"Mettre à jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer' value=\"Supprimer\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
-			'</table></form>';
+			'</table></form>',
+
+			'<p><a href="agenda.php"> Retour à l\'agenda </a></p>',
+		'</section><div style="clear: both;"> </div>',
+	'</section>';
+
+	fd_html_pied();
 			
 
 	
@@ -283,7 +310,7 @@ echo
 		}
 
 		//-----------------------------------------------------
-		// Insertion d'un nouvel utilisateur dans la base de données       ========> A finir 
+		// Insertion d'un nouveau rendez-vous dans la base de données       ========> A finir 
 		//-----------------------------------------------------
 		$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
 
@@ -321,14 +348,6 @@ echo
 		header ('location: agenda.php');
 		exit();
 	}
-				
-			
-			
-			
-		echo '<p><a href="agenda.php"> Retour à l\'agenda </a></p>',
-			'</section>',
-	'</section>';
-
-fd_html_pied();
+	
 ob_end_flush();
 ?>

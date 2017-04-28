@@ -153,21 +153,21 @@ function fd_form_heure($name, $hsel=0, $msel=0){
 	}
 	$res .= "</select> : <select id='{$name}_m' name='{$name}_m'>"; //l'espace entre les balises  </select> et <select> est utile
 	for ($i=0; $i <= 59 ; $i=$i+15){
-		if ($i == $msel){
-			if($i<10){
-				$res .= "<option value='$i' selected>".'0'.$i.'</option>';
-			}
-			else{
-				$res .= "<option value='$i' selected>".$i.'</option>';
-			}	
+		if ($i == $msel)
+		{
+			$res .= "<option value='$i' selected>";
 		}
-		else {
-			if($i<10){
-				$res .= "<option value='$i'>".'0'.$i.'</option>';
-			}
-			else{
-				$res .= "<option value='$i'>".$i.'</option>';
-			}	
+		else 
+		{
+			$res .= "<option value='$i'>";
+		}
+
+		if($i<10){
+			$res .= "0$i</option>";
+		}
+		else
+		{
+			$res .= "$i</option>";
 		}	
 	}
 	$res .= "</select>" ;
@@ -176,7 +176,15 @@ function fd_form_heure($name, $hsel=0, $msel=0){
 
 
 
-
+//_______________________________________________________________
+/**
+* Génére le code html des zones de selection de l'heure de debut ou de fin à afficher dns le semainier
+*
+* @param string		$name	Préfixe pour les noms des zones
+* @param integer	$hsel 	Lheure sélectionné par défaut
+*
+* @return string 	Le code HTML de la zone de selection
+*/
 function heure_min_max($name, $hsel=0){
 	$hsel=(int)$hsel;
 
@@ -702,14 +710,15 @@ function ec_html_semainier($jour, $mois, $annee) {
 		$annee = $AA;
 	}
 
-
 	$date = mktime(0,0,0,$mois,$jour,$annee);
-	echo date('r',$date);
+
 	$numJourSem = date('w',$date);
+
 	if ($numJourSem == 0) 
 	{
 		$numJourSem = 7;
 	}
+
 	$numJourSem--;
 
 	$date = mktime(0,0,0,$mois,$jour-$numJourSem,$annee);
@@ -800,12 +809,14 @@ function ec_html_semainier($jour, $mois, $annee) {
 			break;
 	}
 
+	list($jNeg, $mNeg, $aNeg) = explode('-', date('j-n-Y',mktime(0,0,0,$mois,$jour-$numJourSem-7,$annee)));
+	list($jPos, $mPos, $aPos) = explode('-', date('j-n-Y',mktime(0,0,0,$mois,$jour-$numJourSem+7,$annee)));
 
 	echo '<section id="bcCentre">',
 			'<p id="titreAgenda">',
-				'<a href="#" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
+				'<a href="?jour=',$jNeg,'&mois=',$mNeg,'&annee=',$aNeg,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 				'<strong>Semaine du ',$affDate,'</strong> pour <strong>les L2</strong>',
-				'<a href="#" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+				'<a href=?jour=',$jPos,'&mois=',$mPos,'&annee=',$aPos,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 			'</p>',
 			'<section id="agenda">',
 				'<div id="intersection"></div>';
@@ -874,9 +885,9 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 			for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) 
 			{ 
-				echo	'<a href="rendezvous.php?jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
+				echo	'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
 			}
-			echo 		'<a href="rendezvous.php?jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>
+			echo 		'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>
 					</div>';
 		}
 	}

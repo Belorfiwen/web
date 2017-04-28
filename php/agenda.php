@@ -39,8 +39,8 @@ echo	'</aside>';
 
 ec_html_semainier($jour, $mois, $annee);
 
-echo	'</section><div style="clear: both;"> </div>
-	</section>';
+echo	'</section><div style="clear: both;"> </div>',
+	'</section>';
 
 fd_html_pied();
 ?>
