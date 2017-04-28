@@ -135,7 +135,9 @@ echo
 	*/
 	
 	function recup_categorie(){
+		
 		fd_bd_connexion();
+
 			$ch="";
 			$ID = $_SESSION['utiID'];
 
@@ -179,10 +181,6 @@ echo
 		
 		fd_bd_connexion();
 		
-		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-        if ($ret == FALSE){
-            fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-        }
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------

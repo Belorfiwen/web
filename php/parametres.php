@@ -24,11 +24,6 @@ if (! isset($_POST['btnValider1'])) {
 	// => On intialise les zones de saisie.
 	
 	fd_bd_connexion();
-		
-	$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-    if ($ret == FALSE){
-		fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-    }
 	
 	$S = "SELECT	utiNom, utiID
 					FROM	utilisateur
@@ -50,11 +45,7 @@ if (! isset($_POST['btnValider1'])) {
 	// Si aucune erreur n'est détectée, fdl_add_utilisateur()
 	// redirige la page sur la page 'protegee.php'
 	$erreurs = fdl_modification_utilisateur();
-	$nbErr = count($erreurs);
-	
-	
-	
-	
+	$nbErr = count($erreurs);	
 }
 
 
@@ -63,11 +54,6 @@ if (! isset($_POST['btnValider2'])) {
 	// => On intialise les zones de saisie.
 	
 	fd_bd_connexion();
-		
-	$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-    if ($ret == FALSE){
-		fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-    }
 	
 	$S = "SELECT	utiID,utiHeureMin, utiHeureMax
 					FROM	utilisateur
@@ -87,11 +73,7 @@ if (! isset($_POST['btnValider2'])) {
 	// Si aucune erreur n'est détectée, fdl_add_utilisateur()
 	// redirige la page sur la page 'protegee.php'
 	$erreurs2 = fdl_modification_affichage_calendrier();
-	$nbErr2 = count($erreurs2);
-	
-	
-	
-	
+	$nbErr2 = count($erreurs2);	
 }
 
 
@@ -156,10 +138,6 @@ function fdl_modification_utilisateur() {
 		
 		fd_bd_connexion();
 		
-		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-        if ($ret == FALSE){
-            fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-        }
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------
@@ -263,10 +241,6 @@ function fdl_modification_affichage_calendrier() {
 		
 		fd_bd_connexion();
 		
-		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-        if ($ret == FALSE){
-            fd_bd_erreurExit('Erreur lors du chargement du jeu de caractères utf8');
-        }
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------
