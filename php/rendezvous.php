@@ -319,29 +319,79 @@ echo
 		$rdvHFin=$hFin.$mFin;
 		$Cat=$_POST['rdvCat'];
 		
-		
-		if(! isset($_POST['rdvCheck'])){
-			$S = "INSERT INTO rendezvous SET
+		if ($_GET['mode'] == -1) {
+
+			if(! isset($_POST['rdvCheck'])){
+				$S = "INSERT INTO rendezvous SET
+						rdvDate = '$rdvDate',
+						rdvHeureDebut = '$rdvHDeb',
+						rdvHeureFin = '$rdvHFin',
+						rdvIDUtilisateur = {$_SESSION['utiID']},
+						rdvIDCategorie = '$Cat',
+						rdvLibelle = '$txtLibelle'";
+
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}
+			else{
+				$S = "INSERT INTO rendezvous SET
+						rdvDate = '$rdvDate',
+						rdvHeureDebut = -1,
+						rdvHeureFin = -1,
+						rdvIDUtilisateur = {$_SESSION['utiID']},
+						rdvIDCategorie = '$Cat',
+						rdvLibelle = '$txtLibelle'";
+
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}	
+			
+		}
+		else {
+			$hdebut=$_GET['heure'].'0'.'0';
+			$j=$_GET['jour'];
+			$m=$_GET['mois'];
+			$a=$_GET['annee'];
+			$date='';
+			if($_GET['jour']<10){
+				$j='0'.$_GET['jour'];
+			}	
+			if($_GET['mois']<10){
+				$m='0'.$_GET['mois'];
+			}	
+			$date=$a.$m.$j;	
+				
+			$S = "SELECT	rdvID
+				FROM	rendezvous
+				WHERE	rdvIDUtilisateur = {$_SESSION['utiID']}
+				AND		rdvHeureDebut = '$hdebut'
+				AND 	rdvDate = '$date'";
+			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			
+			$D = mysqli_fetch_assoc($R);
+			$rdvID=$D['rdvID'];
+			
+			if(! isset($_POST['rdvCheck'])){
+				$S = "UPDATE rendezvous SET
 					rdvDate = '$rdvDate',
 					rdvHeureDebut = '$rdvHDeb',
 					rdvHeureFin = '$rdvHFin',
-					rdvIDUtilisateur = {$_SESSION['utiID']},
 					rdvIDCategorie = '$Cat',
-					rdvLibelle = '$txtLibelle'";
-
-			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		}
-		else{
-			$S = "INSERT INTO rendezvous SET
+					rdvLibelle = '$txtLibelle'
+					WHERE rdvID = '$rdvID'";
+					
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}
+			else{
+				$S = "UPDATE rendezvous SET
 					rdvDate = '$rdvDate',
 					rdvHeureDebut = -1,
 					rdvHeureFin = -1,
-					rdvIDUtilisateur = {$_SESSION['utiID']},
 					rdvIDCategorie = '$Cat',
-					rdvLibelle = '$txtLibelle'";
+					rdvLibelle = '$txtLibelle'
+					WHERE rdvID = '$rdvID'";
 
-			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		}	
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}	
+		}
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		

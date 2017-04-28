@@ -326,6 +326,7 @@ function fdl_modification_affichage_calendrier() {
 			$jours.='0';
 		}
 		
+		$jours=bindec($jours);
 		
 
 		//-----------------------------------------------------
