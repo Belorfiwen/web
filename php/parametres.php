@@ -43,11 +43,7 @@ if (! isset($_POST['btnValider1'])) {
 	// => vérification des valeurs reçues
 	// Si aucune erreur n'est détectée, fdl_modification_utilisateur()
 	$erreurs = fdl_modification_utilisateur();
-	$nbErr = count($erreurs);
-	
-	
-	
-	
+	$nbErr = count($erreurs);	
 }
 
 
@@ -55,11 +51,14 @@ if (! isset($_POST['btnValider2'])) {
 	// => On intialise les zones de saisie.
 	
 	fd_bd_connexion();
+<<<<<<< HEAD
 		
 	$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
     if ($ret == FALSE){
 		fd_bd_erreurExit('Erreur lors du chargement du jeu de caract&egrave;res utf8');
     }
+=======
+>>>>>>> origin/master
 	
 	$S = "SELECT	utiID,utiHeureMin, utiHeureMax
 					FROM	utilisateur
@@ -78,11 +77,7 @@ if (! isset($_POST['btnValider2'])) {
 	// => vérification des valeurs reçues et création utilisateur.
 	// Si aucune erreur n'est détectée, fdl_modification_affichage_calendrier
 	$erreurs2 = fdl_modification_affichage_calendrier();
-	$nbErr2 = count($erreurs2);
-	
-	
-	
-	
+	$nbErr2 = count($erreurs2);	
 }
 
 

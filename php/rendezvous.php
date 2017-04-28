@@ -152,7 +152,9 @@ echo
 	*/
 	
 	function recup_categorie(){
+		
 		fd_bd_connexion();
+
 			$ch="";
 			$ID = $_SESSION['utiID'];
 

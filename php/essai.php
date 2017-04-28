@@ -61,3 +61,30 @@ while ($D = mysqli_fetch_assoc($R))
 echo '<div id=jEntier><a style="background-color: #00FF00;',
     						  'border: solid 2px #00DD00;',
 							  'color: #000000;height: auto;left: 259px;" class="rendezvous ',$classeRDV,'" id="rdvJEntier" href="rendezvous.php">TP L salut coucou coucouc coucocu coucouco coucouc coucocuhhgeuhiudoieoi</a></div>';
+
+
+
+
+
+
+
+
+
+
+
+
+
+if($hDeb+1==$hFin){
+				$test=1;
+				if($mDeb==0){
+					$test=0;
+				}
+				else{
+					$test=60-$mDeb;
+				}
+				$test2=$mFin;
+				
+				if($test+$test2<15){
+					$erreurs[] = 'Durée du rendez-vous inferieur a 15min';
+				}
+			}
