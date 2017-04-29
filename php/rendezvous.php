@@ -316,8 +316,10 @@ echo
 		$rdvHDeb=$hDeb.$mDeb;
 		$rdvHFin=$hFin.$mFin;
 		$Cat=$_POST['rdvCat'];
+
 		
 		if ($_POST['mode'] == -1) {
+
 
 			if(! isset($_POST['rdvCheck'])){
 				$S = "INSERT INTO rendezvous SET
@@ -384,7 +386,7 @@ echo
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		
-		header ('location: agenda.php');
+		
 		exit();
 	}
 	

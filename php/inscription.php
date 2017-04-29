@@ -126,14 +126,6 @@ function fdl_add_utilisateur() {
 	} else {
 		// Vérification que le mail n'existe pas dans la BD
 		fd_bd_connexion();
-<<<<<<< HEAD
-		
-		$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-        if ($ret == FALSE){
-            fd_bd_erreurExit('Erreur lors du chargement du jeu de caract&egrave;res utf8');
-        }
-=======
->>>>>>> origin/master
 
 		$mail = mysqli_real_escape_string($GLOBALS['bd'], $txtMail);
 
