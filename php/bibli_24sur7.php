@@ -904,7 +904,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 		
 	
 
-	mysqli_free_result($R);
+	
 	
 
 	echo		'<div id="col-heures">';
