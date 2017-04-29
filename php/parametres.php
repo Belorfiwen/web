@@ -51,15 +51,7 @@ if (! isset($_POST['btnValider2'])) {
 	// => On intialise les zones de saisie.
 	
 	fd_bd_connexion();
-<<<<<<< HEAD
-		
-	$ret = mysqli_set_charset($GLOBALS['bd'], "utf8");
-    if ($ret == FALSE){
-		fd_bd_erreurExit('Erreur lors du chargement du jeu de caract&egrave;res utf8');
-    }
-=======
 
->>>>>>> origin/master
 	
 	$S = "SELECT	utiID,utiHeureMin, utiHeureMax
 					FROM	utilisateur
