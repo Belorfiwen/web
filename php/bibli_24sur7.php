@@ -39,7 +39,6 @@ define('APP_Z_RESET', 'reset');
 
 
 
-
 //_______________________________________________________________
 /**
 * Génére le code HTML d'une ligne de tableau d'un formulaire.
@@ -685,7 +684,7 @@ function ec_html_categorie() {
 //_______________________________________________________________
 
 /**
- * Genere le code html pour l'affichage du semenier.
+ * Genere le code html pour l'affichage du semainier.
  *
  * @param integer	$jour		Numéro du jour à afficher
  * @param integer	$mois		Numéro du mois à afficher

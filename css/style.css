@@ -599,6 +599,16 @@ strong {
 	margin: 0px auto;
 }
 
+.newparamCategorie .titreparam3{
+	position: relative;
+	line-height: 1.2;
+	font-size: 18px; 
+	width: 800px;
+	margin-top: 10px;
+	text-align: left;
+}
+
+
 .newparamUtilisateur{
 	text-align: right;
 	position: relative;
@@ -618,6 +628,17 @@ strong {
 	width: 400px;
 	height:180px;
 	line-height: 2.5;
-	border: 1px solid black;
+
+}
+
+.newparamCategorie{
+	text-align: right;
+	position: relative;
+	margin: 10px 0px 0px 0px;
+	left: 180px;
+	word-spacing: 5px;
+	width: 700px;
+	min-height:180px;
+	line-height: 2.5;
 
 }
