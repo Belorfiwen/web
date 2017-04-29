@@ -774,6 +774,8 @@ function ec_html_semainier($jour, $mois, $annee) {
 	$utiHeureMin =$D['utiHeureMin'];
 	$utiHeureMax =$D['utiHeureMax'];
 
+	mysqli_free_result($R);
+
 	$count = 0;
 
 	switch ($nbJours) {
@@ -826,10 +828,13 @@ function ec_html_semainier($jour, $mois, $annee) {
 			'</p>',
 			'<section id="agenda">',
 				'<div id="intersection"></div>';
+	
 
+	$countJour =-1;
 	for ($i=0; $i < 7; $i++) { 
 		if (mb_substr($utiJours, $i, 1) == 1) 
-		{	
+		{	$countJour++;
+			$posJour[(int)(date('Ymj',mktime(0,0,0,$mois,$jour-$numJourSem+$i,$annee)))] = $countJour;
 			switch ($i) {
 				case 0:
 					$day = 'Lundi';
@@ -865,13 +870,42 @@ function ec_html_semainier($jour, $mois, $annee) {
 			}
 		}
 	}
-	echo '<div id=jEntier><a style="background-color: #00FF00;',
-    						  'border: solid 2px #00DD00;',
-							  'color: #000000;height: 20px;left: ',46+$jEntier,'px;top: 45px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">TP L salut coucou  coucocuhhgeuhiudoieoi</a>
 
-							  <a style="background-color: #00FF00;',
-    						  'border: solid 2px #00DD00;',
-							  'color: #000000;height:20px;left: ',46+$jEntier*2,'px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">TP L salut coucou coucouc coucocu coucouco coucouc coucocuhhgeuhiudoieoi</a></div>';	
+		// Requête de sélection des utilisateurs
+	$sql = "SELECT rdvID, rdvLibelle, rdvDate, rdvIDCategorie, catCouleurFond, catCouleurBordure, catPublic
+			FROM rendezvous, categorie
+			WHERE rendezvous.rdvIDCategorie = categorie.catID
+			AND rendezvous.rdvHeureFin = -1
+			AND rendezvous.rdvIDUtilisateur = {$_SESSION['utiID']}
+			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1)."$jourDate1
+			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2)."$jourDate2";
+
+	// Exécution de la requête
+	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
+
+	// traitement
+
+
+			echo '<div id=jEntier>';
+
+			while ($D = mysqli_fetch_assoc($R)) 
+			{
+				ec_htmlProteger ($D);
+				if (isset($posJour[$D['rdvDate']])) 
+				{		
+					echo '<a style="background-color: #',$D['catCouleurFond'],';',
+    						  'border: solid 2px #',$D['catCouleurBordure'],';',
+							  'color: #000000;height: 20px;left: ',46+$jEntier*$posJour[$D['rdvDate']],'px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">',$D['rdvLibelle'],'</a>';
+				}
+
+				$nbJours = mb_substr_count($utiJours, '1');
+			}
+			echo '</div>';
+		
+	
+
+	mysqli_free_result($R);
+	
 
 	echo		'<div id="col-heures">';
 
