@@ -781,31 +781,38 @@ function ec_html_semainier($jour, $mois, $annee) {
 		case 1:
 			$classColonne = 'taille1';
 			$classeRDV = 'taille1RDV';
+			$jEntier = 0;
 			break;
 		case 2:
 			$classColonne = 'taille2';
 			$classeRDV = 'taille2RDV';
+			$jEntier = 338;
 			break;
 		case 3:
 			$classColonne = 'taille3';
 			$classeRDV = 'taille3RDV';
+			$jEntier = 226;
 			break;
 		case 4:
 			$classColonne = 'taille4';
 			$classeRDV = 'taille4RDV';
+			$jEntier = 170;
 			break;
 		case 5:
 			$classColonne = 'taille5';
 			$classeRDV = 'taille5RDV';
+			$jEntier = 136.4;
 			break;
 		case 6:
 			$classColonne = 'taille6';
 			$classeRDV = 'taille6RDV';
+			$jEntier = 114;
 			break;
 		
 		default:
 			$classColonne = 'taille7';
 			$classeRDV = 'taille7RDV';
+			$jEntier = 98;
 			break;
 	}
 
@@ -859,7 +866,14 @@ function ec_html_semainier($jour, $mois, $annee) {
 			}
 		}
 	}
-				
+	echo '<div id=jEntier><a style="background-color: #00FF00;',
+    						  'border: solid 2px #00DD00;',
+							  'color: #000000;height: 20px;left: ',46+$jEntier,'px;top: 45px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">TP L salut coucou  coucocuhhgeuhiudoieoi</a>
+
+							  <a style="background-color: #00FF00;',
+    						  'border: solid 2px #00DD00;',
+							  'color: #000000;height:20px;left: ',46+$jEntier*2,'px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">TP L salut coucou coucouc coucocu coucouco coucouc coucocuhhgeuhiudoieoi</a></div>';	
+
 	echo		'<div id="col-heures">';
 
 	for ($i=$utiHeureMin; $i <= $utiHeureMax; $i++) { 
@@ -888,8 +902,27 @@ function ec_html_semainier($jour, $mois, $annee) {
 				echo	'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
 			}
 			echo 		'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>
+
+			<a style="background-color: #00FF00;',
+    						  'border: solid 2px #00DD00;',
+							  'color: #000000;',
+							  'top: 131px;', 
+					          'height: 114px;" class="rendezvous ',$classeRDV,'" href="#">TP LW</a>',
+					'<a style="color: #FFFFFF;',
+							  'background-color: #FF0000;',
+							  'border: solid 2px #DD0000;',
+							  'top: 357px;',
+							  'height: 114px;" class="rendezvous ',$classeRDV,'" href="#">TP LW</a>',
+
+							  '<a style="color: #FFFFFF;
+							  background-color: #0000FF;
+							  border: solid 2px #0000DD;
+							  top: 295px; 
+							  height: 114px;" class="rendezvous ',$classeRDV,'" href="#">TP LW</a>
 					</div>';
+
 		}
+
 	}
 
 	echo	'</section>';
