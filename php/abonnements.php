@@ -4,8 +4,10 @@
  *
  * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
  */
-
+ob_start();
 include('bibli_24sur7.php');	// Inclusion de la bibliothéque
+session_start();
+ec_verifie_session();
 
 fd_html_head('24sur7 | Agenda');
 
@@ -26,4 +28,5 @@ echo		'<section id="categories">',
 	'</section>';
 
 fd_html_pied();
+ob_end_flush();
 ?>

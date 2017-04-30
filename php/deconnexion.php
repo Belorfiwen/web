@@ -13,5 +13,5 @@ require('bibli_24sur7.php');
 session_start();
 
 // Appel à la fonction de déconnexion et de redirection
-fd_exit_session();
+ec_exit_session();
 ?>
