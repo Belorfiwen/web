@@ -210,7 +210,7 @@ function heure_min_max($name, $hsel=0){
 * Si l'utilisateur n'est pas authentifié, la fonction fd_exit_session() est invoquée
 */
 function ec_verifie_session(){
-	if (! isset($_SESSION['utiID']) || ! isset($_SESSION['utiNom'])) {
+	if (! isset($_SESSION['utiID']) || ! isset($_SESSION['utiMail'])) {
 		ec_exit_session();
 	}
 }
