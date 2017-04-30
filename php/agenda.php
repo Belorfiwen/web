@@ -5,8 +5,9 @@
  */
 // Bufferisation des sorties
 ob_start();
-session_start();
 include('bibli_24sur7.php');	// Inclusion de la bibliothéque
+session_start();
+ec_verifie_session();
 
 $jour = 0;
 $mois = 0;
@@ -43,4 +44,5 @@ echo	'</section><div style="clear: both;"> </div>',
 	'</section>';
 
 fd_html_pied();
+ob_end_flush();
 ?>

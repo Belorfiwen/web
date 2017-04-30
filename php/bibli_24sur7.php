@@ -209,9 +209,9 @@ function heure_min_max($name, $hsel=0){
 * 
 * Si l'utilisateur n'est pas authentifié, la fonction fd_exit_session() est invoquée
 */
-function fd_verifie_session(){
+function ec_verifie_session(){
 	if (! isset($_SESSION['utiID']) || ! isset($_SESSION['utiNom'])) {
-		fd_exit_session();
+		ec_exit_session();
 	}
 }
 
@@ -224,7 +224,7 @@ function fd_verifie_session(){
 * Puis, le cookie de session est supprimé
 * Enfin, elle effectue la redirection vers la page 'inscription.php'
 */
-function fd_exit_session() {
+function ec_exit_session() {
 	session_destroy();
 	session_unset();
 	$cookieParams = session_get_cookie_params();

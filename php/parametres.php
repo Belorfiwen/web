@@ -5,8 +5,9 @@
  * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
  */
 ob_start();
-session_start();
 include('bibli_24sur7.php');	// Inclusion de la bibliothéque
+session_start();
+ec_verifie_session();
 
 fd_html_head('24sur7 | Agenda');
 
@@ -265,7 +266,19 @@ echo '<div class="titreparam2"> Vos catégories </div>';
 	
 	echo '</table></form>';		
 			
-			
+	echo '</section>';
+	
+
+
+
+
+	
+	echo '</section>';
+
+		
+	
+	fd_html_pied();
+	ob_end_flush();		
 			
 			
 	/** 
@@ -754,16 +767,5 @@ function affecter4($i=0,$d=''){
 		$ch='catPublic'.$i;
 		$_POST[$ch]=$d;
 }			
-	echo '</section>';
-	
 
-
-
-
-	
-	echo '</section>';
-
-		
-	
-	fd_html_pied();
 ?>
