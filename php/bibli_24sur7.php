@@ -695,6 +695,8 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	list($JJ, $MM, $AA) = explode('-', date('j-n-Y'));
 
+	$minTopRDV = 29;
+
 	// Vérification des paramètres
 	$jour = (int) $jour;
 	$mois = (int) $mois;
@@ -833,8 +835,9 @@ function ec_html_semainier($jour, $mois, $annee) {
 	$countJour =-1;
 	for ($i=0; $i < 7; $i++) { 
 		if (mb_substr($utiJours, $i, 1) == 1) 
-		{	$countJour++;
-			$posJour[(int)(date('Ymj',mktime(0,0,0,$mois,$jour-$numJourSem+$i,$annee)))] = $countJour;
+		{	
+			$countJour++;
+			$posJour[(int)(date('Ymd',mktime(0,0,0,$mois,$jour-$numJourSem+$i,$annee)))] = $countJour;
 			switch ($i) {
 				case 0:
 					$day = 'Lundi';
@@ -871,26 +874,30 @@ function ec_html_semainier($jour, $mois, $annee) {
 		}
 	}
 
-		// Requête de sélection des utilisateurs
+	// Requête de sélection des rendez-vous sur une journée
 	$sql = "SELECT rdvID, rdvLibelle, rdvDate, rdvIDCategorie, catCouleurFond, catCouleurBordure, catPublic
 			FROM rendezvous, categorie
 			WHERE rendezvous.rdvIDCategorie = categorie.catID
 			AND rendezvous.rdvHeureFin = -1
 			AND rendezvous.rdvIDUtilisateur = {$_SESSION['utiID']}
-			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1)."$jourDate1
-			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2)."$jourDate2";
+			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1).(($jourDate1 < 10)?'0'.$jourDate1:$jourDate1)."
+			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2).(($jourDate2 < 10)?'0'.$jourDate2:$jourDate2);
 
 	// Exécution de la requête
 	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
 
 	// traitement
+		if (mysqli_num_rows($R)) 
+		{
 
-
+			$minTopRDV = 58;
+		
 			echo '<div id=jEntier>';
 
 			while ($D = mysqli_fetch_assoc($R)) 
 			{
 				ec_htmlProteger ($D);
+
 				if (isset($posJour[$D['rdvDate']])) 
 				{		
 					echo '<a style="background-color: #',$D['catCouleurFond'],';',
@@ -901,11 +908,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 				$nbJours = mb_substr_count($utiJours, '1');
 			}
 			echo '</div>';
-		
-	
-
-	
-	
+		}
 
 	echo		'<div id="col-heures">';
 
@@ -913,6 +916,19 @@ function ec_html_semainier($jour, $mois, $annee) {
 		echo 		'<div>',$i,'h</div>';
 	}
 	echo		'</div>';
+
+	// Requête de sélection des rendez-vous sur une journée
+
+	$sql = "SELECT rdvID, rdvLibelle, rdvDate, rdvIDCategorie, catCouleurFond, catCouleurBordure, catPublic, rdvHeureDebut, rdvHeureFin
+			FROM rendezvous, categorie
+			WHERE rendezvous.rdvIDCategorie = categorie.catID
+			AND rendezvous.rdvHeureFin != -1
+			AND rendezvous.rdvIDUtilisateur = {$_SESSION['utiID']}
+			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1).(($jourDate1 < 10)?'0'.$jourDate1:$jourDate1)."
+			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2).(($jourDate2 < 10)?'0'.$jourDate2:$jourDate2);
+
+	// Exécution de la requête
+	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
 
 	$count = 0;
 
@@ -934,25 +950,84 @@ function ec_html_semainier($jour, $mois, $annee) {
 			{ 
 				echo	'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
 			}
-			echo 		'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>
+			echo 		'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>';
 
-			<a style="background-color: #00FF00;',
-    						  'border: solid 2px #00DD00;',
+			if ($utiHeureMin < 10) {
+				$heureMin = ('0'.$utiHeureMin.'00');
+			}
+			else
+			{
+				$heureMin = ($utiHeureMin.'00');
+			}
+
+			if ($utiHeureMax < 10) {
+				$heureMax = ('0'.$utiHeureMax.'00');
+			}
+			else
+			{
+				$heureMax = ($utiHeureMax.'00');
+			}
+
+			while($D = mysqli_fetch_assoc($R))
+			{
+				if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] >= $heureMin) 
+				{
+					$D['rdvHeureDebut'] = $heureMin;
+				}
+				if ($D['rdvHeureFin'] > $heureMax && $D['rdvHeureDebut'] >= $heureMin) 
+				{
+					$D['rdvHeureFin'] = $heureMax;
+				}
+				if ($D['rdvHeureDebut'] >= $heureMin && $D['rdvHeureDebut'] <= $heureMax && $D['rdvHeureFin'] >= $heureMin && $D['rdvHeureFin'] <= $heureMax) 
+				{
+					
+					$heureDebut = mb_substr($D['rdvHeureDebut'], 0, 2);
+					$minDebut = mb_substr($D['rdvHeureDebut'], 2, 2);
+
+					switch ($minDebut) {
+						case 15:
+							$minDebut = 8.5;
+							break;
+						case 30:
+							$minDebut =  17;
+							break;
+						case 45:
+							$minDebut = 25.5;
+							break;
+						
+						default:
+							$minDebut = 0;
+							break;
+					}
+
+					$heureFin = mb_substr($D['rdvHeureFin'], 0, 2);
+					$minFin = mb_substr($D['rdvHeureFin'], 2, 2);
+
+					switch ($minFin) {
+						case 15:
+							$minFin = 8.5;
+							break;
+						case 30:
+							$minFin =  17;
+							break;
+						case 45:
+							$minFin = 25.5;
+							break;
+						
+						default:
+							$minFin = 0;
+							break;
+					}
+
+					echo '<a style="background-color: #',$D['catCouleurFond'],';',
+    						  'border: solid 2px #',$D['catCouleurBordure'],';',
 							  'color: #000000;',
-							  'top: 131px;', 
-					          'height: 114px;" class="rendezvous ',$classeRDV,'" href="#">TP LW</a>',
-					'<a style="color: #FFFFFF;',
-							  'background-color: #FF0000;',
-							  'border: solid 2px #DD0000;',
-							  'top: 357px;',
-							  'height: 114px;" class="rendezvous ',$classeRDV,'" href="#">TP LW</a>',
+							  'top: ',$minTopRDV+($heureDebut-$utiHeureMin)*34+$minDebut,'px;', 
+					          'height: ',$heureDebut-$heureFin,'px;" class="rendezvous ',$classeRDV,'" href="#">',$D['rdvLibelle'],'</a>';
+				}
+			}
 
-							  '<a style="color: #FFFFFF;
-							  background-color: #0000FF;
-							  border: solid 2px #0000DD;
-							  top: 295px; 
-							  height: 114px;" class="rendezvous ',$classeRDV,'" href="#">TP LW</a>
-					</div>';
+			echo '</div>';
 
 		}
 
