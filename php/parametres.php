@@ -253,8 +253,8 @@ echo '<div class="titreparam2"> Vos catégories </div>';
 							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond$i", $_POST['catFond'.$i], 10).
 							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure$i", $_POST['catBordure'.$i], 10),
 							fd_form_input('checkbox',"catPublic$i", $_POST['catPublic'.$i]).'Public  
-							<input type=\'image\' src=\'../images/sauver.png\' width=\'20px\' height=\'20px\' name=\'sauver'.$i.'\'>
-							<input type=\'image\' src=\'../images/supprimer.png\' width=\'20px\' height=\'20px\' name=\'supprimer'.$i.'\'>',
+							<input type=\'image\' src=\'../images/sauver.png\' width=\'20px\' height=\'20px\' name=\'sauver'.$i.'\' alt="logoSave" value=\'save\'>
+							<input type=\'image\' src=\'../images/supprimer.png\' width=\'20px\' height=\'20px\' name=\'supprimer'.$i.'\' alt="logoSupp" value=\'delete\'>',
 												'','class="colonneGauche"','class="boutonIIAnnuler"');
 		$i++;
 	}

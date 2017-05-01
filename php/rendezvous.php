@@ -14,6 +14,10 @@ if (isset($_GET['jour'])) {
 	$jour = $_GET['jour'];
 }
 
+if (isset($_GET['heure'])) {
+	$heure = $_GET['heure'];
+}
+
 if (isset($_GET['mois'])) {
 	$mois = $_GET['mois'];
 }
@@ -22,10 +26,14 @@ if (isset($_GET['annee'])) {
 	$annee = $_GET['annee'];
 }
 
+if (isset($_GET['mode'])) {
+	$mode = $_GET['mode'];
+}
+
 fd_html_head('24sur7 | Rendez-vous');
 
 fd_html_bandeau();
-echo '<input type=\'hidden\' name=\'mode\' value=\'1\'>',
+echo '<input type=\'hidden\' name=\'mode\' value=\''.$_GET['mode'].'\'>',
 		'<input type=\'hidden\' name=\'j\' value=\'2\'>',
 		'<input type=\'hidden\' name=\'m\' value=\'3\'>',
 		'<input type=\'hidden\' name=\'a\' value=\'4\'>',
@@ -71,10 +79,15 @@ echo
 		} else {
 		// On est dans la phase de soumission du formulaire :
 		// => vérification des valeurs reçues et création utilisateur.
-		// Si aucune erreur n'est détectée, fdl_add_rdv()
-		$erreurs = fdl_add_rdv();
-		$nbErr = count($erreurs);
-	}
+		// Si aucune erreur n'est détectée, fdl_add_rdv() ou fdl_modifie_rdv()
+			if($_GET['mode'] == -1){
+				$erreurs = fdl_add_rdv();
+				$nbErr = count($erreurs);
+			} else {
+				$erreurs = fdl_modifie_rdv();
+				$nbErr = count($erreurs);
+			}	
+		}
 
 
 	// Si il y a des erreurs on les affiche
@@ -89,13 +102,8 @@ echo
 	$_POST['j']=$_GET['jour'];
 	$_POST['m']=$_GET['mois'];
 	$_POST['a']=$_GET['annee'];
-	if($_POST['j']<10){
-		$_POST['j']='0'.$_POST['j'];
-	}	
-	if($_POST['m']<10){
-		$_POST['m']='0'.$_POST['m'];
-	}	
-	$_POST['d']=$_POST['a'].$_POST['m'].$_POST['j'];
+	
+	
 			
 	$_POST['mode']=$_GET['mode'];
 	if ($_POST['mode'] == -1) {
@@ -107,7 +115,7 @@ echo
 	}
 
 	// Affichage du formulaire
-	echo '<form class="newrdv" method="POST" action="rendezvous.php">',
+	echo '<form class="newrdv" method="POST" action="rendezvous.php?mode='.$_GET['mode'].'&heure='.$_GET['heure'].'&heureFin='.$_POST['rdvFin_h'].'&jour='.$_GET['jour'].'&mois='.$_GET['mois'].'&annee='.$_GET['annee'].'">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Libell&eacute; : ', 
 				fd_form_input(APP_Z_TEXT,'txtLibelle', $_POST['txtLibelle'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
@@ -184,12 +192,12 @@ echo
 	}
 	
 	/**
-	* Validation de la saisie et création d'un nouvel utilisateur.
+	* Validation de la saisie et création d'un nouveau rendezvous.
 	*
 	* Les zones reçues du formulaires de saisie sont vérifiées. Si
 	* des erreurs sont détectées elles sont renvoyées sous la forme
 	* d'un tableau. Si il n'y a pas d'erreurs, un enregistrement est
-	* créé dans la table rendez vous, ou une modification est faite si le rendez vous existe.
+	* créé dans la table rendez vous.
 	*
 	* @global array		$_POST		zones de saisie du formulaire
 	* @global array		$_GLOBALS	base de bonnées 
@@ -210,6 +218,7 @@ echo
 		$jour = $_POST['rdvDate_j'];
 		$mois = $_POST['rdvDate_m'];
 		$annee = $_POST['rdvDate_a'];
+		$mode = $_GET['mode'];
 
 		if (!checkdate($mois, $jour, $annee)) {
 			$erreurs[] = 'La date de rendez-vous est invalide';
@@ -312,16 +321,12 @@ echo
 		//-----------------------------------------------------
 		// Insertion d'un nouveau rendez-vous dans la base de données   
 		//-----------------------------------------------------
-		$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
+	$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
 
 		$rdvDate=$annee.$mois.$jour;
 		$rdvHDeb=$hDeb.$mDeb;
 		$rdvHFin=$hFin.$mFin;
 		$Cat=$_POST['rdvCat'];
-
-		
-		if ($_POST['mode'] == -1) {
-
 
 			if(! isset($_POST['rdvCheck'])){
 				$S = "INSERT INTO rendezvous SET
@@ -345,12 +350,185 @@ echo
 
 				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 			}	
+
+		
+		// Déconnexion de la base de données
+		mysqli_close($GLOBALS['bd']);
+		
+		header ('location: agenda.php');
+		exit();
+	}
+	
+	
+	
+	
+	
+	/**
+	* Validation de la saisie et modification d'un rendezvous.
+	*
+	* Les zones reçues du formulaires de saisie sont vérifiées. Si
+	* des erreurs sont détectées elles sont renvoyées sous la forme
+	* d'un tableau. Si il n'y a pas d'erreurs, une modification est faite si le rendez vous existe.
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*
+	* @return array 	Tableau des erreurs détectées
+	*/
+	function fdl_modifie_rdv() {
+		
+		fd_bd_connexion();
+		
+		//-----------------------------------------------------
+		// Vérification des zones
+		//-----------------------------------------------------
+		$erreurs = array();
+		
+		
+		
+		// Vérification de la date
+
+		$jour = $_POST['rdvDate_j'];
+		$mois = $_POST['rdvDate_m'];
+		$annee = $_POST['rdvDate_a'];
+		$mode = $_GET['mode'];
+
+		if (!checkdate($mois, $jour, $annee)) {
+			$erreurs[] = 'La date de rendez-vous est invalide';
+		}
+		
+		// Vérification de l'heure du rendez-vous
+		$hDeb=$_POST['rdvDeb_h'];
+		$mDeb=$_POST['rdvDeb_m'];
+		$hFin=$_POST['rdvFin_h'];
+		$mFin=$_POST['rdvFin_m'];
+		
+		if(! isset($_POST['rdvCheck'])){
+		
+			if($hDeb>$hFin){
+				$erreurs[] = 'Dur&eacute;e du rendez-vous invalide';
+			}
+			
+			if($hDeb==$hFin){
+				if($mDeb+15>$mFin){
+					$erreurs[] = 'Dur&eacute;e du rendez-vous invalide';
+				}
+			}
 			
 		}
-		else {
+		
+
+		// test jours
+		if($jour<10){
+			$jour='0'.$jour;
+		}
+		
+		if($mois<10){
+			$mois='0'.$mois;
+		}
+		
+		
+		if($mDeb<10){
+			$mDeb='0'.$mDeb;
+		}
+		
+		
+		if($mFin<10){
+			$mFin='0'.$mFin;
+		}
+		
+		$rdvDate=$annee.$mois.$jour;
+		$rdvHDeb=$hDeb.$mDeb;
+		$rdvHFin=$hFin.$mFin;
+		$Cat=$_POST['rdvCat'];
+
+		// Vérification du libellé
+		$txtLibelle = trim($_POST['txtLibelle']);
+		$long = mb_strlen($txtLibelle, 'UTF-8');
+		if ($long ==0){
+			$erreurs[] = 'Le nom doit avoir de 4 &agrave; 30 caract&egrave;res';
+		}
+
+		
+		
+		// Vérification du rendez-vous
+		
+		$ID = $_SESSION['utiID'];
+
+		$S = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
+				FROM	rendezvous
+				WHERE	'$ID' = rdvIDUtilisateur
+				AND		'$rdvDate' = rdvDate";
+
+		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+		
+		while($D = mysqli_fetch_assoc($R)){	
 			
-			$hdebut=$_POST['hdebut'];
-			$date=$_POST['d'];
+			if($D['rdvHeureDebut'] <= $_GET['heure']){
+				if($D['rdvHeureFin'] >= $_GET['heure']){
+					continue;
+				}
+			}
+			
+			if($D['rdvHeureDebut'] <= $_GET['heureFin']){
+				if($D['rdvHeureFin'] >= $_GET['heureFin']){
+					continue;
+				}
+			}
+			
+			if(($D['rdvHeureDebut'] >= $_GET['heure'])&&($D['rdvHeureFin']<=$_GET['heureFin'])){
+				continue;
+			}	
+			
+			if($D['rdvHeureDebut'] <= $rdvHDeb){
+				if($D['rdvHeureFin'] >= $rdvHDeb){
+					$erreurs[] = 'Le rendez-vous commence pendant un autre en cours';
+				}
+			}
+				
+			if($D['rdvHeureDebut'] <= $rdvHFin){
+				if($D['rdvHeureFin'] >= $rdvHFin){
+					$erreurs[] = 'Le rendez-vous fini apres le debut d\'un autre';
+				}
+			}
+				
+			if(($D['rdvHeureDebut'] >= $rdvHDeb)&&($D['rdvHeureFin']<=$rdvHFin)){
+				$erreurs[] = 'Le rendez-vous en remplace un autre';
+			}	
+		}
+		
+		mysqli_free_result($R);
+
+		
+		
+
+
+		// Si il y a des erreurs, la fonction renvoie le tableau d'erreurs
+		if (count($erreurs) > 0) {
+			return $erreurs;		// RETURN : des erreurs ont été détectées
+		}
+
+		//-----------------------------------------------------
+		// Insertion d'un nouveau rendez-vous dans la base de données   
+		//-----------------------------------------------------
+		$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
+
+		$rdvDate=$annee.$mois.$jour;
+		$rdvHDeb=$hDeb.$mDeb;
+		$rdvHFin=$hFin.$mFin;
+		$Cat=$_POST['rdvCat'];	
+			
+			$hdebut=$_GET['heure'].'0'.'0';
+			$j=$_GET['jour'];
+			$m=$_GET['mois'];
+			if($_GET['jour']<10){
+				$j='0'.$_GET['jour'];
+			}	
+			if($_GET['mois']<10){
+				$m='0'.$_GET['mois'];
+			}
+			
+			$date=$_GET['annee'].$m.$j;
 				
 			$S = "SELECT	rdvID
 				FROM	rendezvous
@@ -374,7 +552,7 @@ echo
 				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 			}
 			else{
-				$S = "UPDATE rendezvous SET
+				$S = "UPDATE rendhfiifbezvous SET
 					rdvDate = '$rdvDate',
 					rdvHeureDebut = -1,
 					rdvHeureFin = -1,
@@ -384,11 +562,22 @@ echo
 
 				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 			}	
-		}
+		
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		
-		
+		header ('location: agenda.php');
 		exit();
 	}
+	
+			
+		echo '</section>';
+	
+	echo '</section>';
+
+		
+	
+fd_html_pied();			
+
+	
 ?>

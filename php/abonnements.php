@@ -14,18 +14,131 @@ fd_html_head('24sur7 | Agenda');
 fd_html_bandeau(APP_PAGE_ABONNEMENTS);
 
 echo '<section id="bcContenu">',
-		'<aside id="bcGauche">';
+		'<section>';
+		
+		
+fd_bd_connexion();
+	
+	$S = "SELECT 	count(*)
+			FROM	suivi
+			WHERE	suiIDSuivi = {$_SESSION['utiID']}";
 
-fd_html_calendrier(7, 1, 2017);
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+	$i=1;
+while($D = mysqli_fetch_assoc($R)){
+		
+	
+	if (isset($_POST['abn'.$i])) {
+		
+		// suppression de l'abonné avec aj_ajout_abonnement($i)
+		aj_ajout_abonnement($i);		
 
-echo		'<section id="categories">',
-				'Ici : bloc catégories pour afficher les catégories de rendez-vous',
-			'</section>',
-		'</aside>',
-		'<section id="bcCentre">',
-			'Ici : bloc avec le détail des rendez-vous de la semaine du 9 au 15 février 2015',
-		'</section>',
-	'</section>';
+	} 
+	
+	if (isset($_POST['abnSupp'.$i])) {
+		
+		// suppression de l'abonné avec aj_supprimer_abonnement($i)
+		aj_supprimer_abonnement($i);		
+
+	} 
+}
+		
+echo '<h1>Utilisateurs abonnés à moi : </h1>';
+		
+	fd_bd_connexion();
+	
+	$S = "SELECT	utiID, utiNom, utiMail
+			FROM	utilisateur, suivi
+			WHERE	suiIDSuivi = {$_SESSION['utiID']}
+			AND 	suiIDSuiveur = utiID";
+
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+	$i=1;
+	while($D = mysqli_fetch_assoc($R)){
+		$id = $D['utiID'];
+		$S = "SELECT	*
+			FROM	utilisateur, suivi
+			WHERE	suiIDSuivi = '$id'
+			AND 	suiIDSuiveur = {$_SESSION['utiID']}";
+
+		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+		
+		$D = mysqli_fetch_assoc($R);
+		
+		if(count($D)>0){
+			echo htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8');
+		} else {
+			echo '<input type="hidden" name="abnID$i" value="'.$D['utiID'].'">',
+			htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8'),
+				" <input type='submit' name='abn$i' value=\"S'abonner\" size=15 class='boutonII'>";
+		}
+	}	
+	
+	mysqli_free_result($R);
+	
+echo '<h1>Je suis abonné à : </h1>';
+	
+	$S = "SELECT	utiID, utiNom, utiMail
+			FROM	utilisateur, suivi
+			WHERE	suiIDSuivi = utiID
+			AND 	suiIDSuiveur = {$_SESSION['utiID']}";
+
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+	$i=1;
+	while($D = mysqli_fetch_assoc($R)){
+		echo '<input type="hidden" name="abnSuppID$i" value="'.$D['utiID'].'">',
+			htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8'),
+				" <input type='submit' name='abnSupp$i' value=\"Se désabonner\" size=15 class='boutonII'>";
+	}	
+		
+		
+/** 
+	* ajout d'un abonnement
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*/			
+function aj_ajout_abonnement($i){
+	
+	$idSuivi = $_POST['abnID'.$i];
+	$S = "INSERT INTO suivi SET
+			suiIDSuiveur = {$_SESSION['utiID']},
+			suiIDSuivi = '$idSuivi'";
+
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+	
+	// Déconnexion de la base de données
+	mysqli_close($GLOBALS['bd']);
+		
+	header ('location: abonnements.php');
+	exit();
+}	
+
+/** 
+	* suppression d'un abonnement
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*/			
+function aj_suppression_abonnement($i){
+	
+	$idSuivi = $_POST['abnSuppID'.$i];
+	$S = "DELETE FROM suivi SET
+			suiIDSuiveur = {$_SESSION['utiID']},
+			suiIDSuivi = '$idSuivi'";
+
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+	
+	// Déconnexion de la base de données
+	mysqli_close($GLOBALS['bd']);
+		
+	header ('location: abonnements.php');
+	exit();
+}			
+		
+		
+		
+echo '</section>';
 
 fd_html_pied();
 ob_end_flush();
