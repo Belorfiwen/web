@@ -925,12 +925,14 @@ function ec_html_semainier($jour, $mois, $annee) {
 			AND rendezvous.rdvHeureFin != -1
 			AND rendezvous.rdvIDUtilisateur = {$_SESSION['utiID']}
 			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1).(($jourDate1 < 10)?'0'.$jourDate1:$jourDate1)."
-			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2).(($jourDate2 < 10)?'0'.$jourDate2:$jourDate2);
+			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2).(($jourDate2 < 10)?'0'.$jourDate2:$jourDate2).
+			" ORDER BY rdvDate";
 
 	// Exécution de la requête
 	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
 
 	$count = 0;
+	$testDate = -1;
 
 	for ($j=0; $j < 7; $j++) { 
 
@@ -952,78 +954,92 @@ function ec_html_semainier($jour, $mois, $annee) {
 			}
 			echo 		'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>';
 
-			if ($utiHeureMin < 10) {
-				$heureMin = ('0'.$utiHeureMin.'00');
-			}
-			else
-			{
 				$heureMin = ($utiHeureMin.'00');
-			}
 
-			if ($utiHeureMax < 10) {
-				$heureMax = ('0'.$utiHeureMax.'00');
-			}
-			else
-			{
-				$heureMax = ($utiHeureMax.'00');
-			}
+				$heureMax = (($utiHeureMax+1).'00');
 
-			while($D = mysqli_fetch_assoc($R))
+			if ($testDate == -1) {
+				$D = mysqli_fetch_assoc($R);
+			}
+			$testDate = 0;
+
+			while($D['rdvDate'] == (int)(date('Ymd',mktime(0,0,0,$mois,$jour-$numJourSem+$j,$annee))))
 			{
-				if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] >= $heureMin) 
-				{
-					$D['rdvHeureDebut'] = $heureMin;
+				if ($testDate != 0) {
+					$D = mysqli_fetch_assoc($R);
 				}
-				if ($D['rdvHeureFin'] > $heureMax && $D['rdvHeureDebut'] >= $heureMin) 
-				{
-					$D['rdvHeureFin'] = $heureMax;
-				}
-				if ($D['rdvHeureDebut'] >= $heureMin && $D['rdvHeureDebut'] <= $heureMax && $D['rdvHeureFin'] >= $heureMin && $D['rdvHeureFin'] <= $heureMax) 
-				{
+				if ($D['rdvDate'] == (int)(date('Ymd',mktime(0,0,0,$mois,$jour-$numJourSem+$j,$annee)))) {
 					
-					$heureDebut = mb_substr($D['rdvHeureDebut'], 0, 2);
-					$minDebut = mb_substr($D['rdvHeureDebut'], 2, 2);
+					$testDate++;
 
-					switch ($minDebut) {
-						case 15:
-							$minDebut = 8.5;
-							break;
-						case 30:
-							$minDebut =  17;
-							break;
-						case 45:
-							$minDebut = 25.5;
-							break;
-						
-						default:
-							$minDebut = 0;
-							break;
+					if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] >= $heureMin) 
+					{
+						$D['rdvHeureDebut'] = $heureMin;
 					}
-
-					$heureFin = mb_substr($D['rdvHeureFin'], 0, 2);
-					$minFin = mb_substr($D['rdvHeureFin'], 2, 2);
-
-					switch ($minFin) {
-						case 15:
-							$minFin = 8.5;
-							break;
-						case 30:
-							$minFin =  17;
-							break;
-						case 45:
-							$minFin = 25.5;
-							break;
-						
-						default:
-							$minFin = 0;
-							break;
+					if ($D['rdvHeureFin'] > $heureMax && $D['rdvHeureDebut'] >= $heureMin) 
+					{
+						$D['rdvHeureFin'] = $heureMax;
 					}
+					if ($D['rdvHeureDebut'] >= $heureMin && $D['rdvHeureDebut'] <= $heureMax && $D['rdvHeureFin'] >= $heureMin && $D['rdvHeureFin'] <= $heureMax) 
+					{
+						if ($D['rdvHeureDebut'] < 1000) {
+							$heureDebut = mb_substr($D['rdvHeureDebut'], 0, 1);
+							$minDebut = mb_substr($D['rdvHeureDebut'], 1, 2);
+						}
+						else
+						{
+							$heureDebut = mb_substr($D['rdvHeureDebut'], 0, 2);
+							$minDebut = mb_substr($D['rdvHeureDebut'], 2, 2);
+						}
 
-					echo '<a style="background-color: #',$D['catCouleurFond'],';',
-    						  'border: solid 2px #',$D['catCouleurBordure'],';',
-							  'color: #000000;',
-							  'top: ',$minTopRDV+($heureDebut-$utiHeureMin)*34+$minDebut,'px;', 
-					          'height: ',$heureDebut-$heureFin,'px;" class="rendezvous ',$classeRDV,'" href="#">',$D['rdvLibelle'],'</a>';
+						switch ($minDebut) {
+							case 15:
+								$minDebut = 10.25;
+								break;
+							case 30:
+								$minDebut =  20.5;
+								break;
+							case 45:
+								$minDebut = 30.75;
+								break;
+							
+							default:
+								$minDebut = 0;
+								break;
+						}
+
+						if ($D['rdvHeureFin'] < 1000) {
+							$heureFin = mb_substr($D['rdvHeureFin'], 0, 1);
+							$minFin = mb_substr($D['rdvHeureFin'], 1, 2);
+						}
+						else
+						{
+							$heureFin = mb_substr($D['rdvHeureFin'], 0, 2);
+							$minFin = mb_substr($D['rdvHeureFin'], 2, 2);
+						}
+
+						switch ($minFin) {
+							case 15:
+								$minFin = 10.25;
+								break;
+							case 30:
+								$minFin =  20.5;
+								break;
+							case 45:
+								$minFin = 30.75;
+								break;
+							
+							default:
+								$minFin = 0;
+								break;
+						}
+
+						echo '<a style="background-color: #',$D['catCouleurFond'],';',
+	    						  'border: solid 2px #',$D['catCouleurBordure'],';',
+								  'color: #000000;',
+								  'top: ',$minTopRDV+($heureDebut-$utiHeureMin)*41 + $minDebut,'px;', 
+						          'height: ',32*($heureFin-$heureDebut)+9*($heureFin-$heureDebut-1)+($minFin-$minDebut),'px;" class="rendezvous ',$classeRDV,'" href="#">',$D['rdvLibelle'],$heureDebut,' ',$heureFin,'</a>';
+					}
 				}
 			}
 

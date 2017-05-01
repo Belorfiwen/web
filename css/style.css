@@ -358,13 +358,12 @@ strong {
 	position: absolute; 
     margin: 1px; 
     padding: 2px 0px 0px 2px; 
-    color: #000000;					          
+    color: #000000;	
+    word-wrap: break-word;
+	overflow: auto;				          
 }
 .rdvJEntier {
 	margin: 0px; 
-	word-wrap: break-word;
-	overflow: auto;
-
 }
 
 #jEntier{
