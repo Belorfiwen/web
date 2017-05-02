@@ -25,6 +25,8 @@ if (isset($_GET['annee'])) {
 	$annee = $_GET['annee'];
 }
 
+ec_uti_rdv();
+
 fd_html_head('24sur7 | Agenda');
 
 fd_html_bandeau(APP_PAGE_AGENDA);
@@ -34,7 +36,7 @@ echo '<section id="bcContenu">',
 
 fd_html_calendrier($jour, $mois, $annee);
 
-ec_html_categorie();
+ec_html_categorie($jour, $mois, $annee);
 
 echo	'</aside>';
 

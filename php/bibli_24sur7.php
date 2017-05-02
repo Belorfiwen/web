@@ -507,9 +507,9 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	// Affichage du titre du calendrier
 	echo '<section id="calendrier">',
 	'<p>',
-	'<a href="?',$returnDateMoins,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
+	'<a href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDateMoins,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 	fd_get_mois($mois), ' ', $annee,
-	'<a href="?',$returnDatePlus,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+	'<a href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDatePlus,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 	'</p>';
 	
 	// Affichage des jours du calendrier
@@ -545,7 +545,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 
 			if ($moisAff == $mois)
 			{
-              echo '<a href="?',$returnDate,'">', $jourAff, '</a></td>';
+              echo '<a href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDate,'">', $jourAff, '</a></td>';
             }
             else
             {
@@ -559,7 +559,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 					$returnDate = 'jour='.$jourAff.'&mois=1&annee='.($annee+1);
 				}
 
-              echo '<a class="lienJourHorsMois" href="?',$returnDate,'">', $jourAff, '</a></td>';
+              echo '<a class="lienJourHorsMois" href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDate,'">', $jourAff, '</a></td>';
             }
 			$jourAff++;
 			if ($jourAff > $dernierJourMoisAff){
@@ -595,7 +595,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
  * Genere le code html pour l'affichage des agendas et categories.
  *
  */
-function ec_html_categorie() {
+function ec_html_categorie($jour, $mois, $annee) {
 
 	echo 		'<section id="categories">',
 					'<h3>Vos agendas</h3>';
@@ -621,7 +621,7 @@ function ec_html_categorie() {
 		if ($count == 0) 
 		{
 			echo 	'<p>',
-						'<a href="?uti=',$D['utiID'],'">Agenda de ',$D['utiNom'],'</a> ',
+						'<a href="?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">Agenda de ',$D['utiNom'],'</a> ',
 					'</p>',
 					'<ul>';
 			$count++;
@@ -662,7 +662,7 @@ function ec_html_categorie() {
 		if ($prev != $D['utiID']) 
 		{
 			echo 	'<p>',
-						'<a class="catSui" href="?uti=',$D['utiID'],'">',$D['utiNom'],'</a> ',
+						'<a class="catSui" href="?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">',$D['utiNom'],'</a> ',
 					'</p>';
 		}
 		
@@ -693,6 +693,9 @@ function ec_html_categorie() {
  */
 function ec_html_semainier($jour, $mois, $annee) {
 
+	// Connexion à la base de données
+	fd_bd_connexion();
+
 	list($JJ, $MM, $AA) = explode('-', date('j-n-Y'));
 
 	$minTopRDV = 29;
@@ -705,7 +708,8 @@ function ec_html_semainier($jour, $mois, $annee) {
 	($mois == 0) && $mois = $MM;
 	($annee < 2012) && $annee = $AA;
 
-	if (!checkdate($mois, $jour, $annee)) {
+	if (!checkdate($mois, $jour, $annee)) 
+	{
 		$jour = $JJ;
 		$mois = $MM;
 		$annee = $AA;
@@ -747,9 +751,6 @@ function ec_html_semainier($jour, $mois, $annee) {
 	{
 		$affDate = $jourDate1.' au '.$jourDate2.' '.$moisDate1;
 	}
-
-	// Connexion à la base de données
-	fd_bd_connexion();
 
 	// Requête de sélection des utilisateurs
 	$sql = "SELECT utiJours, utiHeureMin, utiHeureMax
@@ -824,9 +825,9 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	echo '<section id="bcCentre">',
 			'<p id="titreAgenda">',
-				'<a href="?jour=',$jNeg,'&mois=',$mNeg,'&annee=',$aNeg,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
+				'<a href="?uti=',$GLOBALS['lienRendezVous'],'&jour=',$jNeg,'&mois=',$mNeg,'&annee=',$aNeg,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 				'<strong>Semaine du ',$affDate,'</strong> pour <strong>les L2</strong>',
-				'<a href=?jour=',$jPos,'&mois=',$mPos,'&annee=',$aPos,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+				'<a href=?uti=',$GLOBALS['lienRendezVous'],'&jour=',$jPos,'&mois=',$mPos,'&annee=',$aPos,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 			'</p>',
 			'<section id="agenda">',
 				'<div id="intersection"></div>';
@@ -874,12 +875,21 @@ function ec_html_semainier($jour, $mois, $annee) {
 		}
 	}
 
+	if ($GLOBALS['lienRendezVous'] == $_SESSION['utiID']) {
+		$public = '';
+	}
+	else
+	{
+		$public = 'AND categorie.catPublic = 1';
+	}
+
 	// Requête de sélection des rendez-vous sur une journée
-	$sql = "SELECT rdvID, rdvLibelle, rdvDate, rdvIDCategorie, catCouleurFond, catCouleurBordure, catPublic
+	$sql = "SELECT rdvID, rdvLibelle, rdvDate, catCouleurFond, catCouleurBordure, catPublic, rdvIDUtilisateur
 			FROM rendezvous, categorie
 			WHERE rendezvous.rdvIDCategorie = categorie.catID
+			$public
 			AND rendezvous.rdvHeureFin = -1
-			AND rendezvous.rdvIDUtilisateur = {$_SESSION['utiID']}
+			AND rendezvous.rdvIDUtilisateur = {$GLOBALS['lienRendezVous']}
 			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1).(($jourDate1 < 10)?'0'.$jourDate1:$jourDate1)."
 			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2).(($jourDate2 < 10)?'0'.$jourDate2:$jourDate2);
 
@@ -900,9 +910,26 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 				if (isset($posJour[$D['rdvDate']])) 
 				{		
-					echo '<a style="background-color: #',$D['catCouleurFond'],';',
+					$couleurHSL = ec_hexToHsl($D['catCouleurFond']); 
+
+					if ($couleurHSL[2] > 0.5) //0.5 = 50%  
+					{
+						$textColor = '000000';
+					} 
+					else
+					{
+						$textColor = 'FFFFFF';
+					} 
+
+					$balise = 'a';
+
+					if ($D['rdvIDUtilisateur'] != $_SESSION['utiID']) {
+						$balise = 'div';
+					}
+
+					echo '<',$balise,' style="background-color: #',$D['catCouleurFond'],';',
     						  'border: solid 2px #',$D['catCouleurBordure'],';',
-							  'color: #000000;height: 20px;left: ',46+$jEntier*$posJour[$D['rdvDate']],'px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">',$D['rdvLibelle'],'</a>';
+							  'color: #',$textColor,';height: 20px;left: ',46+$jEntier*$posJour[$D['rdvDate']],'px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">',$D['rdvLibelle'],'</',$balise,'>';
 				}
 
 				$nbJours = mb_substr_count($utiJours, '1');
@@ -919,11 +946,11 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	// Requête de sélection des rendez-vous sur une journée
 
-	$sql = "SELECT rdvID, rdvLibelle, rdvDate, rdvIDCategorie, catCouleurFond, catCouleurBordure, catPublic, rdvHeureDebut, rdvHeureFin
+	$sql = "SELECT rdvID, rdvLibelle, rdvDate, catCouleurFond, catCouleurBordure, catPublic, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
 			FROM rendezvous, categorie
 			WHERE rendezvous.rdvIDCategorie = categorie.catID
 			AND rendezvous.rdvHeureFin != -1
-			AND rendezvous.rdvIDUtilisateur = {$_SESSION['utiID']}
+			AND rendezvous.rdvIDUtilisateur = {$GLOBALS['lienRendezVous']}
 			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1).(($jourDate1 < 10)?'0'.$jourDate1:$jourDate1)."
 			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2).(($jourDate2 < 10)?'0'.$jourDate2:$jourDate2).
 			" ORDER BY rdvDate";
@@ -948,7 +975,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 				echo'<div class="col-jour border-TRB ',$classColonne,'">';
 			}
 
-			for ($i=$utiHeureMin; $i < $utiHeureMax; $i++) 
+			for ($i=$utiHeureMin; $i < $utiHeureMax-1; $i++) 
 			{ 
 				echo	'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
 			}
@@ -956,7 +983,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 				$heureMin = ($utiHeureMin.'00');
 
-				$heureMax = (($utiHeureMax+1).'00');
+				$heureMax = (($utiHeureMax).'00');
 
 			if ($testDate == -1) {
 				$D = mysqli_fetch_assoc($R);
@@ -972,7 +999,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 					
 					$testDate++;
 
-					if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] >= $heureMin) 
+					if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] > $heureMin) 
 					{
 						$D['rdvHeureDebut'] = $heureMin;
 					}
@@ -980,7 +1007,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 					{
 						$D['rdvHeureFin'] = $heureMax;
 					}
-					if ($D['rdvHeureDebut'] >= $heureMin && $D['rdvHeureDebut'] <= $heureMax && $D['rdvHeureFin'] >= $heureMin && $D['rdvHeureFin'] <= $heureMax) 
+					if ($D['rdvHeureDebut'] >= $heureMin && $D['rdvHeureDebut'] < $heureMax && $D['rdvHeureFin'] >= $heureMin && $D['rdvHeureFin'] <= $heureMax && ($GLOBALS['lienRendezVous'] == $_SESSION['utiID'] || $D['catPublic'] == 1)) 
 					{
 						if ($D['rdvHeureDebut'] < 1000) {
 							$heureDebut = mb_substr($D['rdvHeureDebut'], 0, 1);
@@ -1034,11 +1061,28 @@ function ec_html_semainier($jour, $mois, $annee) {
 								break;
 						}
 
-						echo '<a style="background-color: #',$D['catCouleurFond'],';',
+						$couleurHSL = ec_hexToHsl($D['catCouleurFond']); 
+
+						if ($couleurHSL[2] > 0.5) //0.5 = 50%  
+						{
+							$textColor = '000000';
+						} 
+						else
+						{
+							$textColor = 'FFFFFF';
+						}
+
+						$balise = 'a';
+
+						if ($D['rdvIDUtilisateur'] != $_SESSION['utiID']) {
+							$balise = 'div';
+						}
+
+						echo '<',$balise,' style="background-color: #',$D['catCouleurFond'],';',
 	    						  'border: solid 2px #',$D['catCouleurBordure'],';',
-								  'color: #000000;',
+								  'color: #',$textColor,';',
 								  'top: ',$minTopRDV+($heureDebut-$utiHeureMin)*41 + $minDebut,'px;', 
-						          'height: ',32*($heureFin-$heureDebut)+9*($heureFin-$heureDebut-1)+($minFin-$minDebut),'px;" class="rendezvous ',$classeRDV,'" href="#">',$D['rdvLibelle'],$heureDebut,' ',$heureFin,'</a>';
+						          'height: ',32*($heureFin-$heureDebut)+9*($heureFin-$heureDebut-1)+($minFin-$minDebut),'px;" class="rendezvous ',$classeRDV,'" href="rendezvous.php?id=',$D['rdvID'],'">',$D['rdvLibelle'],'</',$balise,'>';
 					}
 				}
 			}
@@ -1051,13 +1095,59 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	echo	'</section>';
 
-				// Libère la mémoire associée au résultat $R
+	// Libère la mémoire associée au résultat $R
 	mysqli_free_result($R);
 
 	// Déconnexion de la base de données
 	mysqli_close($GLOBALS['bd']);
 
 }
+
+//_______________________________________________________________
+
+/**
+ * Creer une variable globale contenant l'url vers rendezvous.php avec l'ID de l'utilisateur à affiché en paramètre 
+ *
+ */
+function ec_uti_rdv() {
+
+	fd_bd_connexion();
+
+	if(isset($_GET['uti']) && estEntier($_GET['uti']) && $_GET['uti'] != $_SESSION['utiID']) 
+	{
+		// Requête de sélection des utilisateurs
+		$sql = "SELECT count(*) as count
+				FROM suivi
+				WHERE suiIDSuiveur = {$_SESSION['utiID']}
+	            AND suiIDSuivi = {$_GET['uti']}";
+
+		// Exécution de la requête
+		$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
+
+		// traitement
+		$D = mysqli_fetch_assoc($R);
+
+		ec_htmlProteger ($D);
+		if ($D['count'] == 1) {
+			$GLOBALS['lienRendezVous'] = $_GET['uti'];
+		}
+		else
+		{
+			$GLOBALS['lienRendezVous'] = $_SESSION['utiID'];
+		}
+
+		// Libère la mémoire associée au résultat $R
+		mysqli_free_result($R);
+
+		// Déconnexion de la base de données
+		mysqli_close($GLOBALS['bd']);
+	}
+	else
+	{
+		$GLOBALS['lienRendezVous'] = $_SESSION['utiID'];
+	}
+}
+	
 
 //_______________________________________________________________
 
@@ -1149,6 +1239,49 @@ function ec_htmlProteger (&$tab) {
  */
 function estEntier($x) {
     return is_numeric($x) && ($x == (int) $x);
+}
+
+//___________________________________________________________________
+/**
+ * Covertit une couleur hexadecimal en HSL
+ *
+ * @param int  $hex  couleur en hexadecimal
+ * @return int  $h hue
+ * @return int  $s saturation
+ * @return int  $l lightness
+ */
+function ec_hexToHsl($hex) {
+    $hex = array($hex[0].$hex[1], $hex[2].$hex[3], $hex[4].$hex[5]);
+    $rgb = array_map(function($part) {
+        return hexdec($part) / 255;
+    }, $hex);
+
+    $max = max($rgb);
+    $min = min($rgb);
+
+    $l = ($max + $min) / 2;
+
+    if ($max == $min) {
+        $h = $s = 0;
+    } else {
+        $diff = $max - $min;
+        $s = $l > 0.5 ? $diff / (2 - $max - $min) : $diff / ($max + $min);
+
+        switch($max) {
+            case $rgb[0]:
+                $h = ($rgb[1] - $rgb[2]) / $diff + ($rgb[1] < $rgb[2] ? 6 : 0);
+                break;
+            case $rgb[1]:
+                $h = ($rgb[2] - $rgb[0]) / $diff + 2;
+                break;
+            case $rgb[2]:
+                $h = ($rgb[0] - $rgb[1]) / $diff + 4;
+                break;
+        }
+
+        $h /= 6;
+    }
+    return array($h, $s, $l);
 }
 
 ?>
