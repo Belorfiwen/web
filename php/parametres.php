@@ -79,10 +79,10 @@ if (! isset($_POST['ajouter'])) {
 		
 	$nbErr3 = 0;
 	
-	$_POST['catNom']='';
-	$_POST['catFond']='';
-	$_POST['catBordure']='';
-	$_POST['catPublic']=1;
+	$_POST['catNom1']='';
+	$_POST['catFond1']='';
+	$_POST['catBordure1']='';
+	$_POST['catPublic1']=1;
 					
 
 } else {
@@ -92,83 +92,6 @@ if (! isset($_POST['ajouter'])) {
 	$erreurs3 = fdl_ajout_categorie();
 	$nbErr3 = count($erreurs3);	
 }
-
-fd_bd_connexion();
-	
-	$S = "SELECT 	count(*)
-			FROM	categorie
-			WHERE	catIDUtilisateur = {$_SESSION['utiID']}";
-
-	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-	$i=1;
-while($D = mysqli_fetch_assoc($R)){
-		
-	
-	if (! isset($_POST['sauver'.$i])) {
-		// => On intialise les zones de saisie.
-		
-		$S = "SELECT	catNom, catCouleurFond, catCouleurBordure, catIDUtilisateur, catPublic
-						FROM	categorie
-						WHERE	catIDUtilisateur = {$_SESSION['utiID']}";
-
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		
-		$nbErr3 = 0;
-		$j=1;
-		while($D = mysqli_fetch_assoc($R)){
-			affecter($j,$D['catNom']);
-			affecter2($j,$D['catCouleurFond']);
-			affecter3($j,$D['catCouleurBordure']);
-			affecter4($j,$D['catPublic']);
-			
-			$j++;
-		}
-			
-
-	} else {
-		// On est dans la phase de soumission du formulaire :
-		// => vérification des valeurs reçues
-		// Si aucune erreur n'est détectée, fdl_modification_utilisateur()
-		$erreurs3 = fdl_modification_categorie($i);
-		$nbErr3 = count($erreurs3);	
-	}
-	
-	if (! isset($_POST['supprimer'.$i])) {
-		// => On intialise les zones de saisie.
-		
-		$S = "SELECT	catNom, catCouleurFond, catCouleurBordure, catIDUtilisateur, catPublic
-						FROM	categorie
-						WHERE	catIDUtilisateur = {$_SESSION['utiID']}";
-
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		
-		$nbErr3 = 0;
-		$j=1;
-		while($D = mysqli_fetch_assoc($R)){
-			affecter($j,$D['catNom']);
-			affecter2($j,$D['catCouleurFond']);
-			affecter3($j,$D['catCouleurBordure']);
-			affecter4($j,$D['catPublic']);
-			
-			$j++;
-		}
-			
-
-	} else {
-		// On est dans la phase de soumission du formulaire :
-		// => vérification des valeurs reçues
-		// Si aucune erreur n'est détectée, fdl_modification_utilisateur()
-		$erreurs3 = fdl_suppression_categorie($i);
-		$nbErr3 = count($erreurs3);	
-		if ($nbErr3 > 0) {
-			echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
-			for ($i = 0; $i < $nbErr3; $i++) {
-				echo '<br>', $erreurs3[$i];
-			}
-		}
-	}
-}
-mysqli_free_result($R);
 
 // Si il y a des erreurs on les affiche
 
@@ -222,8 +145,8 @@ echo '<div class="titreparam2"> Options d\'affichage du calendrier </div>';
 												<input type=\'checkbox\' name=\'checkDimanche\' value=\'1\' checked> Dimanche',
 												'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
-			fd_form_ligne('Heure minimale ', heure_min_max('hMin',6),'','class="colonneGauche"','class="boutonIIAnnuler"'),
-			fd_form_ligne('Heure maximale ', heure_min_max('hMax',22),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			fd_form_ligne('Heure minimale ', heure_min_max('hMin',7),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			fd_form_ligne('Heure maximale ', heure_min_max('hMax',18),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
 			fd_form_ligne("<input type='submit' name='btnValider2' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
@@ -232,60 +155,137 @@ echo '<div class="titreparam2"> Options d\'affichage du calendrier </div>';
 			
 echo '<div class="titreparam2"> Vos catégories </div>';
 	// Affichage du formulaire
-	echo '<form class="newparamCategorie" method="POST" action="parametres.php">',
-			'<table border="1" cellpadding="4" cellspacing="0">';
-	fd_bd_connexion();
 	
-	$S = "SELECT	catID, catNom, catCouleurFond, catCouleurBordure, catIDUtilisateur, catPublic
-					FROM	categorie
-					WHERE	catIDUtilisateur = {$_SESSION['utiID']}";
-
-	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	
-	$nbErr3 = 0;
-	$i=1;
-	while($D = mysqli_fetch_assoc($R)){
+	
+	
+	
+function aj_form_categorie($ID,$Nom,$CatCouleurBordure,$CatCouleurFond,$Public) {
 		
-		if(isset($_POST['supprimer'.$i])){
-			echo fd_form_ligne('Supprimer la catégorie et les rendez-vous et évènements associés ? '.fd_form_input("submit","catSupp","Supprimer",10,'class=\'boutonII\''),'');
-		}	
-		echo fd_form_ligne(fd_form_input("hidden","catID$i", $D['catID']).'Nom : '.fd_form_input(APP_Z_TEXT,"catNom$i", $_POST['catNom'.$i], 10). 
-							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond$i", $_POST['catFond'.$i], 10).
-							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure$i", $_POST['catBordure'.$i], 10),
-							fd_form_input('checkbox',"catPublic$i", $_POST['catPublic'.$i]).'Public <div height="10px" width="15px" background-color="'.$D['catCouleurFond'].'" border=" 1px solid '.$D['catCouleurBordure'].'">Aperçu</div>
-							<input type=\'image\' src=\'../images/sauver.png\' width=\'20px\' height=\'20px\' name=\'sauver'.$i.'\' alt="logoSave" value=\'save\'>
-							<input type=\'image\' src=\'../images/supprimer.png\' width=\'20px\' height=\'20px\' name=\'supprimer'.$i.'\' alt="logoSupp" value=\'delete\'>',
-												'','class="colonneGauche"','class="boutonIIAnnuler"');
-		$i++;
+		echo	'<form class="newparamCategorie" method="POST" action="parametres.php" >',
+		'<table border="1" cellpadding="4" cellspacing="15">',
+			'<tr border=" 1px solid black">',
+				'<td>Nom :</td>',
+				'<td class="catEspace"><input type="text" name="catNom" size="10"  maxlength="8" value="',$Nom,'"></td>',
+				'<td>Fond :</td>',
+				'<td class="catEspace"><input type="text" name="catFond" size="6"  maxlength="8" value="',$CatCouleurFond,'"></td>',
+				'<td>Bordures :</td>',
+				'<td class="catEspace"><input type="text" name="catBordure" size="6"  maxlength="8" value="',$CatCouleurBordure,'"></td>',
+				'<td class="catEspace"><input type="checkbox" name="catPublic" value="1"';
+				if($Public==1){
+					echo ' checked id="catPublic"';
+							}
+		echo	'><label for="catPublic">Public</label></td>',
+				'<td style="border: solid 2px #',$CatCouleurBordure,';background-color: #',$CatCouleurFond,';font-weight: bold;">Aper&ccedil;u</td>',
+				'<td style="padding-left: 20px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
+				'<td style="padding-left: 20px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',
+
+			'</tr>',
+		'</table>',
+	'</form>';		
+}
+
+
+if(isset($_POST['Save'])){
+			
+	$err=array();
+	
+	if (!isset($_POST['catPublic'])){
+		$_POST['catPublic']=0;
+	}
+			
+	if (!preg_match('^[a-zA-Z0-9]{0,12}$^', $_POST['catNom'])){
+		$err[]='Le nom saisi est invalide';
 	}
 	
-	if(isset($_POST['catSupp'])){
-		fdl_suppression_categorie($i);
-	}	
+	if (strlen($_POST['catFond'])>6){
+		$err[]='Le code saisi pour la couleur du fond est invalide';
+	}
+	
+	if (strlen($_POST['catBordure'])>6) {
+		$err[]='Le code saisi pour la couleur des bordures est invalide';
+	}
+	
+	if($err !=NULL){
+		echo '<p class="aligncenter"><strong>Les erreurs suivantes ont &#233;t&#233; d&#233;tect&#233;es</strong><br>';
+
+		foreach ($err as $cle => $valeur) {
+			echo $valeur,'<br>';
+		}
+
+		echo'</p>';
+
+	}
+	else {
+		$catNom=mysqli_real_escape_string($GLOBALS['bd'], $_POST['catNom']);
+		$catFond=mysqli_real_escape_string($GLOBALS['bd'], $_POST['catFond']);
+		$catBordure=mysqli_real_escape_string($GLOBALS['bd'], $_POST['catBordure']);
+
+		$S1="UPDATE 	categorie 
+				SET 	catNom='$catNom',
+						catCouleurFond='$catFond',
+						catCouleurBordure='$catBordure',
+						catIDutilisateur='".$_SESSION['utiID']."',
+						catPublic='".$_POST['catPublic']."'
+				WHERE 	catID = '".$_POST['Save']."'";
+				
+		$R1 = mysqli_query($GLOBALS['bd'],$S1) or fd_bd_erreur($S1);
+		
+	}
+}
+if(isset($_POST['Delete'])){
+						
+			$S1="DELETE FROM 	categorie 
+						WHERE 	catID = '".$_POST['Delete']."'";
+			$R1 = mysqli_query($GLOBALS['bd'],$S1) or fd_bd_erreur($S1);
+}
+	
+	fd_bd_connexion();
+	$S="SELECT 	catID,catNom,catCouleurFond,catCouleurBordure,catPublic
+		FROM 	categorie 
+		WHERE 	catIDUtilisateur = {$_SESSION['utiID']}";
+	
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+	
+	
+	
+	
+
+	
+	while($D = mysqli_fetch_assoc($R)){
+		
+		aj_form_categorie($D['catID'],$D['catNom'],$D['catCouleurBordure'],$D['catCouleurFond'],$D['catPublic']);
+	
+	}
+	mysqli_free_result($R);
+	
+	
+	echo '<form class="newparamCategorie" method="POST" action="parametres.php">',
+			'<table border="1" cellpadding="4" cellspacing="0">';
 	
 	echo fd_form_ligne('&nbsp;','&nbsp;','class=\'titreparam3\'','',''),
-				fd_form_ligne('Nouvelle catégorie :','','class=\'titreparam3\'','',''), 
-				fd_form_ligne('Nom : '.fd_form_input(APP_Z_TEXT,"catNom", $_POST['catNom'], 10). 
-							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond", $_POST['catFond'], 10).
-							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure", $_POST['catBordure'], 10),
-							fd_form_input('checkbox',"catPublic", $_POST['catPublic']).'Public  
+				fd_form_ligne('Nouvelle catégorie : ','','class=\'titreparam3\'','',''), 
+				fd_form_ligne('Nom : '.fd_form_input(APP_Z_TEXT,"catNom1", $_POST['catNom1'], 10). 
+							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond1", $_POST['catFond1'], 10).
+							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure1", $_POST['catBordure1'], 10),
+							fd_form_input('checkbox',"catPublic1", $_POST['catPublic1']).'Public  
 							<input type=\'submit\' name=\'ajouter\' value="Ajouter" size=15 class=\'boutonII\'>',
 												'','class="colonneGauche"','class="boutonIIAnnuler"');	
 	
 	echo '</table></form>';		
 			
 	echo '</section>';
-	
+
+echo '</section>';
+	fd_html_pied();	
 
 
 
+						
 
-	
-	echo '</section>';
 
 		
 	
-	fd_html_pied();
 	ob_end_flush();		
 			
 			
@@ -577,7 +577,7 @@ function fdl_ajout_categorie() {
 				WHERE	catIDUtilisateur = {$_SESSION['utiID']}";
 
 		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		$nom = trim($_POST['catNom']);
+		$nom = trim($_POST['catNom1']);
 		$nom = mysqli_real_escape_string($GLOBALS['bd'],$nom);
 		$long = mb_strlen($nom, 'UTF-8');
 		if($long==0){
@@ -585,14 +585,14 @@ function fdl_ajout_categorie() {
 		}
 		
 		while($D = mysqli_fetch_assoc($R)){
-			if($D['catNom']===$_POST['catNom']){
+			if($D['catNom']===$_POST['catNom1']){
 				$erreurs[] = 'La catégorie existe déjà';
 			}
 		}	
 		mysqli_free_result($R);
 		
 		// Vérification de la couleur de fond
-		$fond = trim($_POST['catFond']);
+		$fond = trim($_POST['catFond1']);
 		$fond = mysqli_real_escape_string($GLOBALS['bd'],$fond);
 		$long = mb_strlen($fond, 'UTF-8');
 		if ($long > 6){
@@ -603,7 +603,7 @@ function fdl_ajout_categorie() {
 		}	
 		
 		// Vérification de la couleur de bordure
-		$bordure = trim($_POST['catBordure']);
+		$bordure = trim($_POST['catBordure1']);
 		$bordure = mysqli_real_escape_string($GLOBALS['bd'],$bordure);
 		$long = mb_strlen($bordure, 'UTF-8');
 		if ($long > 6){
@@ -622,7 +622,7 @@ function fdl_ajout_categorie() {
 		// ajout de la categorie   
 		//-----------------------------------------------------
 		
-		if(!isset($_POST['catPublic'])){
+		if(!isset($_POST['catPublic1'])){
 			$S = "INSERT INTO categorie SET
 				catNom = '$nom',
 				catCouleurFond = '$fond',
@@ -650,159 +650,6 @@ function fdl_ajout_categorie() {
 		exit();
 }	
 
-
-
-
-/**
-	* Validation de la saisie et modification de la categorie.
-	*
-	* Les zones reçues du formulaires de saisie sont vérifiées. Si
-	* des erreurs sont détectées elles sont renvoyées sous la forme
-	* d'un tableau. Si il n'y a pas d'erreurs,une modification est faite dans la table categorie.
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @global array		$_GLOBALS	base de bonnées 
-	* @param  int  		$i  		differenciation des categories
-	*
-	* @return array 	Tableau des erreurs détectées
-	*/
-function fdl_modifier_categorie($i) {
-		
-		fd_bd_connexion();
-		
-		//-----------------------------------------------------
-		// Vérification des zones
-		//-----------------------------------------------------
-		$erreurs = array();
-		
-		//-----------------------------------------------------
-		// Vérification du nom de la categorie
-		//-----------------------------------------------------
-		
-		$S = "SELECT	catNom
-				FROM	categorie
-				WHERE	catIDUtilisateur = {$_SESSION['utiID']}";
-
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		$nom = trim($_POST['catNom'.$i]);
-		$nom = mysqli_real_escape_string($GLOBALS['bd'],$nom);
-		$long = mb_strlen($nom, 'UTF-8');
-		if($long==0){
-			$erreurs[] = 'la catégorie n\'a pas de nom';
-		}
-		
-		while($D = mysqli_fetch_assoc($R)){
-			if($D['catNom']===$_POST['catNom'.$i]){
-				$erreurs[] = 'La catégorie existe déjà';
-			}
-		}	
-		mysqli_free_result($R);
-		
-		// Vérification de la couleur de fond
-		$fond = trim($_POST['catFond'.$i]);
-		$fond = mysqli_real_escape_string($GLOBALS['bd'],$fond);
-		$long = mb_strlen($fond, 'UTF-8');
-		if ($long > 6){
-			$erreurs[] = 'la couleur de fond est invalide';
-		}
-		if($long==0){
-			$erreurs[] = 'la couleur de fond est vide';
-		}	
-		
-		// Vérification de la couleur de bordure
-		$bordure = trim($_POST['catBordure'.$i]);
-		$bordure = mysqli_real_escape_string($GLOBALS['bd'],$bordure);
-		$long = mb_strlen($bordure, 'UTF-8');
-		if ($long > 6){
-			$erreurs[] = 'la couleur de bordure est invalide';
-		}
-		if($long==0){
-			$erreurs[] = 'la couleur de bordure est vide';
-		}
-
-		// Si il y a des erreurs, la fonction renvoie le tableau d'erreurs
-		if (count($erreurs) > 0) {
-			return $erreurs;		// RETURN : des erreurs ont été détectées
-		}
-		
-		//-----------------------------------------------------
-		// modification de la categorie   
-		//-----------------------------------------------------
-		$catID= $_POST['catID'.$i];
-		
-		if(!isset($_POST['catPublic'.$i])){
-			$S = "UPDATE categorie SET
-				catNom = '$nom',
-				catCouleurFond = '$fond',
-				catCouleurBordure = '$bordure',
-				catPublic = 0
-				WHERE catID = '$catID";
-
-			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		}
-		else{
-			$S = "UPDATE categorie SET
-				catNom = '$nom',
-				catCouleurFond = '$fond',
-				catCouleurBordure = '$bordure',
-				catPublic = 1
-				WHERE catID = '$catID";
-
-			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		}
-
-		// Déconnexion de la base de données
-		mysqli_close($GLOBALS['bd']);
-		
-		header ('location: parametres.php');
-		exit();
-}
-
-
-/**
-	* Validation de la saisie et suppression de la categorie.
-	*
-	* Les zones reçues du formulaires de saisie sont vérifiées. Si
-	* des erreurs sont détectées elles sont renvoyées sous la forme
-	* d'un tableau. Si il n'y a pas d'erreurs,une suppression est faite dans la table categorie.
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @global array		$_GLOBALS	base de bonnées 
-	* @param  int  		$i  		differenciation des categories
-	*
-	* @return array 	Tableau des erreurs détectées
-	*/
-function fdl_suppression_categorie($i) {
-		
-		fd_bd_connexion();
-		
-		
-		
-		//-----------------------------------------------------
-		// suppression de la categorie  et des rendezvous associés
-		//-----------------------------------------------------
-		$catID= $_POST['catID'.$i];
-		
-		$S = "DELETE FROM categorie
-				WHERE catID = '$catID'
-				AND catIDUtilisateur = {$_SESSION['utiID']}";
-
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-		
-		$S = "DELETE FROM rendezvous
-				WHERE rdvIDCategorie = '$catID'
-				AND rdvIDUtilisateur = {$_SESSION['utiID']}";
-
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-
-		
-
-		// Déconnexion de la base de données
-		mysqli_close($GLOBALS['bd']);
-		
-		header ('location: parametres.php');
-		exit();
-}
 
 				
 /**
@@ -853,14 +700,8 @@ function affecter4($i=0,$d=''){
 		$_POST[$ch]=$d;
 }	
 
-		
-		echo '</section>';
 	
-	echo '</section>';
-
 		
-	
-fd_html_pied();			
 
 
 ?>

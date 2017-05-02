@@ -631,13 +631,29 @@ strong {
 }
 
 .newparamCategorie{
-	text-align: right;
 	position: relative;
-	margin: 10px 0px 0px 0px;
-	left: 180px;
-	word-spacing: 5px;
+	margin: 15px 0px 0px 0px;
+	left: 140px;
 	width: 700px;
-	min-height:180px;
-	line-height: 2.5;
+	line-height: 1.5;
 
+}
+
+.boutonCatSav{
+	background: url(../images/sauver.png);
+	color: transparent;
+	width: 	25px;
+	height: 25px;
+	border: none;
+}
+.boutonCatSupp{
+	background: url(../images/supprimer.png);
+	color: transparent;
+	width: 25px;
+	height: 25px;
+	border: none;
+}
+
+.catEspace{
+	padding-right: 30px;
 }
