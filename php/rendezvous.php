@@ -5,13 +5,11 @@ ob_start();
 include('bibli_24sur7.php');	// Inclusion de la bibliothèque
 session_start();
 ec_verifie_session();
-fd_bd_connexion();
+
 $GLOBALS['lienRendezVous']= $_SESSION['utiID'];
 
-$idRdv=0;
-if (isset($_GET['id'])) {
-	$idRdv = $_GET['id'];
-}
+
+$idRdv = $_GET['id'];
 
 $jour = 0;
 $mois = 0;
@@ -34,15 +32,6 @@ if (isset($_GET['annee'])) {
 	$annee = $_GET['annee'];
 }
 
-
-$S2 = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur, rdvIDCategorie
-				FROM	rendezvous
-				WHERE	 rdvIDUtilisateur = '$idRdv'
-				AND		rdvID = '$idRdv'";
-
-$R2 = mysqli_query($GLOBALS['bd'], $S2) or fd_bd_erreur($S2);
-$D1=mysqli_fetch_assoc($R2);
-
 fd_html_head('24sur7 | Rendez-vous');
 
 fd_html_bandeau();
@@ -58,8 +47,9 @@ echo
 		'<section id="bcCentre">';
 			
 			
-		if (! isset($_POST['btnValider'])) {
-				// On n'est dans un premier affichage de la page.
+		if (!isset($_POST['btnValider']) && $idRdv == -1) 
+		{
+				// On n'est dans un premier affichage de la page dans le cas de la creation d'un rendezvous.
 				// => On intialise les zones de saisie.
 				$nbErr = 0;
 				$_POST['txtLibelle']='';
@@ -83,7 +73,38 @@ echo
 					$_POST['rdvFin_h'] = $_GET['heure']+1;
 				}
 
-		} else {
+		} 
+		elseif (!isset($_POST['btnValider']) && $idRdv != -1) 
+		{
+			// On n'est dans un premier affichage de la page dans le cas de la modification d'un rendezvous.
+			// => On intialise les zones de saisie.
+			fd_bd_connexion();
+			$sql = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur, rdvIDCategorie, rdvLibelle
+					FROM	rendezvous
+					WHERE 	rdvID = $idRdv";
+
+			$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
+			$D = mysqli_fetch_assoc($R);
+			ec_htmlProteger($D);
+
+			$nbErr = 0;
+			$_POST['txtLibelle']= $D['rdvLibelle'];
+			$_POST['rdvDate_a'] = mb_substr($D['rdvDate'], 0, 4);
+			$_POST['rdvDate_m'] = mb_substr($D['rdvDate'], 4, 2);
+			$_POST['rdvDate_j'] = mb_substr($D['rdvDate'], 6, 2);
+
+			$rdvDeb = (($D['rdvHeureDebut'] < 1000)?'0'.$D['rdvHeureDebut']:$D['rdvHeureDebut']);
+			$_POST['rdvDeb_h'] = mb_substr($rdvDeb, 0, 2);
+			$_POST['rdvDeb_m'] = mb_substr($rdvDeb, 2, 2);
+			echo $_POST['rdvDeb_m'];
+			$rdvFin = (($D['rdvHeureFin'] < 1000)?'0'.$D['rdvHeureFin']:$D['rdvHeureFin']);
+			$_POST['rdvFin_h'] = mb_substr($rdvFin, 0, 2);
+			$_POST['rdvFin_m'] = mb_substr($rdvFin, 2, 2);
+
+			$_POST['idRdv'] = $idRdv;
+		} 
+		else
+		{
 		// On est dans la phase de soumission du formulaire :
 		// => vérification des valeurs reçues et création utilisateur.
 		// Si aucune erreur n'est détectée, fdl_add_rdv() ou fdl_modifie_rdv()
@@ -126,7 +147,7 @@ echo
 			
 			 fd_form_ligne('Date : ', fd_form_date('rdvDate', $_POST['rdvDate_j'], $_POST['rdvDate_m'], $_POST['rdvDate_a']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			 fd_form_ligne('Cat&eacute;gorie : ', recup_categorie(),'','class="colonneGauche"','class="boutonIIAnnuler"'),
-			 fd_form_ligne('Horaire D&eacute;but : ', fd_form_heure('rdvDeb',$_POST['rdvDeb_h'],$_POST['rdvDeb_h']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			 fd_form_ligne('Horaire D&eacute;but : ', fd_form_heure('rdvDeb',$_POST['rdvDeb_h'],$_POST['rdvDeb_m']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			 fd_form_ligne('Horaire Fin : ', fd_form_heure('rdvFin',$_POST['rdvFin_h'],$_POST['rdvFin_m']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			 fd_form_ligne('Ou ', '<input type=\'checkbox\' name=\'rdvCheck\' value=\'1\'> Evenement sur une journ&eacute;e','','class="colonneGauche"','class="boutonIIAnnuler"'),
 
