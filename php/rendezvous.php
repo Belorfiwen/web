@@ -44,7 +44,7 @@ echo '<section id="bcContenu">',
 
 fd_html_calendrier($jour, $mois, $annee);
 
-ec_html_categorie();
+ec_html_categorie($jour, $mois, $annee);
 		
 echo	
 		'</aside>',

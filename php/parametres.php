@@ -166,6 +166,7 @@ function aj_form_categorie($ID,$Nom,$CatCouleurBordure,$CatCouleurFond,$Public) 
 		if(isset($_POST['Delete'])){
 			echo '<div> Supprimer la catégorie et les rendezvous et évènements associés
 					<input type="submit" name="Supprimer" value="-1"></div>';
+		}
 
 
 		$couleurHSL = ec_hexToHsl($CatCouleurFond); 
