@@ -9,7 +9,7 @@ include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 session_start();
 ec_verifie_session();
 
-fd_html_head('24sur7 | Agenda');
+fd_html_head('24sur7 | Recherche');
 
 fd_html_bandeau(APP_PAGE_RECHERCHE);
 

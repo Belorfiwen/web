@@ -933,7 +933,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 					echo '<',$balise,' style="background-color: #',$D['catCouleurFond'],';',
     						  'border: solid 2px #',$D['catCouleurBordure'],';',
-							  'color: #',$textColor,';height: 20px;left: ',46+$jEntier*$posJour[$D['rdvDate']],'px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php">',$D['rdvLibelle'],'</',$balise,'>';
+							  'color: #',$textColor,';height: 20px;left: ',46+$jEntier*$posJour[$D['rdvDate']],'px;" class="rendezvous ',$classeRDV,' rdvJEntier" href="rendezvous.php?id=',$D['rdvID'],'">',$D['rdvLibelle'],'</',$balise,'>';
 				}
 
 				$nbJours = mb_substr_count($utiJours, '1');
