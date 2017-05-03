@@ -445,17 +445,9 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	
 	$nbJoursMoisCourant = date('j', $timeDernierJourMoisCourant);	// nombre de jours dans le mois
 	
-	$semaineDebut = date('W', $timePremierJourMoisCourant);
 	$semaineFin = date('W', $timeDernierJourMoisCourant);
-	echo "$semaineDebut  $semaineFin";
 	$semaineCourante = date('W', $timeJourCourant);
-	if ($semaineDebut >= 52){ 
-        $semaineDebut = 0;
-        if ($semaineCourante >= 52) $semaineCourante = 0;
-    }
-    /*if ($semaineFin == 1 && $semaineDebut > 45){ 
-        $semaineFin = 53;
-    }*/
+
 	
 	$jourSemaineJourDebut = date ('w', $timePremierJourMoisCourant);
 	($jourSemaineJourDebut == 0) && $jourSemaineJourDebut = 7;
@@ -523,24 +515,29 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	'</tr>';
 	
 	
-	for ($sem = $semaineDebut ; $sem <= $semaineFin; $sem++)
+	for (;;)
 	{
+		$sem = date('W', mktime(0, 0, 0, $moisAff, $jourAff, $annee));
 		if ($sem == $semaineCourante)
 		{
 			echo '<tr class="semaineCourante">';
 		}
-		else{
+		else
+		{
 			echo '<tr>';
 		}
+
 		for($i = 1; $i <= 7 ; $i++)
 		{
 			if ($jourAff == $jourAujourdhui) 
 			{
 				echo '<td class="aujourdHui">';
-			} elseif ($jourAff == $jourCourant) 
+			} 
+			elseif ($jourAff == $jourCourant) 
 			{
 				echo '<td class="jourCourant">';
-			} else 
+			} 
+			else 
 			{
 				echo '<td>';
 			}
@@ -587,6 +584,9 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 			}
 		}
 		echo '</tr>';
+		if ($sem == $semaineFin){
+            break;
+        }
 	}
 	echo '</table></section>';
 }
