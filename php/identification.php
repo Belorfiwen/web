@@ -21,7 +21,7 @@ if (! isset($_POST['btnValider'])) {
 	// On est dans la phase de soumission du formulaire :
 	// => vérification des valeurs reçues et connexion de utilisateur.
 	// Si aucune erreur n'est détectée, fdl_add_utilisateur()
-	// redirige la page sur la page 'protegee.php'
+	// redirige la page sur la page 'agenda.php'
 	$erreurs = ecl_connect_utilisateur();
 	$nbErr = count($erreurs);
 }
@@ -66,9 +66,10 @@ echo '<div class="II"><form method="POST" action="identification.php">',
 
         fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'identifier', 15,'class="boutonII"'),
         	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII"'),'','class="colonneGauche"','class="boutonIIAnnuler"'),
-		'</table></form></div>',
-		'<p class="basII"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
-		'<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
+		'</table>',
+	 '</form></div>',
+	 '<p class="basII"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
+	 '<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
 		
 fd_html_pied();
 ob_end_flush();
@@ -133,6 +134,7 @@ function ecl_connect_utilisateur() {
 	}
 	else
 	{
+		ec_htmlProteger ($D);
 		$utiID = $D['utiID'];
 	}
 	// Libère la mémoire associée au résultat $R

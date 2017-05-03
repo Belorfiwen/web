@@ -9,7 +9,7 @@ include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 session_start();
 ec_verifie_session();
 
-fd_html_head('24sur7 | Agenda');
+fd_html_head('24sur7 | Param&egrave;tre');
 
 fd_html_bandeau(APP_PAGE_PARAMETRES);
 
@@ -63,18 +63,38 @@ if (! isset($_POST['btnValider2'])) {
 	fd_bd_connexion();
 	$nbErr2=0;
 	
-	$S = "SELECT	utiID, utiJours, utiHeureMin, utiHeureMax
+
+	$S = "SELECT	utiID,utiHeureMin, utiHeureMax, utiJours
 					FROM	utilisateur
 					WHERE	utiID = {$_SESSION['utiID']}";
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	
 	$D = mysqli_fetch_assoc($R);
+
+	ec_htmlProteger($D);
 	
 	$nbErr = 0;
 	$utiJours= $D['utiJours'];
 	$_POST['hMin'] = $D['utiHeureMin'];
 	$_POST['hMax'] = $D['utiHeureMax'];
+
+	$utiJours = decbin($D['utiJours']);
+
+	$n = mb_strlen($utiJours);
+	if ($n < 7) {
+		for ($i=0; $i < 7-$n ; $i++) { 
+			$utiJours = '0'.$utiJours;
+		}
+	}
+
+	$_POST['checkLundi'] = mb_substr($utiJours, 0, 1);
+	$_POST['checkMardi'] = mb_substr($utiJours, 1, 1);
+	$_POST['checkMercredi'] = mb_substr($utiJours, 2, 1);
+	$_POST['checkJeudi'] = mb_substr($utiJours, 3, 1);
+	$_POST['checkVendredi'] = mb_substr($utiJours, 4, 1);
+	$_POST['checkSamedi'] = mb_substr($utiJours, 5, 1);
+	$_POST['checkDimanche'] = mb_substr($utiJours, 6, 1);
 
 } else {
 	// On est dans la phase de soumission du formulaire :
@@ -144,20 +164,29 @@ if (isset($_POST['btnValider1']) && $alert == 0)
 			
 echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrier </div>';
 	// Affichage du formulaire
-	
+
+	$lundi = (($_POST['checkLundi'] == 1)?'checked':''); 
+	$mardi = (($_POST['checkMardi'] == 1)?'checked':'');
+	$mercredi = (($_POST['checkMercredi'] == 1)?'checked':'');
+	$jeudi = (($_POST['checkJeudi'] == 1)?'checked':'');
+	$vendredi = (($_POST['checkVendredi'] == 1)?'checked':'');
+	$samedi = (($_POST['checkSamedi'] == 1)?'checked':'');
+	$dimanche = (($_POST['checkDimanche'] == 1)?'checked':'');
+
 	echo '<form class="newparamCalendrier" method="POST" action="parametres.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
-			fd_form_ligne('Jours affich&eacute;s ', '<input type=\'checkbox\' name=\'checkLundi\' value=\'1\' checked> Lundi
-												<input type=\'checkbox\' name=\'checkMardi\' value=\'1\' checked> Mardi
-												<input type=\'checkbox\' name=\'checkMercredi\' value=\'1\' checked> Mercredi
-												<input type=\'checkbox\' name=\'checkJeudi\' value=\'1\' checked> Jeudi
-												<input type=\'checkbox\' name=\'checkVendredi\' value=\'1\' checked> Vendredi
-												<input type=\'checkbox\' name=\'checkSamedi\' value=\'1\' checked> Samedi
-												<input type=\'checkbox\' name=\'checkDimanche\' value=\'1\' checked> Dimanche',
+			fd_form_ligne('Jours affich&eacute;s ', '<input type=\'checkbox\' name=\'checkLundi\' value=\'1\' '.$lundi.'> Lundi
+												<input type=\'checkbox\' name=\'checkMardi\' value=\'1\' '.$mardi.'> Mardi
+												<input type=\'checkbox\' name=\'checkMercredi\' value=\'1\' '.$mercredi.'> Mercredi
+												<input type=\'checkbox\' name=\'checkJeudi\' value=\'1\' '.$jeudi.'> Jeudi
+												<input type=\'checkbox\' name=\'checkVendredi\' value=\'1\' '.$vendredi.'> Vendredi
+												<input type=\'checkbox\' name=\'checkSamedi\' value=\'1\' '.$samedi.'> Samedi
+												<input type=\'checkbox\' name=\'checkDimanche\' value=\'1\' '.$dimanche.'> Dimanche',
 												'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
-			fd_form_ligne('Heure minimale ', heure_min_max('hMin',8),'','class="colonneGauche"','class="boutonIIAnnuler"'),
-			fd_form_ligne('Heure maximale ', heure_min_max('hMax',18),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			fd_form_ligne('Heure minimale ', heure_min_max('hMin',$_POST['hMin']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			fd_form_ligne('Heure maximale ', heure_min_max('hMax',$_POST['hMax']),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+
 			
 			fd_form_ligne("<input type='submit' name='btnValider2' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
