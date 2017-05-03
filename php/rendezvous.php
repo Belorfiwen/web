@@ -58,43 +58,43 @@ echo
 		'<section id="bcCentre">';
 			
 			
-		if (! isset($_POST['btnValider'])) {
-				// On n'est dans un premier affichage de la page.
-				// => On intialise les zones de saisie.
-				$nbErr = 0;
-				$_POST['txtLibelle']='';
-				$_POST['rdvDate_a'] = date('Y');
-				$_POST['rdvDate_m'] = $_POST['rdvDate_j'] = 1;
-				$_POST['rdvDeb_h']=7;
-				$_POST['rdvFin_h']=12;
-				$_POST['rdvDeb_m']=$_POST['rdvFin_m']=00;
+	if (! isset($_POST['btnValider'])) {
+		// On n'est dans un premier affichage de la page.
+		// => On intialise les zones de saisie.
+		$nbErr = 0;
+		$_POST['txtLibelle']='';
+		$_POST['rdvDate_a'] = date('Y');
+		$_POST['rdvDate_m'] = $_POST['rdvDate_j'] = 1;
+		$_POST['rdvDeb_h']=7;
+		$_POST['rdvFin_h']=12;
+		$_POST['rdvDeb_m']=$_POST['rdvFin_m']=00;
 
-				if (estEntier($annee) && $annee <= $_POST['rdvDate_a'] +5 && $annee >= $_POST['rdvDate_a'] -7) {
-					$_POST['rdvDate_a'] = $annee;
-				}
-				if (estEntier($mois) && $mois <= 12 && $mois >= 1) {
-					$_POST['rdvDate_m'] = $mois;
-				}
-				if (estEntier($jour) && $jour <= 31 && $jour >= 1 && checkdate($_POST['rdvDate_m'], $jour, $_POST['rdvDate_a'])) {
-					$_POST['rdvDate_j'] = $jour;
-				}
-				if (isset($_GET['heure']) && estEntier($_GET['heure']) && $_GET['heure'] <= 24 && $_GET['heure'] >= 0) {
-					$_POST['rdvDeb_h'] = $_GET['heure'];
-					$_POST['rdvFin_h'] = $_GET['heure']+1;
-				}
-
-		} else {
-		// On est dans la phase de soumission du formulaire :
-		// => vérification des valeurs reçues et création utilisateur.
-		// Si aucune erreur n'est détectée, fdl_add_rdv() ou fdl_modifie_rdv()
-			if($idRdv == -1){
-				$erreurs = fdl_add_rdv();
-				$nbErr = count($erreurs);
-			} else {
-				$erreurs = fdl_modifie_rdv();
-				$nbErr = count($erreurs);
-			}	
+		if (estEntier($annee) && $annee <= $_POST['rdvDate_a'] +5 && $annee >= $_POST['rdvDate_a'] -7) {
+			$_POST['rdvDate_a'] = $annee;
 		}
+		if (estEntier($mois) && $mois <= 12 && $mois >= 1) {
+			$_POST['rdvDate_m'] = $mois;
+		}
+		if (estEntier($jour) && $jour <= 31 && $jour >= 1 && checkdate($_POST['rdvDate_m'], $jour, $_POST['rdvDate_a'])) {
+			$_POST['rdvDate_j'] = $jour;
+		}
+		if (isset($_GET['heure']) && estEntier($_GET['heure']) && $_GET['heure'] <= 24 && $_GET['heure'] >= 0) {
+			$_POST['rdvDeb_h'] = $_GET['heure'];
+			$_POST['rdvFin_h'] = $_GET['heure']+1;
+		}
+
+	} else {
+	// On est dans la phase de soumission du formulaire :
+	// => vérification des valeurs reçues et création utilisateur.
+	// Si aucune erreur n'est détectée, fdl_add_rdv() ou fdl_modifie_rdv()
+	if($idRdv == -1){
+		$erreurs = fdl_add_rdv();
+		$nbErr = count($erreurs);
+	} else {
+		$erreurs = fdl_modifie_rdv();
+		$nbErr = count($erreurs);
+	}	
+
 
 
 	// Si il y a des erreurs on les affiche
@@ -165,35 +165,35 @@ echo
 	* @return chaine 	chaine html d'une partie de formulaire
 	*/
 	
-	function recup_categorie(){
+function recup_categorie(){
 		
-			fd_bd_connexion();
-			$ch="";
-			$ID = $_SESSION['utiID'];
+	fd_bd_connexion();
+	$ch="";
+	$ID = $_SESSION['utiID'];
 
-			$S = "SELECT	catNom, catID
-					FROM	categorie
-					WHERE	'$ID' = catIDUtilisateur";
+	$S = "SELECT	catNom, catID
+			FROM	categorie
+			WHERE	'$ID' = catIDUtilisateur";
 
-			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-			$ch=$ch.'<select name="rdvCat" >';
-			$g=0;
-			while($D = mysqli_fetch_assoc($R)){	
-				ec_htmlProteger($D);
-				if($g==0){
-					$ch=$ch.'<option value="'.$D['catID'].'" selected>'.$D['catNom'].'</option>';
-					$g++;
-				}
-				else{
-					$ch=$ch.'<option value="'.$D['catID'].'">'.$D['catNom'].'</option>';	
-				}
-			}
-			$ch=$ch.'</select>';
-			return $ch;
-			mysqli_free_result($R);
-			mysqli_close($GLOBALS['bd']);
-			
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+	$ch=$ch.'<select name="rdvCat" >';
+	$g=0;
+	while($D = mysqli_fetch_assoc($R)){	
+		ec_htmlProteger($D);
+		if($g==0){
+			$ch=$ch.'<option value="'.$D['catID'].'" selected>'.$D['catNom'].'</option>';
+			$g++;
+		}
+		else{
+			$ch=$ch.'<option value="'.$D['catID'].'">'.$D['catNom'].'</option>';	
+		}
 	}
+	$ch=$ch.'</select>';
+	return $ch;
+	mysqli_free_result($R);
+	mysqli_close($GLOBALS['bd']);
+			
+}
 	
 	/**
 	* Validation de la saisie et création d'un nouveau rendezvous.
@@ -323,7 +323,7 @@ echo
 		//-----------------------------------------------------
 		// Insertion d'un nouveau rendez-vous dans la base de données   
 		//-----------------------------------------------------
-	$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
+		$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
 
 		$rdvDate=$annee.$mois.$jour;
 		$rdvHDeb=$hDeb.$mDeb;
@@ -556,9 +556,9 @@ echo
 	}
 	
 			
-		echo '</section>';
+		echo '</section>',
 	
-	echo '</section>';
+		'</section>';
 
 		
 	

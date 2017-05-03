@@ -98,7 +98,7 @@ function ecl_recherche() {
 	}
 	else
 	{
-		echo 'Aucun resultat trouvé.';
+		echo 'Aucun resultat trouv&eacute;.';
 	}
 	// Libère la mémoire associée au résultat $R
     mysqli_free_result($R);

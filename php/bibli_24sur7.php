@@ -387,7 +387,7 @@ function fd_html_bandeau($page="") {
 				($page == APP_PAGE_AGENDA) ? '<h2>Agenda</h2>' : '<a href="'.APP_PAGE_AGENDA.'">Agenda</a>',
 				($page == APP_PAGE_RECHERCHE) ? '<h2>Recherche</h2>' : '<a href="'.APP_PAGE_RECHERCHE.'">Recherche</a>',
 				($page == APP_PAGE_ABONNEMENTS) ? '<h2>Abonnements</h2>' : '<a href="'.APP_PAGE_ABONNEMENTS.'">Abonnements</a>',
-				($page == APP_PAGE_PARAMETRES) ? '<h2>Paramètres</h2>' : '<a href="'.APP_PAGE_PARAMETRES.'">Paramètres</a>',
+				($page == APP_PAGE_PARAMETRES) ? '<h2>Param&egrave;tres</h2>' : '<a href="'.APP_PAGE_PARAMETRES.'">Param&egrave;tres</a>',
 			'</nav>',
 			'<div id="bcLogo"></div>',
 			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',

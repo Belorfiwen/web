@@ -40,20 +40,20 @@ if (isset($GLOBALS['bd'])){
 
 fd_html_head('24sur7 | Inscription');
 
-echo '<header id="bcEntete">',
+echo 	'<header id="bcEntete">',
 			'<nav id="bcOnglets">',
 			'</nav>',
 			'<div id="bcLogo"></div>',
 			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
 		 '</header>',
 		 
-		 '<section id="bcContenu">';
+		 '<section id="bcContenu">',
 
-echo '<h2 id="titreII">Pour vous inscrire &agrave; <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
+			'<h2 id="titreII">Pour vous inscrire &agrave; <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
 
 // Si il y a des erreurs on les affiche
 if ($nbErr > 0) {
-	echo '<strong>Les erreurs suivantes ont été détectées</strong>';
+	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
 	for ($i = 0; $i < $nbErr; $i++) {
 		echo '<br>', $erreurs[$i];
 	}
@@ -74,8 +74,8 @@ echo '<div class="II"><form method="POST" action="inscription.php">',
         fd_form_ligne(fd_form_input(APP_Z_SUBMIT,'btnValider', 'S\'inscrire', 15,'class="boutonII"'),
         	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII"'),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 		'</table></form></div>',
-		'<p class="basII"> Déj&agrave; inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
-		'<p class="basII"> Vous hésitez &agrave; vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
+		'<p class="basII"> D&eacute;j&agrave; inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
+		'<p class="basII"> Vous h&eacute;sitez &agrave; vous inscrire ? Laissez vous s&eacute;duire par <a href="../html/presentation.html">une pr&eacute;sentation</a> des possibilit&eacute;s de 24sur7</p></section>';
 		
 	fd_html_pied();
 	ob_end_flush();
@@ -109,9 +109,7 @@ function fdl_add_utilisateur() {
 	// Vérification du nom
 	$txtNom = trim($_POST['txtNom']);
 	$long = mb_strlen($txtNom, 'UTF-8');
-	if ($long < 4
-	|| $long > 30)
-	{
+	if ($long < 4 || $long > 30){
 		$erreurs[] = 'Le nom doit avoir de 4 &agrave; 30 caract&egrave;res';
 	}
 
@@ -119,9 +117,7 @@ function fdl_add_utilisateur() {
 	$txtMail = trim($_POST['txtMail']);
 	if ($txtMail == '') {
 		$erreurs[] = 'L\'adresse mail est obligatoire';
-	} elseif (mb_strpos($txtMail, '@', 0, 'UTF-8') === FALSE
-			|| mb_strpos($txtMail, '.', 0, 'UTF-8') === FALSE)
-	{
+	} elseif (mb_strpos($txtMail, '@', 0, 'UTF-8') === FALSE || mb_strpos($txtMail, '.', 0, 'UTF-8') === FALSE){
 		$erreurs[] = 'L\'adresse mail n\'est pas valide';
 	} else {
 		// Vérification que le mail n'existe pas dans la BD
@@ -138,7 +134,7 @@ function fdl_add_utilisateur() {
 		$D = mysqli_fetch_row($R);
 
 		if ($D[0] > 0) {
-			$erreurs[] = 'Cette adresse mail est déj&agrave; inscrite.';
+			$erreurs[] = 'Cette adresse mail est d&eacute;j&agrave; inscrite.';
 		}
 		// Libère la mémoire associée au résultat $R
         mysqli_free_result($R);
@@ -147,15 +143,13 @@ function fdl_add_utilisateur() {
 	// Vérification du mot de passe
 	$txtPasse = trim($_POST['txtPasse']);
 	$long = mb_strlen($txtPasse, 'UTF-8');
-	if ($long < 4
-	|| $long > 20)
-	{
+	if ($long < 4 || $long > 20){
 		$erreurs[] = 'Le mot de passe doit avoir de 4 &agrave; 20 caract&egrave;res';
 	}
 
 	$txtVerif = trim($_POST['txtVerif']);
 	if ($txtPasse != $txtVerif) {
-		$erreurs[] = 'Le mot de passe est différent dans les 2 zones';
+		$erreurs[] = 'Le mot de passe est diff&eacute;rent dans les 2 zones';
 	}
 
 
@@ -186,7 +180,7 @@ function fdl_add_utilisateur() {
 	$idInscr = mysqli_insert_id($GLOBALS['bd']);
 
 	$S = "INSERT INTO categorie (catNom,catCouleurFond,catCouleurBordure,catIDUtilisateur,catPublic)
-  		VALUES ('Défaut','FFFFFF','000000',(SELECT utiID FROM utilisateur ORDER BY utiID DESC LIMIT 1),0)";
+  		VALUES ('D&eacute;faut','FFFFFF','000000',(SELECT utiID FROM utilisateur ORDER BY utiID DESC LIMIT 1),0)";
 
   	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 

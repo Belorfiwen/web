@@ -44,7 +44,7 @@ while($D = mysqli_fetch_assoc($R)){
 	$i++;
 }
 		
-echo '<h1>Utilisateurs abonnés à moi : </h1>';
+echo '<h1>Utilisateurs abonn&eacute;s &agrave; moi : </h1>';
 		
 	fd_bd_connexion();
 	
@@ -65,7 +65,7 @@ echo '<h1>Utilisateurs abonnés à moi : </h1>';
 	
 	mysqli_free_result($R);
 	
-echo '<h1>Je suis abonné à : </h1>';
+echo '<h1>Je suis abonn&eacute; &agrave; : </h1>';
 	
 	$S = "SELECT	utiID, utiNom, utiMail
 			FROM	utilisateur, suivi
@@ -77,7 +77,7 @@ echo '<h1>Je suis abonné à : </h1>';
 	while($D = mysqli_fetch_assoc($R)){
 		echo '<input type="hidden" name="abnSuppID',$i,'" value="'.$D['utiID'].'">',
 			htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8'),
-				" <form method='POST' action='abonnements.php' style=\"display: inline-block;\"><input type='submit' name='abnSupp$i' value=\"Se désabonner\" size=15 class='boutonII'></form></br>";
+				" <form method='POST' action='abonnements.php' style=\"display: inline-block;\"><input type='submit' name='abnSupp$i' value=\"Se d&eacute;sabonner\" size=15 class='boutonII'></form></br>";
 		$i++;
 	}	
 		

@@ -32,6 +32,7 @@ if (! isset($_POST['btnValider1'])) {
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	
 	$D = mysqli_fetch_assoc($R);
+	ec_htmlProteger ($D);
 	
 	$nbErr = 0;
 	$_POST['txtNom']= $D['utiNom'];
@@ -95,6 +96,7 @@ if (! isset($_POST['btnValider2'])) {
 	$_POST['checkVendredi'] = mb_substr($utiJours, 4, 1);
 	$_POST['checkSamedi'] = mb_substr($utiJours, 5, 1);
 	$_POST['checkDimanche'] = mb_substr($utiJours, 6, 1);
+	
 
 } else {
 	// On est dans la phase de soumission du formulaire :
@@ -159,7 +161,7 @@ echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </d
 			
 if (isset($_POST['btnValider1']) && $alert == 0)
 {
-	echo '<div class="confirmationSave"> Utilisateur mis à jour avec succès ! </div>';
+	echo '<div class="confirmationSave"> Utilisateur mis &agrave; jour avec succ&egrave;s ! </div>';
 }			
 			
 echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrier </div>';
@@ -192,12 +194,14 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 			
-if(isset($_POST['btnValider2'])&& $alert2==0){
-	echo '<div class="confirmationSave"> Affichage d\'agenda mis à jour avec succès ! </div>';
-}
+if (isset($_POST['btnValider2']) && $alert2 == 0)
+{
+	echo '<div class="confirmationSave"> Affichage agenda mis &agrave; jour avec succ&egrave;s ! </div>';
+}			
+	
 			
 			
-echo '<div class="titreparam2 titreParametre"> Vos catégories </div>';
+echo '<div class="titreparam2 titreParametre"> Vos cat&eacute;gories </div>';
 	// Affichage du formulaire
 	
 if(isset($_POST['Supprimer'])){
@@ -220,9 +224,9 @@ if(isset($_POST['Delete'])){
 	$D1=mysqli_fetch_row($R1);
 	
 	if($D1[0]<2){
-		echo '<p class="confirmationSupp">Vous ne pouvez pas supprimer de catégories</p>';
+		echo '<p class="confirmationSupp">Vous ne pouvez pas supprimer de cat&eacute;gories</p>';
 	}else{
-		echo '<form method="POST" action="parametres.php" class="confirmationSupp"><div> Supprimer la catégorie et les rendezvous et évènements associés : ',
+		echo '<form method="POST" action="parametres.php" class="confirmationSupp"><div> Supprimer la cat&eacute;gorie et les rendezvous et &eacute;v&egrave;nements associ&eacute;s : ',
 				'<input type="submit" name="Supprimer" value="Supprimer" class="boutonII">',
 				'<input type="hidden" name="catID" value="',$_POST['Delete'],'"></div></form>';
 	}
@@ -232,7 +236,7 @@ if(isset($_POST['Delete'])){
 
 if(isset($_POST['Save'])){
 	
-	echo '<div class="confirmationSave"> Catégorie mise à jour avec succès ! </div>';
+	echo '<div class="confirmationSave"> Cat&eacute;gorie mise &agrave; jour avec succ&egrave;s ! </div>';
 			
 	$err=array();
 	
@@ -287,14 +291,9 @@ if(isset($_POST['Save'])){
 		WHERE 	catIDUtilisateur = {$_SESSION['utiID']}";
 	
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-	
-	
-	
-	
 
-	
 	while($D = mysqli_fetch_assoc($R)){
-		
+		ec_htmlProteger ($D);
 		aj_form_categorie($D['catID'],$D['catNom'],$D['catCouleurBordure'],$D['catCouleurFond'],$D['catPublic']);
 	
 	}
@@ -305,7 +304,7 @@ if(isset($_POST['Save'])){
 				'<table border="1" cellpadding="4" cellspacing="0">';
 	
 
-	echo 		fd_form_ligne('<p class="titreParametre">Nouvelle catégorie : </p>','','class=\'titreparam3\'','',''), 
+	echo 		fd_form_ligne('<p class="titreParametre">Nouvelle cat&eacute;gorie : </p>','','class=\'titreparam3\'','',''), 
 				fd_form_ligne('Nom : '.fd_form_input(APP_Z_TEXT,"catNom1", $_POST['catNom1'], 6). 
 							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond1", $_POST['catFond1'], 3).
 							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure1", $_POST['catBordure1'], 3).
@@ -381,6 +380,7 @@ echo '</section>';
 			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
 			$D = mysqli_fetch_row($R);
+			
 
 			if ($D[0] > 0) {
 				$erreurs[] = 'Cette adresse mail est d&eacute;j&agrave; inscrite.';
@@ -669,12 +669,12 @@ function fdl_ajout_categorie() {
 		$nom = mysqli_real_escape_string($GLOBALS['bd'],$nom);
 		$long = mb_strlen($nom, 'UTF-8');
 		if($long==0){
-			$erreurs[] = 'la catégorie n\'a pas de nom';
+			$erreurs[] = 'la cat&eacute;gorie n\'a pas de nom';
 		}
 		
 		while($D = mysqli_fetch_assoc($R)){
 			if($D['catNom']===$_POST['catNom1']){
-				$erreurs[] = 'La catégorie existe déjà';
+				$erreurs[] = 'La cat&eacute;gorie existe d&eacute;j&agrave;';
 			}
 		}	
 		mysqli_free_result($R);
@@ -736,56 +736,6 @@ function fdl_ajout_categorie() {
 		
 		header ('location: parametres.php');
 		exit();
-}	
-
-
-				
-/**
-	* affectation du nom de la zone de formulaire dans $_POST
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @param  int  		$i  		differenciation des categories
-	* @param  string  	$d  		valeur des affectations
-	*/	
-function affecter($i=0,$d=''){
-		$ch='catNom'.$i;
-		$_POST[$ch]=$d;
-}
-
-/**
-	* affectation du nom de la zone de formulaire dans $_POST
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @param  int  		$i  		differenciation des categories
-	* @param  string  	$d  		valeur des affectations
-	*/
-function affecter2($i=0,$d=''){
-		$ch='catFond'.$i;
-		$_POST[$ch]=$d;
-}
-
-/**
-	* affectation du nom de la zone de formulaire dans $_POST
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @param  int  		$i  		differenciation des categories
-	* @param  string  	$d  		valeur des affectations
-	*/
-function affecter3($i=0,$d=''){
-		$ch='catBordure'.$i;
-		$_POST[$ch]=$d;
-}
-
-/**
-	* affectation du nom de la zone de formulaire dans $_POST
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @param  int  		$i  		differenciation des categories
-	* @param  string  	$d  		valeur des affectations
-	*/
-function affecter4($i=0,$d=''){
-		$ch='catPublic'.$i;
-		$_POST[$ch]=$d;
 }	
 
 	

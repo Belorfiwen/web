@@ -662,6 +662,7 @@ strong {
 }
 
 .confirmationSupp{
+	position: relative;
 	border: 2px solid #FF9933;
 	color: #FF9933;
 	text-align: center;
@@ -674,6 +675,7 @@ strong {
 }
 
 .confirmationSave{
+	position: relative;
 	border: 2px solid green;
 	color: green;
 	text-align: center;
