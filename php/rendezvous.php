@@ -6,6 +6,7 @@ include('bibli_24sur7.php');	// Inclusion de la bibliothèque
 session_start();
 ec_verifie_session();
 fd_bd_connexion();
+$GLOBALS['lienRendezVous']= $_SESSION['utiID'];
 
 $jour = 0;
 $mois = 0;

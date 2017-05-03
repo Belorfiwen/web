@@ -18,7 +18,7 @@ echo '<section id="bcContenu">';
 	
 echo	'<section style="padding-bottom: 27px;">';
 		
-$nbErr2=0;		
+		
 			
 if (! isset($_POST['btnValider1'])) {
 	// => On intialise les zones de saisie.
@@ -46,13 +46,22 @@ if (! isset($_POST['btnValider1'])) {
 	$erreurs = fdl_modification_utilisateur();
 	$nbErr = count($erreurs);	
 }
+$alert=0;
+if ($nbErr > 0) {
+	$alert=1;
+	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
+	for ($i = 0; $i < $nbErr; $i++) {
+		echo '<br>', $erreurs[$i];
+	}
+}
+
 
 
 if (! isset($_POST['btnValider2'])) {
 	// => On intialise les zones de saisie.
 	
 	fd_bd_connexion();
-
+	$nbErr2=0;
 	
 	$S = "SELECT	utiID,utiHeureMin, utiHeureMax
 					FROM	utilisateur
@@ -73,10 +82,19 @@ if (! isset($_POST['btnValider2'])) {
 	$erreurs2 = fdl_modification_affichage_calendrier();
 	$nbErr2 = count($erreurs2);	
 }
+$alert2=0;
+if ($nbErr2 > 0) {
+	$alert2=1;
+	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
+	for ($i = 0; $i < $nbErr2; $i++) {
+		echo '<br>', $erreurs2[$i];
+	}
+}
+
+
 
 if (! isset($_POST['ajouter'])) {
 	// => On intialise les zones de saisie.
-		
 	$nbErr3 = 0;
 	
 	$_POST['catNom1']='';
@@ -94,27 +112,14 @@ if (! isset($_POST['ajouter'])) {
 }
 
 // Si il y a des erreurs on les affiche
-
-if ($nbErr > 0) {
-	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
-	for ($i = 0; $i < $nbErr; $i++) {
-		echo '<br>', $erreurs[$i];
-	}
-}
-
-if ($nbErr2 > 0) {
-	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
-	for ($i = 0; $i < $nbErr2; $i++) {
-		echo '<br>', $erreurs2[$i];
-	}
-}
-
 if ($nbErr3 > 0) {
 	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
 	for ($i = 0; $i < $nbErr3; $i++) {
 		echo '<br>', $erreurs3[$i];
 	}
 }
+
+
 
 echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </div>';
 	// Affichage du formulaire
@@ -131,6 +136,10 @@ echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </d
 				"<input type='reset' name='btnEffacer1' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 			
+if (isset($_POST['btnValider1']) && $alert == 0)
+{
+	echo '<div class="confirmationSave"> Utilisateur mis à jour avec succès ! </div>';
+}			
 			
 echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrier </div>';
 	// Affichage du formulaire
@@ -152,61 +161,47 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 			
+if((isset($_POST['btnValider2']))&&($alert2==0)){
+	echo '<div class="confirmationSave"> Affichage d\'agenda mis à jour avec succès ! </div>';
+}
+			
 			
 echo '<div class="titreparam2 titreParametre"> Vos catégories </div>';
 	// Affichage du formulaire
 	
-	
-	
-	
-	
-function aj_form_categorie($ID,$Nom,$CatCouleurBordure,$CatCouleurFond,$Public) {
+if(isset($_POST['Supprimer'])){
 
-	
-		if(isset($_POST['Delete'])){
-			echo '<div> Supprimer la catégorie et les rendezvous et évènements associés
-					<input type="submit" name="Supprimer" value="-1"></div>';
-		}
-
-
-		$couleurHSL = ec_hexToHsl($CatCouleurFond); 
-
-		if ($couleurHSL[2] > 0.5) //0.5 = 50%  
-		{
-			$textColor = '000000';
-		} 
-		else
-		{
-			$textColor = 'FFFFFF';
-
-		}
-		
-		echo	'<form class="newparamCategorie" method="POST" action="parametres.php" >',
-		'<table border="1" cellpadding="4" cellspacing="15">',
-			'<tr border=" 1px solid black">',
-				'<td>Nom :</td>',
-				'<td class="catEspace"><input type="text" name="catNom" size="6"  maxlength="8" value="',$Nom,'"></td>',
-				'<td>Fond :</td>',
-				'<td class="catEspace"><input type="text" name="catFond" size="3"  maxlength="8" value="',$CatCouleurFond,'"></td>',
-				'<td>Bordures :</td>',
-				'<td class="catEspace"><input type="text" name="catBordure" size="3"  maxlength="8" value="',$CatCouleurBordure,'"></td>',
-				'<td class="catEspace"><input type="checkbox" name="catPublic" value="1"';
-		if($Public==1)
-		{
-			echo ' checked id="catPublic"';
-		}
-		echo	'><label for="catPublic">Public</label></td>',
-				'<td><div style="border: solid 2px #',$CatCouleurBordure,';background-color: #',$CatCouleurFond,';font-size: 14px;color: #',$textColor,';width: 75px;height: 20px;text-align: center;">Aper&ccedil;u</div></td>',
-				'<td style="padding-left: 20px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
-				'<td style="padding-left: 20px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',
-
-			'</tr>',
-		'</table>',
-	'</form>';		
+	$S1= "DELETE FROM 	categorie 
+						WHERE 	catID = '{$_POST['catID']}'";
+	$R1 = mysqli_query($GLOBALS['bd'],$S1) or fd_bd_erreur($S1);
+			
+	$S2 = "DELETE FROM 	rendezvous
+						WHERE 	rdvIDCategorie = '{$_POST['catID']}'";
+	$R2 = mysqli_query($GLOBALS['bd'],$S2) or fd_bd_erreur($S2);
 }
+	
+if(isset($_POST['Delete'])){
+	
+	$S1 = "SELECT	count(*)
+			FROM	categorie
+			WHERE	catIDUtilisateur = '{$_SESSION['utiID']}'";
+	$R1 = mysqli_query($GLOBALS['bd'],$S1) or fd_bd_erreur($S1);
+	$D1=mysqli_fetch_row($R1);
+	
+	if($D1[0]<4){
+		echo '<p class="confirmationSupp">Vous ne pouvez pas supprimer de catégories</p>';
+	}else{
+		echo '<form method="POST" action="parametres.php" class="confirmationSupp"><div> Supprimer la catégorie et les rendezvous et évènements associés : ',
+				'<input type="submit" name="Supprimer" value="Supprimer" class="boutonII">',
+				'<input type="hidden" name="catID" value="',$_POST['Delete'],'"></div></form>';
+	}
+}
+	
 
 
 if(isset($_POST['Save'])){
+	
+	echo '<div class="confirmationSave"> Catégorie mise à jour avec succès ! </div>';
 			
 	$err=array();
 	
@@ -253,12 +248,7 @@ if(isset($_POST['Save'])){
 		
 	}
 }
-if(isset($_POST['Delete'])){
-						
-			$S1="DELETE FROM 	categorie 
-						WHERE 	catID = '".$_POST['Delete']."'";
-			$R1 = mysqli_query($GLOBALS['bd'],$S1) or fd_bd_erreur($S1);
-}
+
 	
 	fd_bd_connexion();
 	$S="SELECT 	catID,catNom,catCouleurFond,catCouleurBordure,catPublic
@@ -370,7 +360,7 @@ echo '</section>';
 		
 		// Verification mot de passe
 		$mdp=0;
-		if(($_POST['txtPasse'] !== '')||($_POST['txtVerif'] !== '')){
+		if($_POST['txtPasse'] != ''){
 			$txtPasse = trim($_POST['txtPasse']);
 			$long = mb_strlen($txtPasse, 'UTF-8');
 			if ($long < 4 || $long > 20){
@@ -378,14 +368,14 @@ echo '</section>';
 			}
 
 			$txtVerif = trim($_POST['txtVerif']);
-			if ($txtPasse != $txtVerif) {
-				$erreurs[] = 'Le mot de passe est diff&eacute;rent dans les 2 zones';
+			if ($txtPasse !== $txtVerif) {
+				$erreurs[] = 'Le mot de passe est différent dans les 2 zones';
 			}
 			$mdp=1;
 		}
 
 		// Si il y a des erreurs, la fonction renvoie le tableau d'erreurs
-		if (count($erreurs) > 0) {
+		if (count($erreurs) > 0){
 			return $erreurs;		// RETURN : des erreurs ont été détectées
 		}
 
@@ -395,7 +385,6 @@ echo '</section>';
 		$txtNom = mysqli_real_escape_string($GLOBALS['bd'], $_POST['txtNom']);
 
 		$txtMail = mysqli_real_escape_string($GLOBALS['bd'], $_POST['txtMail']);
-		$txtPasse='';
 		if($mdp===1){
 			$txtPasse = mysqli_real_escape_string($GLOBALS['bd'], md5($txtPasse));
 			$S = "UPDATE utilisateur SET
@@ -418,8 +407,6 @@ echo '</section>';
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		
-		header ('location: parametres.php');
-		exit();
 }			
 
 
@@ -563,7 +550,56 @@ function fdl_modification_affichage_calendrier() {
 		exit();
 }	
 
+/**
+	* Affichage du formulaire pour les categories.
+	*
+	* @param 	int		$ID			Id de la catégorie
+	* @param string		$nom		Nom de la catégorie
+	* @param string		$catCouleurBordure		Couleur de la bordure d'affichage de la catégorie
+	* @param string		$catCouleurFond			Couleur de fond d'affichage de la catégorie
+	* @param 	int		$public		Couleur de la bordure d'affichage de la catégorie
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*/
+function aj_form_categorie($ID,$nom,$catCouleurBordure,$catCouleurFond,$public) {
 
+
+		$couleurHSL = ec_hexToHsl($catCouleurFond); 
+
+		if ($couleurHSL[2] > 0.5) //0.5 = 50%  
+		{
+			$textColor = '000000';
+		} 
+		else
+		{
+			$textColor = 'FFFFFF';
+
+		}
+		
+		echo	'<form class="newparamCategorie" method="POST" action="parametres.php" >',
+		'<table border="1" cellpadding="4" cellspacing="15">',
+			'<tr border=" 1px solid black">',
+				'<td>Nom :</td>',
+				'<td class="catEspace"><input type="text" name="catNom" size="6"  maxlength="8" value="',$nom,'"></td>',
+				'<td>Fond :</td>',
+				'<td class="catEspace"><input type="text" name="catFond" size="3"  maxlength="8" value="',$catCouleurFond,'"></td>',
+				'<td>Bordures :</td>',
+				'<td class="catEspace"><input type="text" name="catBordure" size="3"  maxlength="8" value="',$catCouleurBordure,'"></td>',
+				'<td class="catEspace"><input type="checkbox" name="catPublic" value="1"';
+		if($public==1)
+		{
+			echo ' checked id="catPublic"';
+		}
+		echo	'><label for="catPublic">Public</label></td>',
+				'<td><div style="border: solid 2px #',$catCouleurBordure,';background-color: #',$catCouleurFond,';font-size: 14px;color: #',$textColor,';width: 75px;height: 20px;text-align: center;">Aper&ccedil;u</div></td>',
+				'<td style="padding-left: 20px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
+				'<td style="padding-left: 20px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',
+
+			'</tr>',
+		'</table>',
+	'</form>';		
+}
 
 
 

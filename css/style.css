@@ -660,3 +660,27 @@ strong {
 .boutonAjouter{
 	padding-left: 30px;
 }
+
+.confirmationSupp{
+	border: 2px solid #FF9933;
+	color: #FF9933;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	width: 600px;
+	height: 40px;
+	margin-left: 150px;
+}
+
+.confirmationSave{
+	border: 2px solid green;
+	color: green;
+	text-align: center;
+	margin: 10px auto;
+	padding-top: 10px;
+	width: 400px;
+	height: 30px;
+
+}
+	
