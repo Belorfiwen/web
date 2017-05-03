@@ -161,24 +161,29 @@ echo '<div class="titreparam2"> Vos catégories </div>';
 	
 	
 function aj_form_categorie($ID,$Nom,$CatCouleurBordure,$CatCouleurFond,$Public) {
+	
+		if(isset($_POST['Delete'])){
+			echo '<div> Supprimer la catégorie et les rendezvous et évènements associés
+					<input type="submit" name="Supprimer" value="-1"></div>';
+		}
 		
 		echo	'<form class="newparamCategorie" method="POST" action="parametres.php" >',
 		'<table border="1" cellpadding="4" cellspacing="15">',
 			'<tr border=" 1px solid black">',
 				'<td>Nom :</td>',
-				'<td class="catEspace"><input type="text" name="catNom" size="10"  maxlength="8" value="',$Nom,'"></td>',
+				'<td class="catEspace"><input type="text" name="catNom" size="6"  maxlength="8" value="',$Nom,'"></td>',
 				'<td>Fond :</td>',
-				'<td class="catEspace"><input type="text" name="catFond" size="6"  maxlength="8" value="',$CatCouleurFond,'"></td>',
+				'<td class="catEspace"><input type="text" name="catFond" size="3"  maxlength="8" value="',$CatCouleurFond,'"></td>',
 				'<td>Bordures :</td>',
-				'<td class="catEspace"><input type="text" name="catBordure" size="6"  maxlength="8" value="',$CatCouleurBordure,'"></td>',
+				'<td class="catEspace"><input type="text" name="catBordure" size="3"  maxlength="8" value="',$CatCouleurBordure,'"></td>',
 				'<td class="catEspace"><input type="checkbox" name="catPublic" value="1"';
 				if($Public==1){
 					echo ' checked id="catPublic"';
 							}
 		echo	'><label for="catPublic">Public</label></td>',
 				'<td style="border: solid 2px #',$CatCouleurBordure,';background-color: #',$CatCouleurFond,';font-weight: bold;">Aper&ccedil;u</td>',
-				'<td style="padding-left: 20px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
-				'<td style="padding-left: 20px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',
+				'<td style="padding-left: 10px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
+				'<td style="padding-left: 10px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',
 
 			'</tr>',
 		'</table>',
@@ -265,9 +270,9 @@ if(isset($_POST['Delete'])){
 	
 	echo fd_form_ligne('&nbsp;','&nbsp;','class=\'titreparam3\'','',''),
 				fd_form_ligne('Nouvelle catégorie : ','','class=\'titreparam3\'','',''), 
-				fd_form_ligne('Nom : '.fd_form_input(APP_Z_TEXT,"catNom1", $_POST['catNom1'], 10). 
-							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond1", $_POST['catFond1'], 10).
-							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure1", $_POST['catBordure1'], 10),
+				fd_form_ligne('Nom : '.fd_form_input(APP_Z_TEXT,"catNom1", $_POST['catNom1'], 6). 
+							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond1", $_POST['catFond1'], 3).
+							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure1", $_POST['catBordure1'], 3),
 							fd_form_input('checkbox',"catPublic1", $_POST['catPublic1']).'Public  
 							<input type=\'submit\' name=\'ajouter\' value="Ajouter" size=15 class=\'boutonII\'>',
 												'','class="colonneGauche"','class="boutonIIAnnuler"');	
