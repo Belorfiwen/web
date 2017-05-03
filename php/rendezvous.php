@@ -8,9 +8,15 @@ ec_verifie_session();
 fd_bd_connexion();
 $GLOBALS['lienRendezVous']= $_SESSION['utiID'];
 
+$idRdv=0;
+if (isset($_GET['id'])) {
+	$idRdv = $_GET['id'];
+}
+
 $jour = 0;
 $mois = 0;
 $annee = 0;
+$heure = 0;
 
 if (isset($_GET['jour'])) {
 	$jour = $_GET['jour'];
@@ -28,21 +34,20 @@ if (isset($_GET['annee'])) {
 	$annee = $_GET['annee'];
 }
 
-if (isset($_GET['mode'])) {
-	$mode = $_GET['mode'];
-}
+
+$S2 = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur, rdvIDCategorie
+				FROM	rendezvous
+				WHERE	 rdvIDUtilisateur = '$idRdv'
+				AND		rdvID = '$idRdv'";
+
+$R2 = mysqli_query($GLOBALS['bd'], $S2) or fd_bd_erreur($S2);
+$D1=mysqli_fetch_assoc($R2);
 
 fd_html_head('24sur7 | Rendez-vous');
 
 fd_html_bandeau();
-echo '<input type=\'hidden\' name=\'mode\' value=\''.$_GET['mode'].'\'>',
-		'<input type=\'hidden\' name=\'j\' value=\'2\'>',
-		'<input type=\'hidden\' name=\'m\' value=\'3\'>',
-		'<input type=\'hidden\' name=\'a\' value=\'4\'>',
-		'<input type=\'hidden\' name=\'hdebut\' value=\'5\'>',
-		'<input type=\'hidden\' name=\'d\' value=\'6\'>';
-echo '<section id="bcContenu">',
-		'<aside id="bcGauche">';
+echo	'<section id="bcContenu">',
+			'<aside id="bcGauche">';
 
 fd_html_calendrier($jour, $mois, $annee);
 
@@ -82,7 +87,7 @@ echo
 		// On est dans la phase de soumission du formulaire :
 		// => vérification des valeurs reçues et création utilisateur.
 		// Si aucune erreur n'est détectée, fdl_add_rdv() ou fdl_modifie_rdv()
-			if($_GET['mode'] == -1){
+			if($idRdv == -1){
 				$erreurs = fdl_add_rdv();
 				$nbErr = count($erreurs);
 			} else {
@@ -100,15 +105,12 @@ echo
 		}
 	}
 	
-	$_POST['hdebut']=$_GET['heure'].'0'.'0';
-	$_POST['j']=$_GET['jour'];
-	$_POST['m']=$_GET['mois'];
-	$_POST['a']=$_GET['annee'];
+	$_POST['hdebut']=$heure.'0'.'0';
+	$_POST['j']=$jour;
+	$_POST['m']=$mois;
+	$_POST['a']=$annee;
 	
-	
-			
-	$_POST['mode']=$_GET['mode'];
-	if ($_POST['mode'] == -1) {
+	if ($idRdv == -1) {
 		echo '<div class="titrerdv">Nouvelle saisie </div>';
 	}
 	else
@@ -117,7 +119,7 @@ echo
 	}
 
 	// Affichage du formulaire
-	echo '<form class="newrdv" method="POST" action="rendezvous.php?mode='.$_GET['mode'].'&heure='.$_GET['heure'].'&heureFin='.$_POST['rdvFin_h'].'&jour='.$_GET['jour'].'&mois='.$_GET['mois'].'&annee='.$_GET['annee'].'">',
+	echo '<form class="newrdv" method="POST" action="rendezvous.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Libell&eacute; : ', 
 				fd_form_input(APP_Z_TEXT,'txtLibelle', $_POST['txtLibelle'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
@@ -219,7 +221,6 @@ echo
 		$jour = $_POST['rdvDate_j'];
 		$mois = $_POST['rdvDate_m'];
 		$annee = $_POST['rdvDate_a'];
-		$mode = $_GET['mode'];
 
 		if (!checkdate($mois, $jour, $annee)) {
 			$erreurs[] = 'La date de rendez-vous est invalide';
@@ -390,7 +391,6 @@ echo
 		$jour = $_POST['rdvDate_j'];
 		$mois = $_POST['rdvDate_m'];
 		$annee = $_POST['rdvDate_a'];
-		$mode = $_GET['mode'];
 
 		if (!checkdate($mois, $jour, $annee)) {
 			$erreurs[] = 'La date de rendez-vous est invalide';
@@ -461,21 +461,29 @@ echo
 
 		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 		
+		$S1 = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
+				FROM	rendezvous
+				WHERE	 rdvIDUtilisateur = '$ID'
+				AND		rdvID = '$idRdv'";
+
+		$R1 = mysqli_query($GLOBALS['bd'], $S1) or fd_bd_erreur($S1);
+		$D1=mysqli_fetch_assoc($R1);
+		
 		while($D = mysqli_fetch_assoc($R)){	
 			
-			if($D['rdvHeureDebut'] <= $_GET['heure']){
-				if($D['rdvHeureFin'] >= $_GET['heure']){
+			if($D['rdvHeureDebut'] <= $D1['rdvHeureDebut']){
+				if($D['rdvHeureFin'] >= $D1['rdvHeureDebut']){
 					continue;
 				}
 			}
 			
-			if($D['rdvHeureDebut'] <= $_GET['heureFin']){
-				if($D['rdvHeureFin'] >= $_GET['heureFin']){
+			if($D['rdvHeureDebut'] <= $D1['rdvHeureFin']){
+				if($D['rdvHeureFin'] >= $D1['rdvHeureFin']){
 					continue;
 				}
 			}
 			
-			if(($D['rdvHeureDebut'] >= $_GET['heure'])&&($D['rdvHeureFin']<=$_GET['heureFin'])){
+			if(($D['rdvHeureDebut'] >= $D1['rdvHeureDebut'])&&($D['rdvHeureFin']<=$D1['rdvHeureFin'])){
 				continue;
 			}	
 			
@@ -515,29 +523,7 @@ echo
 		$rdvDate=$annee.$mois.$jour;
 		$rdvHDeb=$hDeb.$mDeb;
 		$rdvHFin=$hFin.$mFin;
-		$Cat=$_POST['rdvCat'];	
-			
-			$hdebut=$_GET['heure'].'0'.'0';
-			$j=$_GET['jour'];
-			$m=$_GET['mois'];
-			if($_GET['jour']<10){
-				$j='0'.$_GET['jour'];
-			}	
-			if($_GET['mois']<10){
-				$m='0'.$_GET['mois'];
-			}
-			
-			$date=$_GET['annee'].$m.$j;
-				
-			$S = "SELECT	rdvID
-				FROM	rendezvous
-				WHERE	rdvIDUtilisateur = {$_SESSION['utiID']}
-				AND		rdvHeureDebut = '$hdebut'
-				AND 	rdvDate = '$date'";
-			$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-			
-			$D = mysqli_fetch_assoc($R);
-			$rdvID=$D['rdvID'];
+		$Cat=$_POST['rdvCat'];
 			
 			if(! isset($_POST['rdvCheck'])){
 				$S = "UPDATE rendezvous SET
@@ -546,7 +532,7 @@ echo
 					rdvHeureFin = '$rdvHFin',
 					rdvIDCategorie = '$Cat',
 					rdvLibelle = '$txtLibelle'
-					WHERE rdvID = '$rdvID'";
+					WHERE rdvID = '$idRdv'";
 					
 				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 			}
@@ -557,7 +543,7 @@ echo
 					rdvHeureFin = -1,
 					rdvIDCategorie = '$Cat',
 					rdvLibelle = '$txtLibelle'
-					WHERE rdvID = '$rdvID'";
+					WHERE rdvID = '$idRdv'";
 
 				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 			}	

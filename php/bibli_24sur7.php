@@ -966,9 +966,9 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 			for ($i=$utiHeureMin; $i < $utiHeureMax-1; $i++) 
 			{ 
-				echo	'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
+				echo	'<a href="rendezvous.php?id=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'"></a>';
 			}
-			echo 		'<a href="rendezvous.php?mode=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>';
+			echo 		'<a href="rendezvous.php?id=-1&heure=',$i,'&jour=',date('j',$date+$j*86400),'&mois=',date('n',$date+$j*86400),'&annee=',date('Y',$date+$j*86400),'" class="case-heure-bas"></a>';
 
 				$heureMin = ($utiHeureMin.'00');
 
