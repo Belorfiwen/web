@@ -38,7 +38,7 @@ while($D = mysqli_fetch_assoc($R)){
 	if (isset($_POST['abnSupp'.$i])) {
 		
 		// suppression de l'abonné avec aj_supprimer_abonnement($i)
-		aj_supprimer_abonnement($i);		
+		aj_suppression_abonnement($i);		
 
 	} 
 	$i++;
@@ -56,23 +56,10 @@ echo '<h1>Utilisateurs abonnés à moi : </h1>';
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	$i=1;
 	while($D = mysqli_fetch_assoc($R)){
-		$id = $D['utiID'];
-		$S1 = "SELECT *
-			FROM	suivi
-			WHERE	suiIDSuivi = '$id'
-			AND 	suiIDSuiveur = {$_SESSION['utiID']}";
-
-		$R1 = mysqli_query($GLOBALS['bd'], $S1) or fd_bd_erreur($S1);
 		
-		$D1 = mysqli_fetch_assoc($R1);
-		
-		if(count($D1)>0){
-			echo htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8');
-		} else {
-			echo '<input type="hidden" name="abnID$i" value="'.$D['utiID'].'">',
+		echo '<input type="hidden" name="abnID',$i,'" value="'.$D['utiID'].'">',
 			htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8'),
-				" <input type='submit' name='abn$i' value=\"S'abonner\" size=15 class='boutonII'>";
-		}
+				" <form method='POST' action='abonnements.php' style=\"display: inline-block;\><input type='submit' name='abn$i' value=\"S'abonner\" size=15 class='boutonII'></form></br>";
 		$i++;
 	}	
 	
@@ -88,9 +75,9 @@ echo '<h1>Je suis abonné à : </h1>';
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	$i=1;
 	while($D = mysqli_fetch_assoc($R)){
-		echo '<input type="hidden" name="abnSuppID$i" value="'.$D['utiID'].'">',
+		echo '<input type="hidden" name="abnSuppID',$i,'" value="'.$D['utiID'].'">',
 			htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8'),
-				" <input type='submit' name='abnSupp$i' value=\"Se désabonner\" size=15 class='boutonII'>";
+				" <form method='POST' action='abonnements.php' style=\"display: inline-block;\"><input type='submit' name='abnSupp$i' value=\"Se désabonner\" size=15 class='boutonII'></form></br>";
 		$i++;
 	}	
 		

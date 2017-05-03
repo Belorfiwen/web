@@ -292,19 +292,19 @@ echo
 		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 		
 		while($D = mysqli_fetch_assoc($R)){	
-			if($D['rdvHeureDebut'] <= $rdvHDeb){
-				if($D['rdvHeureFin'] >= $rdvHDeb){
+			if($D['rdvHeureDebut'] < $rdvHDeb){
+				if($D['rdvHeureFin'] > $rdvHDeb){
 					$erreurs[] = 'Le rendez-vous commence pendant un autre en cours';
 				}
 			}
 				
-			if($D['rdvHeureDebut'] <= $rdvHFin){
-				if($D['rdvHeureFin'] >= $rdvHFin){
+			if($D['rdvHeureDebut'] < $rdvHFin){
+				if($D['rdvHeureFin'] > $rdvHFin){
 					$erreurs[] = 'Le rendez-vous fini apres le debut d\'un autre';
 				}
 			}
 				
-			if(($D['rdvHeureDebut'] >= $rdvHDeb)&&($D['rdvHeureFin']<=$rdvHFin)){
+			if(($D['rdvHeureDebut'] > $rdvHDeb)&&($D['rdvHeureFin']<$rdvHFin)){
 				$erreurs[] = 'Le rendez-vous en remplace un autre';
 			}	
 		}
@@ -464,7 +464,7 @@ echo
 		$S1 = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
 				FROM	rendezvous
 				WHERE	 rdvIDUtilisateur = '$ID'
-				AND		rdvID = '$idRdv'";
+				AND		rdvID = {$_POST['id']}";
 
 		$R1 = mysqli_query($GLOBALS['bd'], $S1) or fd_bd_erreur($S1);
 		$D1=mysqli_fetch_assoc($R1);

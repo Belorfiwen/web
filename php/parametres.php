@@ -63,7 +63,7 @@ if (! isset($_POST['btnValider2'])) {
 	fd_bd_connexion();
 	$nbErr2=0;
 	
-	$S = "SELECT	utiID,utiHeureMin, utiHeureMax
+	$S = "SELECT	utiID, utiJours, utiHeureMin, utiHeureMax
 					FROM	utilisateur
 					WHERE	utiID = {$_SESSION['utiID']}";
 
@@ -72,6 +72,7 @@ if (! isset($_POST['btnValider2'])) {
 	$D = mysqli_fetch_assoc($R);
 	
 	$nbErr = 0;
+	$utiJours= $D['utiJours'];
 	$_POST['hMin'] = $D['utiHeureMin'];
 	$_POST['hMax'] = $D['utiHeureMax'];
 
@@ -143,6 +144,7 @@ if (isset($_POST['btnValider1']) && $alert == 0)
 			
 echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrier </div>';
 	// Affichage du formulaire
+	
 	echo '<form class="newparamCalendrier" method="POST" action="parametres.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Jours affich&eacute;s ', '<input type=\'checkbox\' name=\'checkLundi\' value=\'1\' checked> Lundi
@@ -154,14 +156,14 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 												<input type=\'checkbox\' name=\'checkDimanche\' value=\'1\' checked> Dimanche',
 												'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
-			fd_form_ligne('Heure minimale ', heure_min_max('hMin',7),'','class="colonneGauche"','class="boutonIIAnnuler"'),
+			fd_form_ligne('Heure minimale ', heure_min_max('hMin',8),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			fd_form_ligne('Heure maximale ', heure_min_max('hMax',18),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
 			fd_form_ligne("<input type='submit' name='btnValider2' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 			
-if((isset($_POST['btnValider2']))&&($alert2==0)){
+if(isset($_POST['btnValider2'])&& $alert2==0){
 	echo '<div class="confirmationSave"> Affichage d\'agenda mis à jour avec succès ! </div>';
 }
 			
@@ -188,7 +190,7 @@ if(isset($_POST['Delete'])){
 	$R1 = mysqli_query($GLOBALS['bd'],$S1) or fd_bd_erreur($S1);
 	$D1=mysqli_fetch_row($R1);
 	
-	if($D1[0]<4){
+	if($D1[0]<2){
 		echo '<p class="confirmationSupp">Vous ne pouvez pas supprimer de catégories</p>';
 	}else{
 		echo '<form method="POST" action="parametres.php" class="confirmationSupp"><div> Supprimer la catégorie et les rendezvous et évènements associés : ',
