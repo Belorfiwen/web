@@ -447,11 +447,15 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	
 	$semaineDebut = date('W', $timePremierJourMoisCourant);
 	$semaineFin = date('W', $timeDernierJourMoisCourant);
+	echo "$semaineDebut  $semaineFin";
 	$semaineCourante = date('W', $timeJourCourant);
 	if ($semaineDebut >= 52){ 
         $semaineDebut = 0;
         if ($semaineCourante >= 52) $semaineCourante = 0;
     }
+    /*if ($semaineFin == 1 && $semaineDebut > 45){ 
+        $semaineFin = 53;
+    }*/
 	
 	$jourSemaineJourDebut = date ('w', $timePremierJourMoisCourant);
 	($jourSemaineJourDebut == 0) && $jourSemaineJourDebut = 7;

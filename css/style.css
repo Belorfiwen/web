@@ -577,10 +577,14 @@ strong {
 	PAGE PARAMETRES
 --------------------------------------------------------------- */
 
+.titreParametre{
+	font-weight: bold;
+	font-size: 14px;
+}
+
 .titreparam1{
 	position: relative;
 	line-height: 1.2;
-	font-size: 18px; 
 	border-bottom: 2px solid black;
 	width: 800px;
 	padding-top: 20px;
@@ -591,17 +595,14 @@ strong {
 .titreparam2{
 	position: relative;
 	line-height: 1.2;
-	font-size: 18px; 
 	border-bottom: 2px solid black;
 	width: 800px;
-	padding-top: 40px;
-	margin: 0px auto;
+	margin: 40px auto 0px;
 }
 
 .newparamCategorie .titreparam3{
 	position: relative;
 	line-height: 1.2;
-	font-size: 18px; 
 	width: 800px;
 	margin-top: 10px;
 	text-align: left;
@@ -612,8 +613,7 @@ strong {
 	text-align: right;
 	position: relative;
 	margin: 10px 0px;
-	width: 380px;
-	height:180px;
+	width: 400px;
 	left: 320px;
 	line-height: 2.5;
 
@@ -622,18 +622,17 @@ strong {
 .newparamCalendrier{
 	text-align: right;
 	position: relative;
-	margin: 10px 0px 0px 0px;
+	margin: 10px 0px 0px;
 	left: 380px;
-	width: 400px;
-	height:180px;
+	width: 420px;
 	line-height: 2.5;
 
 }
 
 .newparamCategorie{
 	position: relative;
-	margin: 15px 0px 0px 0px;
-	left: 140px;
+	margin: 10px 0px 0px 0px;
+	left: 160px;
 	width: 700px;
 	line-height: 1.5;
 
