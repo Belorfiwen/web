@@ -287,10 +287,10 @@ if(isset($_POST['Delete'])){
 	echo 		fd_form_ligne('<p class="titreParametre">Nouvelle catégorie : </p>','','class=\'titreparam3\'','',''), 
 				fd_form_ligne('Nom : '.fd_form_input(APP_Z_TEXT,"catNom1", $_POST['catNom1'], 6). 
 							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond1", $_POST['catFond1'], 3).
-							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure1", $_POST['catBordure1'], 3),
-							fd_form_input('checkbox',"catPublic1", $_POST['catPublic1']).'Public  
-							<input type=\'submit\' name=\'ajouter\' value="Ajouter" size=15 class=\'boutonII\'>',
-												'','class="colonneGauche"','class="boutonIIAnnuler"');	
+							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure1", $_POST['catBordure1'], 3).
+							fd_form_input('checkbox',"catPublic1", $_POST['catPublic1']).'Public',
+							'<input type=\'submit\' name=\'ajouter\' value="Ajouter" size=15 class=\'boutonII\'>',
+												'','class="colonneGauche"','class="boutonAjouter"');	
 	
 	echo 		'</table>
 			</form>';		

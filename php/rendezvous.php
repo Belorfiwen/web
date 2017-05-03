@@ -5,6 +5,7 @@ ob_start();
 include('bibli_24sur7.php');	// Inclusion de la bibliothèque
 session_start();
 ec_verifie_session();
+fd_bd_connexion();
 
 $jour = 0;
 $mois = 0;
@@ -163,8 +164,6 @@ echo
 	
 	function recup_categorie(){
 		
-		fd_bd_connexion();
-
 			$ch="";
 			$ID = $_SESSION['utiID'];
 
@@ -189,6 +188,7 @@ echo
 			return $ch;
 			mysqli_free_result($R);
 			mysqli_close($GLOBALS['bd']);
+			
 	}
 	
 	/**
@@ -205,8 +205,6 @@ echo
 	* @return array 	Tableau des erreurs détectées
 	*/
 	function fdl_add_rdv() {
-		
-		fd_bd_connexion();
 		
 		//-----------------------------------------------------
 		// Vérification des zones
@@ -376,8 +374,6 @@ echo
 	* @return array 	Tableau des erreurs détectées
 	*/
 	function fdl_modifie_rdv() {
-		
-		fd_bd_connexion();
 		
 		//-----------------------------------------------------
 		// Vérification des zones
@@ -562,7 +558,7 @@ echo
 
 				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 			}	
-		
+				mysqli_free_result($R);
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
 		
