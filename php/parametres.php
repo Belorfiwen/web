@@ -16,7 +16,7 @@ fd_html_bandeau(APP_PAGE_PARAMETRES);
 echo '<section id="bcContenu">';
 	
 	
-echo	'<section>';
+echo	'<section style="padding-bottom: 27px;">';
 		
 $nbErr2=0;		
 			
@@ -116,7 +116,7 @@ if ($nbErr3 > 0) {
 	}
 }
 
-echo '<div class="titreparam1"> Informations sur votre compte </div>';
+echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </div>';
 	// Affichage du formulaire
 	echo '<form class="newparamUtilisateur" method="POST" action="parametres.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
@@ -132,7 +132,7 @@ echo '<div class="titreparam1"> Informations sur votre compte </div>';
 			'</table></form>';
 			
 			
-echo '<div class="titreparam2"> Options d\'affichage du calendrier </div>';
+echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrier </div>';
 	// Affichage du formulaire
 	echo '<form class="newparamCalendrier" method="POST" action="parametres.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
@@ -153,7 +153,7 @@ echo '<div class="titreparam2"> Options d\'affichage du calendrier </div>';
 			'</table></form>';
 			
 			
-echo '<div class="titreparam2"> Vos catégories </div>';
+echo '<div class="titreparam2 titreParametre"> Vos catégories </div>';
 	// Affichage du formulaire
 	
 	
@@ -161,10 +161,23 @@ echo '<div class="titreparam2"> Vos catégories </div>';
 	
 	
 function aj_form_categorie($ID,$Nom,$CatCouleurBordure,$CatCouleurFond,$Public) {
+
 	
 		if(isset($_POST['Delete'])){
 			echo '<div> Supprimer la catégorie et les rendezvous et évènements associés
 					<input type="submit" name="Supprimer" value="-1"></div>';
+
+
+		$couleurHSL = ec_hexToHsl($CatCouleurFond); 
+
+		if ($couleurHSL[2] > 0.5) //0.5 = 50%  
+		{
+			$textColor = '000000';
+		} 
+		else
+		{
+			$textColor = 'FFFFFF';
+
 		}
 		
 		echo	'<form class="newparamCategorie" method="POST" action="parametres.php" >',
@@ -177,13 +190,14 @@ function aj_form_categorie($ID,$Nom,$CatCouleurBordure,$CatCouleurFond,$Public) 
 				'<td>Bordures :</td>',
 				'<td class="catEspace"><input type="text" name="catBordure" size="3"  maxlength="8" value="',$CatCouleurBordure,'"></td>',
 				'<td class="catEspace"><input type="checkbox" name="catPublic" value="1"';
-				if($Public==1){
-					echo ' checked id="catPublic"';
-							}
+		if($Public==1)
+		{
+			echo ' checked id="catPublic"';
+		}
 		echo	'><label for="catPublic">Public</label></td>',
-				'<td style="border: solid 2px #',$CatCouleurBordure,';background-color: #',$CatCouleurFond,';font-weight: bold;">Aper&ccedil;u</td>',
-				'<td style="padding-left: 10px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
-				'<td style="padding-left: 10px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',
+				'<td><div style="border: solid 2px #',$CatCouleurBordure,';background-color: #',$CatCouleurFond,';font-size: 14px;color: #',$textColor,';width: 75px;height: 20px;text-align: center;">Aper&ccedil;u</div></td>',
+				'<td style="padding-left: 20px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
+				'<td style="padding-left: 20px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',
 
 			'</tr>',
 		'</table>',
@@ -265,11 +279,11 @@ if(isset($_POST['Delete'])){
 	mysqli_free_result($R);
 	
 	
-	echo '<form class="newparamCategorie" method="POST" action="parametres.php">',
-			'<table border="1" cellpadding="4" cellspacing="0">';
+	echo 	'<form class="newparamCategorie" method="POST" action="parametres.php">',
+				'<table border="1" cellpadding="4" cellspacing="0">';
 	
-	echo fd_form_ligne('&nbsp;','&nbsp;','class=\'titreparam3\'','',''),
-				fd_form_ligne('Nouvelle catégorie : ','','class=\'titreparam3\'','',''), 
+
+	echo 		fd_form_ligne('<p class="titreParametre">Nouvelle catégorie : </p>','','class=\'titreparam3\'','',''), 
 				fd_form_ligne('Nom : '.fd_form_input(APP_Z_TEXT,"catNom1", $_POST['catNom1'], 6). 
 							' Fond : '.fd_form_input(APP_Z_TEXT,"catFond1", $_POST['catFond1'], 3).
 							' Bordure : '.fd_form_input(APP_Z_TEXT,"catBordure1", $_POST['catBordure1'], 3),
@@ -277,7 +291,8 @@ if(isset($_POST['Delete'])){
 							<input type=\'submit\' name=\'ajouter\' value="Ajouter" size=15 class=\'boutonII\'>',
 												'','class="colonneGauche"','class="boutonIIAnnuler"');	
 	
-	echo '</table></form>';		
+	echo 		'</table>
+			</form>';		
 			
 	echo '</section>';
 

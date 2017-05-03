@@ -447,11 +447,15 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	
 	$semaineDebut = date('W', $timePremierJourMoisCourant);
 	$semaineFin = date('W', $timeDernierJourMoisCourant);
+	echo "$semaineDebut  $semaineFin";
 	$semaineCourante = date('W', $timeJourCourant);
 	if ($semaineDebut >= 52){ 
         $semaineDebut = 0;
         if ($semaineCourante >= 52) $semaineCourante = 0;
     }
+    /*if ($semaineFin == 1 && $semaineDebut > 45){ 
+        $semaineFin = 53;
+    }*/
 	
 	$jourSemaineJourDebut = date ('w', $timePremierJourMoisCourant);
 	($jourSemaineJourDebut == 0) && $jourSemaineJourDebut = 7;
@@ -944,22 +948,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 	}
 	echo		'</div>';
 
-	// Requête de sélection des rendez-vous sur une journée
-
-	$sql = "SELECT rdvID, rdvLibelle, rdvDate, catCouleurFond, catCouleurBordure, catPublic, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
-			FROM rendezvous, categorie
-			WHERE rendezvous.rdvIDCategorie = categorie.catID
-			AND rendezvous.rdvHeureFin != -1
-			AND rendezvous.rdvIDUtilisateur = {$GLOBALS['lienRendezVous']}
-			AND rendezvous.rdvDate >= $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1).(($jourDate1 < 10)?'0'.$jourDate1:$jourDate1)."
-			AND rendezvous.rdvDate <= $anneeDate2".(($numMoisDate2 < 10)?'0'.$numMoisDate2:$numMoisDate2).(($jourDate2 < 10)?'0'.$jourDate2:$jourDate2).
-			" ORDER BY rdvDate";
-
-	// Exécution de la requête
-	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
-
 	$count = 0;
-	$testDate = -1;
 
 	for ($j=0; $j < 7; $j++) { 
 
@@ -985,19 +974,22 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 				$heureMax = (($utiHeureMax).'00');
 
-			if ($testDate == -1) {
-				$D = mysqli_fetch_assoc($R);
-			}
-			$testDate = 0;
+			// Requête de sélection des rendez-vous d'une journée
 
-			while($D['rdvDate'] == (int)(date('Ymd',mktime(0,0,0,$mois,$jour-$numJourSem+$j,$annee))))
+			$jourRdv = $jourDate1+$j;
+
+			$sql = "SELECT rdvID, rdvLibelle, rdvDate, catCouleurFond, catCouleurBordure, catPublic, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
+					FROM rendezvous, categorie
+					WHERE rendezvous.rdvIDCategorie = categorie.catID
+					AND rendezvous.rdvHeureFin != -1
+					AND rendezvous.rdvIDUtilisateur = {$GLOBALS['lienRendezVous']}
+					AND rendezvous.rdvDate = $anneeDate1".(($numMoisDate1 < 10)?'0'.$numMoisDate1:$numMoisDate1).(($jourRdv < 10)?'0'.$jourRdv:$jourRdv);
+
+			// Exécution de la requête
+			$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
+
+			while($D = mysqli_fetch_assoc($R))
 			{
-				if ($testDate != 0) {
-					$D = mysqli_fetch_assoc($R);
-				}
-				if ($D['rdvDate'] == (int)(date('Ymd',mktime(0,0,0,$mois,$jour-$numJourSem+$j,$annee)))) {
-					
-					$testDate++;
 
 					if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] > $heureMin) 
 					{
@@ -1084,7 +1076,6 @@ function ec_html_semainier($jour, $mois, $annee) {
 								  'top: ',$minTopRDV+($heureDebut-$utiHeureMin)*41 + $minDebut,'px;', 
 						          'height: ',32*($heureFin-$heureDebut)+9*($heureFin-$heureDebut-1)+($minFin-$minDebut),'px;" class="rendezvous ',$classeRDV,'" href="rendezvous.php?id=',$D['rdvID'],'">',$D['rdvLibelle'],'</',$balise,'>';
 					}
-				}
 			}
 
 			echo '</div>';
