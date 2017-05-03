@@ -990,6 +990,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 			while($D = mysqli_fetch_assoc($R))
 			{
+					ec_htmlProteger($D);
 
 					if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] > $heureMin) 
 					{
