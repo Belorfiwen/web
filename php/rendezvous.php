@@ -164,6 +164,7 @@ echo
 	
 	function recup_categorie(){
 		
+			fd_bd_connexion();
 			$ch="";
 			$ID = $_SESSION['utiID'];
 
@@ -206,6 +207,7 @@ echo
 	*/
 	function fdl_add_rdv() {
 		
+		fd_bd_connexion();
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------
@@ -374,7 +376,7 @@ echo
 	* @return array 	Tableau des erreurs détectées
 	*/
 	function fdl_modifie_rdv() {
-		
+		fd_bd_connexion();
 		//-----------------------------------------------------
 		// Vérification des zones
 		//-----------------------------------------------------
