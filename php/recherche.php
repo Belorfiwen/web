@@ -123,7 +123,7 @@ function ecl_recherche() {
 			echo '<form method="POST" action="recherche.php">',
 				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
 				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
-				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo',$i,'" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
+				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
 			$count++;
 		}
 	}
@@ -148,18 +148,14 @@ function ecl_recherche() {
 	* @global array		$_GLOBALS	base de bonnées 
 	*
 	*/
-	function ecl_delete_rdv() {
+	function ecl_desabonnement() {
 		fd_bd_connexion();
-		
-		$jour = $_POST['rdvDate_j'];
-		$mois = $_POST['rdvDate_m'];
-		$annee = $_POST['rdvDate_a'];
 
 		//-----------------------------------------------------
-		// Insertion d'un nouveau rendez-vous dans la base de données   
+		// supression d'un suivi dans la base de données   
 		//-----------------------------------------------------
 
-		$S = "DELETE FROM rendezvous
+		$S = "DELETE FROM suivi
  			  WHERE rdvID = {$_POST['idRdv']}";
 
 		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
