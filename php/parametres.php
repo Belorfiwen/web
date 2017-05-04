@@ -194,7 +194,7 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 			
-if (isset($_POST['btnValider2']) && $alert2 == 0)
+if ($alert2 == 0 && isset($_POST['btnValider2']))
 {
 	echo '<div class="confirmationSave"> Affichage agenda mis &agrave; jour avec succ&egrave;s ! </div>';
 }			
