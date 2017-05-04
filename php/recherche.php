@@ -35,7 +35,7 @@ fd_html_bandeau(APP_PAGE_RECHERCHE);
 echo '<section id="bcContenu">',
 		'<section>',
 			'<form method="POST" action="recherche.php">',
-				'<div id="zoneRecherche">Entrez le crit&egrave;re de recherche : <form method="POST" action="identification.php">',
+				'<div id="zoneRecherche">Entrez le crit&egrave;re de recherche : ',
 				fd_form_input(APP_Z_TEXT,'recherche', $_POST['recherche'], 30),fd_form_input(APP_Z_SUBMIT,'btnRechercher', 'Rechercher', 15,'class="boutonII"'),
 				'</div>',
 			'</form>';
@@ -121,7 +121,7 @@ function ecl_recherche() {
 			}
 
 			echo '<form method="POST" action="recherche.php">',
-				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
+				 '<input type="hidden" name="utiIDAbonne" value="',$D['utiID'],'">',
 				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
 				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
 			$count++;
@@ -140,9 +140,8 @@ function ecl_recherche() {
 }
 
 	/**
-	* Validation de la saisie et suppression d'un rendezvous.
-	*
-	* une suppression est faite du rendezvous selectionné.
+	* 
+	* Supression d'un abonnement
 	*
 	* @global array		$_POST		zones de saisie du formulaire
 	* @global array		$_GLOBALS	base de bonnées 
@@ -156,7 +155,37 @@ function ecl_recherche() {
 		//-----------------------------------------------------
 
 		$S = "DELETE FROM suivi
- 			  WHERE rdvID = {$_POST['idRdv']}";
+ 			  WHERE suiIDSuiveur = {$_SESSION['utiIDAbonne']}
+ 			  AND   suiIDSuivi = {$_POST['idRdv']}";
+
+		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+
+		mysqli_free_result($R);
+		// Déconnexion de la base de données
+		mysqli_close($GLOBALS['bd']);
+		
+		header ("location: agenda.php?jour=$jour&mois=$mois&annee=$annee");
+		exit();
+	}
+
+	/**
+	* 
+	* Supression d'un abonnement
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*
+	*/
+	function ecl_abonnement() {
+		fd_bd_connexion();
+
+		//-----------------------------------------------------
+		// supression d'un suivi dans la base de données   
+		//-----------------------------------------------------
+
+		$S = "DELETE FROM suivi
+ 			  WHERE suiIDSuiveur = {$_SESSION['utiIDAbonne']}
+ 			  AND   suiIDSuivi = {$_POST['idRdv']}";
 
 		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
