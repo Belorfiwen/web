@@ -14,9 +14,6 @@ fd_html_bandeau(APP_PAGE_ABONNEMENTS);
 echo '<div id="bcContenu">',
 		'<div>';
 		
-		
-fd_bd_connexion();
-		
 	
 // si bouton "s'abonner/se desabonner" cliqué, on appel la fonction ec_abonnement() qui permet de s'abonner à un utilisateur ou de se desabonner
 if (isset($_POST['btnAbo'])) 
@@ -28,7 +25,7 @@ if (isset($_POST['btnAbo']))
 		
 echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrave; moi : </div>';
 		
-	
+	fd_bd_connexion();
 	//requète pour selectionner les utilisateurs qui sont abonnés à l'utilisateur courant
 
 	$S = "SELECT	utiID, utiNom, utiMail, s1.suiIDSuivi AS s1Suivi,s1.suiIDSuiveur AS s1Suiveur,s2.suiIDSuivi AS s2Suivi,s2.suiIDSuiveur AS s2Suiveur
