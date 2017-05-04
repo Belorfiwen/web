@@ -34,12 +34,14 @@ fd_html_bandeau(APP_PAGE_AGENDA);
 echo '<section id="bcContenu">',
 		'<aside id="bcGauche">';
 
+//Affiche le calendrier selon les variables rentrée : $jour, $mois, $annee
 fd_html_calendrier($jour, $mois, $annee);
 
+//Affiche les catégories de l'utilisateur et les autre utilisateurs abonnées avec leurs catégories
 ec_html_categorie($jour, $mois, $annee);
 
 echo	'</aside>';
-
+//Affiche le semainier et les rendez vous correspondant au jour sélectionné dans le calendrier
 ec_html_semainier($jour, $mois, $annee);
 
 echo	'</section><div style="clear: both;"> </div>',

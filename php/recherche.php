@@ -1,11 +1,9 @@
 <?php
 /** @file
- * Page d'accueil de l'application 24sur7
- *
- * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
+ * Page de recherche des utilisateurs de l'application 24sur7
  */
 ob_start();
-include('bibli_24sur7.php');	// Inclusion de la bibliothéque
+include('bibli_24sur7.php');	// Inclusion de la bibliothèque
 session_start();
 ec_verifie_session();
 

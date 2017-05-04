@@ -3,7 +3,7 @@
 // Bufferisation des sorties
 ob_start();
 
-// Inclusion de la bibliothéque
+// Inclusion de la bibliothèque
 include('bibli_24sur7.php');
 
 //-----------------------------------------------------

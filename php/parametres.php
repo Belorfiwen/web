@@ -1,15 +1,13 @@
 <?php
 /** @file
- * Page d'accueil de l'application 24sur7
- *
- * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
+ * Page des paramètres de l'application 24sur7
  */
 ob_start();
-include('bibli_24sur7.php');	// Inclusion de la bibliothéque
+include('bibli_24sur7.php');	// Inclusion de la bibliothèque
 session_start();
 ec_verifie_session();
 
-fd_html_head('24sur7 | Param&egrave;tre');
+fd_html_head('24sur7 | Param&egrave;tres');
 
 fd_html_bandeau(APP_PAGE_PARAMETRES);
 
@@ -101,7 +99,7 @@ if (! isset($_POST['btnValider2'])) {
 } else {
 	// On est dans la phase de soumission du formulaire :
 	// => vérification des valeurs reçues et création utilisateur.
-	// Si aucune erreur n'est détectée, fdl_modification_affichage_calendrier
+	// Si aucune erreur n'est détectée, fdl_modification_affichage_calendrier()
 	$erreurs2 = fdl_modification_affichage_calendrier();
 	$nbErr2 = count($erreurs2);	
 }
@@ -129,7 +127,7 @@ if (! isset($_POST['ajouter'])) {
 } else {
 	// On est dans la phase de soumission du formulaire :
 	// => vérification des valeurs reçues
-	// Si aucune erreur n'est détectée, fdl_modification_utilisateur()
+	// Si aucune erreur n'est détectée, fdl_ajout_categorie()
 	$erreurs3 = fdl_ajout_categorie();
 	$nbErr3 = count($erreurs3);	
 }
@@ -145,7 +143,7 @@ if ($nbErr3 > 0) {
 
 
 echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </div>';
-	// Affichage du formulaire
+	// Affichage du formulaire de modification utilisateur
 	echo '<form class="newparamUtilisateur" method="POST" action="parametres.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Nom ', 
@@ -158,14 +156,15 @@ echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </d
 			fd_form_ligne("<input type='submit' name='btnValider1' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer1' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
-			
+	
+//Confirmation de mise à jour	
 if (isset($_POST['btnValider1']) && $alert == 0)
 {
 	echo '<div class="confirmationSave"> Utilisateur mis &agrave; jour avec succ&egrave;s ! </div>';
 }			
 			
 echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrier </div>';
-	// Affichage du formulaire
+	
 
 	$lundi = (($_POST['checkLundi'] == 1)?'checked':''); 
 	$mardi = (($_POST['checkMardi'] == 1)?'checked':'');
@@ -175,6 +174,7 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 	$samedi = (($_POST['checkSamedi'] == 1)?'checked':'');
 	$dimanche = (($_POST['checkDimanche'] == 1)?'checked':'');
 
+	// Affichage du formulaire de modification des parametres du calendrier
 	echo '<form class="newparamCalendrier" method="POST" action="parametres.php">',
 			'<table border="1" cellpadding="4" cellspacing="0">',
 			fd_form_ligne('Jours affich&eacute;s ', '<input type=\'checkbox\' name=\'checkLundi\' value=\'1\' '.$lundi.'> Lundi
@@ -193,7 +193,8 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 			fd_form_ligne("<input type='submit' name='btnValider2' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
 				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
-			
+	
+//Confirmation de mise à jour		
 if ($alert2 == 0 && isset($_POST['btnValider2']))
 {
 	echo '<div class="confirmationSave"> Affichage agenda mis &agrave; jour avec succ&egrave;s ! </div>';
@@ -202,8 +203,9 @@ if ($alert2 == 0 && isset($_POST['btnValider2']))
 			
 			
 echo '<div class="titreparam2 titreParametre"> Vos cat&eacute;gories </div>';
-	// Affichage du formulaire
 	
+// test de soumission d'un bouton supprimer et suppression 
+// de la catégorie et des rendezvous associés
 if(isset($_POST['Supprimer'])){
 
 	$S1= "DELETE FROM 	categorie 
@@ -215,6 +217,8 @@ if(isset($_POST['Supprimer'])){
 	$R2 = mysqli_query($GLOBALS['bd'],$S2) or fd_bd_erreur($S2);
 }
 	
+// test de soumission d'un bouton Delete et affichage
+// de la demande de confirmation de suppression
 if(isset($_POST['Delete'])){
 	
 	$S1 = "SELECT	count(*)
@@ -233,7 +237,8 @@ if(isset($_POST['Delete'])){
 }
 	
 
-
+// test de soumission d'un bouton save et test la validité des zones de formulaire 
+// puis modification de la catégorie dans la base de donnée
 if(isset($_POST['Save'])){
 	
 	echo '<div class="confirmationSave"> Cat&eacute;gorie mise &agrave; jour avec succ&egrave;s ! </div>';
@@ -292,6 +297,7 @@ if(isset($_POST['Save'])){
 	
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
+	// Affichage du formulaire de modification/suppression de catégories
 	while($D = mysqli_fetch_assoc($R)){
 		ec_htmlProteger ($D);
 		aj_form_categorie($D['catID'],$D['catNom'],$D['catCouleurBordure'],$D['catCouleurFond'],$D['catPublic']);
@@ -300,6 +306,7 @@ if(isset($_POST['Save'])){
 	mysqli_free_result($R);
 	
 	
+	//Afffichage du formulaire d'ajout de categories
 	echo 	'<form class="newparamCategorie" method="POST" action="parametres.php">',
 				'<table border="1" cellpadding="4" cellspacing="0">';
 	
@@ -336,7 +343,7 @@ echo '</section>';
 	* Les zones reçues du formulaires de saisie sont vérifiées. Si
 	* des erreurs sont détectées elles sont renvoyées sous la forme
 	* d'un tableau. Si il n'y a pas d'erreurs,
-	* une modification est faite si le rendez vous existe.
+	* une modification est faite pour l'utilisateur connecté.
 	*
 	* @global array		$_POST		zones de saisie du formulaire
 	* @global array		$_GLOBALS	base de bonnées 
@@ -447,7 +454,8 @@ echo '</section>';
 	*
 	* Les zones reçues du formulaires de saisie sont vérifiées. Si
 	* des erreurs sont détectées elles sont renvoyées sous la forme
-	* d'un tableau. Si il n'y a pas d'erreurs,une modification est faite dans la table utilisateur.
+	* d'un tableau. Si il n'y a pas d'erreurs,une modification est faite dans la table utilisateur .
+	* pour l'affichage du semainier.
 	*
 	* @global array		$_POST		zones de saisie du formulaire
 	* @global array		$_GLOBALS	base de bonnées 
@@ -595,7 +603,7 @@ function fdl_modification_affichage_calendrier() {
 	*/
 function aj_form_categorie($ID,$nom,$catCouleurBordure,$catCouleurFond,$public) {
 
-
+		//Modification de la couleur du texte Aperçu selon la couleur de fond du bloc
 		$couleurHSL = ec_hexToHsl($catCouleurFond); 
 
 		if ($couleurHSL[2] > 0.5) //0.5 = 50%  

@@ -2,7 +2,6 @@
 /** @file
  * Bibliothèque générale de fonctions
  *
- * @author : Frederic Dadeau - frederic.dadeau@univ-fcomte.fr
  */
 
 //____________________________________________________________________________

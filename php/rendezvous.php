@@ -169,11 +169,6 @@ echo
 		}
 	}
 	
-	/*$_POST['hdebut']=$heure.'0'.'0';
-	$_POST['j']=$jour;
-	$_POST['m']=$mois;
-	$_POST['a']=$annee;*/
-	
 	if ($idRdv == -1) 
 	{
 		$bouton1 = 'Ajouter';
@@ -640,16 +635,13 @@ function aj_recup_categorie($idCat){
 
 
 	/**
-	* Validation de la saisie et modification d'un rendezvous.
+	* Validation de la saisie et suppression d'un rendezvous.
 	*
-	* Les zones reçues du formulaires de saisie sont vérifiées. Si
-	* des erreurs sont détectées elles sont renvoyées sous la forme
-	* d'un tableau. Si il n'y a pas d'erreurs, une modification est faite si le rendez vous existe.
+	* une suppression est faite du rendezvous selectionné.
 	*
 	* @global array		$_POST		zones de saisie du formulaire
 	* @global array		$_GLOBALS	base de bonnées 
 	*
-	* @return array 	Tableau des erreurs détectées
 	*/
 	function ecl_delete_rdv() {
 		fd_bd_connexion();
