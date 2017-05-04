@@ -16,41 +16,25 @@ echo '<div id="bcContenu">',
 		
 		
 fd_bd_connexion();
-	
-	$S = "SELECT 	count(*)
-			FROM	suivi
-			WHERE	suiIDSuivi = {$_SESSION['utiID']}";
-
-	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-	$i=1;
-while($D = mysqli_fetch_assoc($R)){
 		
 	
-	if (isset($_POST['abn'.$i])) {
+if (isset($_POST['btnAbo'])) {
 		
-		// suppression de l'abonné avec aj_ajout_abonnement($i)
-		aj_ajout_abonnement($i);		
-
-	} 
-	
-	if (isset($_POST['abnSupp'.$i])) {
-		
-		// suppression de l'abonné avec aj_supprimer_abonnement($i)
-		aj_suppression_abonnement($i);		
-
-	} 
-	$i++;
+	// suppression ou ajout d'un suivi
+	ec_abonnement();
 }
+
 		
 echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrave; moi : </div>';
 		
 	fd_bd_connexion();
 	
-	$S = "SELECT	utiID, utiNom, utiMail
-			FROM	utilisateur, suivi AS s1
-			LEFT OUTER JOIN suivi AS s2 ON utilisateur.utiID = suivi.suiIDSuiveur
-			WHERE	s1.suiIDSuivi = {$_SESSION['utiID']}
-			AND 	s1.suiIDSuiveur = utiID";
+	$S = "SELECT	utiID, utiNom, utiMail, s1.suiIDSuivi AS s1Suivi,s1.suiIDSuiveur AS s1Suiveur,s2.suiIDSuivi AS s2Suivi,s2.suiIDSuiveur AS s2Suiveur
+			FROM suivi AS s2, utilisateur
+			LEFT JOIN suivi AS s1
+            ON s1.suiIDSuiveur = {$_SESSION['utiID']} AND s1.suiIDSuivi = utilisateur.utiID
+            WHERE s2.suiIDSuiveur = utilisateur.utiID AND s2.suiIDSuivi = {$_SESSION['utiID']}
+            ORDER BY utilisateur.utiID";
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	$i=1;
@@ -64,10 +48,20 @@ echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrav
 				$color = '#E5ECF6';
 			}
 		
+			$btn = '<input type="submit" name="btnAbo" value="S\'abonner" size=15 class="boutonII boutonRA">';
+
+			$valueBtn = 1;
+
+			if ($D['s1Suiveur'] != NULL) {
+				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA">';
+
+				$valueBtn = 0;
+			}
+
 			echo '<form method="POST" action="abonnements.php">',
-				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
-				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],
-				 '<input type="submit" name="btnAbonnement',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
+				 '<input type="hidden" name="utiIDAbonne" value="',$D['utiID'],'">',
+				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
+				 '<table class="recherche" style="background-color:',$color,'"><tr><td><p class="texteAbonne">',$D['utiNom'],' - ',$D['utiMail'],' </p></td><td>',$btn,'</td></tr></table></form>';
 			$i++;
 		}
 	}	
@@ -76,7 +70,7 @@ echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrav
 	
 echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : </div>';
 	
-	$S = "SELECT	utiID, utiNom, utiMail
+	$S = "SELECT	utiID, utiNom, utiMail, suiIDSuivi
 			FROM	utilisateur, suivi
 			WHERE	suiIDSuivi = utiID
 			AND 	suiIDSuiveur = {$_SESSION['utiID']}";
@@ -93,10 +87,14 @@ echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : <
 				$color = '#E5ECF6';
 			}
 
+				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA">';
+
+				$valueBtn = 0;
+
 			echo '<form method="POST" action="abonnements.php">',
-				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
-				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],
-				 '<input type="submit" name="btnAbonne',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
+				 '<input type="hidden" name="utiIDAbonne" value="',$D['utiID'],'">',
+				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
+				 '<table class="recherche" style="background-color:',$color,'"><tr><td><p class="texteAbonne">',$D['utiNom'],' - ',$D['utiMail'],' </p></td><td>',$btn,'</td></tr></table></form>';
 			$i++;
 		}
 	}	

@@ -106,18 +106,25 @@ function ecl_recherche() {
 				$abonne = '[est abonn&eacute; &agrave; votre agenda]';
 			}
 
-			$libelleBtn = 'S\'abonner';
+			$btn = '<input type="submit" name="btnAbo" value="S\'abonner" size=15 class="boutonII boutonRA">';
+
 			$valueBtn = 1;
+
 			if ($D['s1Suiveur'] != NULL) {
-				$libelleBtn = 'Se d&eacute;sabonner';
+				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA">';
+
 				$valueBtn = 0;
+			}
+
+			if ($D['utiID'] == $_SESSION['utiID']) {
+				$btn = '';
 			}
 
 			echo '<form method="POST" action="recherche.php">',
 				 '<input type="hidden" name="recherche" value="',$_POST['recherche'],'">',
 				 '<input type="hidden" name="utiIDAbonne" value="',$D['utiID'],'">',
 				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
-				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
+				 '<table class="recherche" style="background-color:',$color,'"><tr><td><p class="texteAbonne">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'</p></td><td>',$btn,'</td></tr></table></form>';
 			$count++;
 		}
 	}

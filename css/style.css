@@ -693,7 +693,7 @@ strong {
 .recherche{
 	margin: auto;
 	width: 680px;
-	min-height: 20px;
+	min-height: 40px;
 	padding-left: 10px;
 }
 
@@ -703,6 +703,12 @@ strong {
 	width: 600px;
 }
 .boutonRA{
-	float: right; 
+	position: relative;
+	top: 5px;
 	margin-right: 10px;
+}
+
+.texteAbonne{
+	word-wrap: break-word;
+	width: 580px;
 }
