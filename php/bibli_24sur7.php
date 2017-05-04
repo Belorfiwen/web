@@ -420,7 +420,7 @@ function fd_html_pied() {
  * @param integer	$mois		Numéro du mois à afficher
  * @param integer	$annee		Année à afficher
  */
-function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
+function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0, $idRdv='') {
 	list($JJ, $MM, $AA) = explode('-', date('j-n-Y'));
 
 	// Vérification des paramètres
@@ -503,9 +503,9 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 	// Affichage du titre du calendrier
 	echo '<section id="calendrier">',
 	'<p>',
-	'<a href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDateMoins,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
+	'<a href="?id=',$idRdv,'&uti=',$GLOBALS['lienRendezVous'],'&',$returnDateMoins,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 	fd_get_mois($mois), ' ', $annee,
-	'<a href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDatePlus,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
+	'<a href="?id=',$idRdv,'&uti=',$GLOBALS['lienRendezVous'],'&',$returnDatePlus,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 	'</p>';
 	
 	// Affichage des jours du calendrier
@@ -546,7 +546,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 
 			if ($moisAff == $mois)
 			{
-              echo '<a href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDate,'">', $jourAff, '</a></td>';
+              echo '<a href="?id=',$idRdv,'&uti=',$GLOBALS['lienRendezVous'],'&',$returnDate,'">', $jourAff, '</a></td>';
             }
             else
             {
@@ -560,7 +560,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0) {
 					$returnDate = 'jour='.$jourAff.'&mois=1&annee='.($annee+1);
 				}
 
-              echo '<a class="lienJourHorsMois" href="?uti=',$GLOBALS['lienRendezVous'],'&',$returnDate,'">', $jourAff, '</a></td>';
+              echo '<a class="lienJourHorsMois" href="?id=',$idRdv,'&uti=',$GLOBALS['lienRendezVous'],'&',$returnDate,'">', $jourAff, '</a></td>';
             }
 			$jourAff++;
 			if ($jourAff > $dernierJourMoisAff){
@@ -625,7 +625,7 @@ function ec_html_categorie($jour, $mois, $annee) {
 		if ($count == 0) 
 		{
 			echo 	'<p>',
-						'<a href="?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">Agenda de ',$D['utiNom'],'</a> ',
+						'<a href="agenda.php?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">Agenda de ',$D['utiNom'],'</a> ',
 					'</p>',
 					'<ul>';
 			$count++;
@@ -666,7 +666,7 @@ function ec_html_categorie($jour, $mois, $annee) {
 		if ($prev != $D['utiID']) 
 		{
 			echo 	'<p>',
-						'<a class="catSui" href="?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">',$D['utiNom'],'</a> ',
+						'<a class="catSui" href="agenda.php?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">',$D['utiNom'],'</a> ',
 					'</p>';
 		}
 		
