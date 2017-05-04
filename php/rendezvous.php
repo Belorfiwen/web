@@ -173,13 +173,13 @@ echo
 	{
 		$bouton1 = 'Ajouter';
 		$bouton2 = "<input type='reset' name='btnEffacer' value=\"Annuler\" size=15 class='boutonII'>";
-		echo '<div class="titrerdv">Nouvelle saisie </div>';
+		echo '<div class="titrerdv titreParametre">Nouvelle saisie </div>';
 	}
 	else
 	{
 		$bouton1 = 'Mettre &agrave; jour';
 		$bouton2 = "<input type='submit' name='btnDelete' value=\"Supprimer\" size=15 class='boutonII'>";
-		echo '<div class="titrerdv">Modification </div>';
+		echo '<div class="titrerdv titreParametre">Modification </div>';
 	}
 
 	// Affichage du formulaire
