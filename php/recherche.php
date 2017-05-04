@@ -25,8 +25,8 @@ fd_html_head('24sur7 | Recherche');
 
 fd_html_bandeau(APP_PAGE_RECHERCHE);
 
-echo '<section id="bcContenu">',
-		'<section>',
+echo '<div id="bcContenu">',
+		'<div>',
 			'<form method="POST" action="recherche.php">',
 				'<div id="zoneRecherche">Entrez le crit&egrave;re de recherche : ',
 				fd_form_input(APP_Z_TEXT,'recherche', $_POST['recherche'], 30),fd_form_input(APP_Z_SUBMIT,'btnRechercher', 'Rechercher', 15,'class="boutonII"'),
@@ -37,8 +37,8 @@ if (isset($_POST['btnRechercher'])) {
 	ecl_recherche();
 }
 
-echo	'</section>',
-	'</section>';
+echo	'</div>',
+	'</div>';
 
 fd_html_pied();
 ob_end_flush();

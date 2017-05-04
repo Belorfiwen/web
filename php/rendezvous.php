@@ -151,7 +151,7 @@ if (isset($_GET['annee'])) {
 fd_html_head('24sur7 | Rendez-vous');
 
 fd_html_bandeau();
-echo	'<section id="bcContenu">',
+echo	'<div id="bcContenu">',
 			'<aside id="bcGauche">';
 
 fd_html_calendrier($jour, $mois, $annee,$idRdv);
@@ -160,7 +160,7 @@ ec_html_categorie($jour, $mois, $annee);
 		
 echo	
 		'</aside>',
-		'<section id="bcCentre">';
+		'<div id="bcCentre">';
 	// Si il y a des erreurs on les affiche
 	if ($nbErr > 0) {
 		echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
@@ -202,8 +202,8 @@ echo
 		 '</form>',
 
 			'<p><a href="agenda.php"> Retour &agrave; l\'agenda </a></p>',
-		'</section><div style="clear: both;"> </div>',
-	'</section>';
+		'</div><div style="clear: both;"> </div>',
+	'</div>';
 
 	fd_html_pied();
 	ob_end_flush();

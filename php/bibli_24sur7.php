@@ -500,7 +500,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0, $idRdv='') {
 	}
 		
 	// Affichage du titre du calendrier
-	echo '<section id="calendrier">',
+	echo '<div id="calendrier">',
 	'<p>',
 	'<a href="?id=',$idRdv,'&uti=',$GLOBALS['lienRendezVous'],'&',$returnDateMoins,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 	fd_get_mois($mois), ' ', $annee,
@@ -587,7 +587,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0, $idRdv='') {
             break;
         }
 	}
-	echo '</table></section>';
+	echo '</table></div>';
 }
 
 
@@ -600,7 +600,7 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0, $idRdv='') {
  */
 function ec_html_categorie($jour, $mois, $annee) {
 
-	echo 		'<section id="categories">',
+	echo 		'<div id="categories">',
 					'<h3>Vos agendas</h3>';
 
 	// Connexion à la base de données
@@ -674,7 +674,7 @@ function ec_html_categorie($jour, $mois, $annee) {
 	}
 
 	echo			'</ul>',
-				'</section>';
+				'</div>';
 
 	// Libère la mémoire associée au résultat $R
 	mysqli_free_result($R);
@@ -826,13 +826,12 @@ function ec_html_semainier($jour, $mois, $annee) {
 	list($jNeg, $mNeg, $aNeg) = explode('-', date('j-n-Y',mktime(0,0,0,$mois,$jour-$numJourSem-7,$annee)));
 	list($jPos, $mPos, $aPos) = explode('-', date('j-n-Y',mktime(0,0,0,$mois,$jour-$numJourSem+7,$annee)));
 
-	echo '<section id="bcCentre">',
-			'<p id="titreAgenda">',
+	echo 	'<p id="titreAgenda">',
 				'<a href="?uti=',$GLOBALS['lienRendezVous'],'&jour=',$jNeg,'&mois=',$mNeg,'&annee=',$aNeg,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 				'<strong>Semaine du ',$affDate,'</strong> pour <strong>les L2</strong>',
 				'<a href=?uti=',$GLOBALS['lienRendezVous'],'&jour=',$jPos,'&mois=',$mPos,'&annee=',$aPos,'" class="flechedroite"><img src="../images/fleche_droite.png" alt="picto fleche droite"></a>',
 			'</p>',
-			'<section id="agenda">',
+			'<div id="agenda">',
 				'<div id="intersection"></div>';
 	
 
@@ -1084,7 +1083,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	}
 
-	echo	'</section>';
+	echo	'</div>';
 
 	// Libère la mémoire associée au résultat $R
 	mysqli_free_result($R);

@@ -47,7 +47,7 @@ echo 	'<header id="bcEntete">',
 			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
 		 '</header>',
 		 
-		 '<section id="bcContenu">',
+		 '<div id="bcContenu">',
 
 			'<h2 id="titreII">Pour vous inscrire &agrave; <strong>24sur7</strong>, veuillez remplir le formulaire ci-dessous.</h2>';
 
@@ -75,7 +75,7 @@ echo '<div class="II"><form method="POST" action="inscription.php">',
         	fd_form_input(APP_Z_RESET,'btnEffacer', 'Annuler', 15, 'class="boutonII"'),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 		'</table></form></div>',
 		'<p class="basII"> D&eacute;j&agrave; inscris ? <a href="identification.php">Identifiez-vous !</a> </p>',
-		'<p class="basII"> Vous h&eacute;sitez &agrave; vous inscrire ? Laissez vous s&eacute;duire par <a href="../html/presentation.html">une pr&eacute;sentation</a> des possibilit&eacute;s de 24sur7</p></section>';
+		'<p class="basII"> Vous h&eacute;sitez &agrave; vous inscrire ? Laissez vous s&eacute;duire par <a href="../html/presentation.html">une pr&eacute;sentation</a> des possibilit&eacute;s de 24sur7</p></div>';
 		
 	fd_html_pied();
 	ob_end_flush();

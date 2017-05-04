@@ -11,8 +11,8 @@ fd_html_head('24sur7 | Abonnements');
 
 fd_html_bandeau(APP_PAGE_ABONNEMENTS);
 
-echo '<section id="bcContenu">',
-		'<section>';
+echo '<div id="bcContenu">',
+		'<div>';
 		
 		
 fd_bd_connexion();
@@ -101,9 +101,9 @@ echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : <
 		}
 	}	
 
-	echo '</section>';	
+	echo '</div>';	
 		
-echo '</section>';
+echo '</div>';
 
 fd_html_pied();
 ob_end_flush();

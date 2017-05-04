@@ -44,7 +44,7 @@ echo '<header id="bcEntete">',
 			'<a href="deconnexion.php" id="btnDeconnexion" title="Se d&eacute;connecter"></a>',
 		 '</header>',
 		 
-		 '<section id="bcContenu">';
+		 '<div id="bcContenu">';
 
 echo '<h2 id="titreII" class="titreIdentifi">Pour vous connecter, veuillez vous identifiez.</h2>';
 
@@ -69,7 +69,7 @@ echo '<div class="II"><form method="POST" action="identification.php">',
 		'</table>',
 	 '</form></div>',
 	 '<p class="basII"> Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a> sans plus tarder !</p>',
-	 '<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></section>';
+	 '<p class="basII"> Vous hésitez à vous inscrire ? Laissez vous séduire par <a href="../html/presentation.html">une présentation</a> des possibilités de 24sur7</p></div>';
 		
 fd_html_pied();
 ob_end_flush();

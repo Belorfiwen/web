@@ -11,10 +11,10 @@ fd_html_head('24sur7 | Param&egrave;tres');
 
 fd_html_bandeau(APP_PAGE_PARAMETRES);
 
-echo '<section id="bcContenu">';
+echo '<div id="bcContenu">';
 	
 	
-echo	'<section style="padding-bottom: 27px;">';
+echo	'<div style="padding-bottom: 27px;">';
 		
 		
 			
@@ -322,9 +322,9 @@ if(isset($_POST['Save'])){
 	echo 		'</table>
 			</form>';		
 			
-	echo '</section>';
+	echo '</div>';
 
-echo '</section>';
+echo '</div>';
 	fd_html_pied();	
 
 
