@@ -154,7 +154,7 @@ echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </d
 			fd_form_ligne('Retapez le mot de passe ', fd_form_input(APP_Z_PASS,'txtVerif', $_POST['txtVerif'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 						
 			fd_form_ligne("<input type='submit' name='btnValider1' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
-				"<input type='reset' name='btnEffacer1' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
+				"<input type='reset' name='btnEffacer1' value=\"Annuler\" size=15 class='boutonII'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 	
 //Confirmation de mise à jour	
@@ -191,7 +191,7 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 
 			
 			fd_form_ligne("<input type='submit' name='btnValider2' value=\"Mettre &agrave; jour\" size=15 class='boutonII'>", 
-				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
+				"<input type='reset' name='btnEffacer2' value=\"Annuler\" size=15 class='boutonII'>",'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			'</table></form>';
 	
 //Confirmation de mise à jour		
@@ -618,7 +618,7 @@ function aj_form_categorie($ID,$nom,$catCouleurBordure,$catCouleurFond,$public) 
 		
 		echo	'<form class="newparamCategorie" method="POST" action="parametres.php" >',
 		'<table border="1" cellpadding="4" cellspacing="15">',
-			'<tr border=" 1px solid black">',
+			'<tr>',
 				'<td>Nom :</td>',
 				'<td class="catEspace"><input type="text" name="catNom" size="6"  maxlength="8" value="',$nom,'"></td>',
 				'<td>Fond :</td>',
@@ -630,7 +630,7 @@ function aj_form_categorie($ID,$nom,$catCouleurBordure,$catCouleurFond,$public) 
 		{
 			echo ' checked id="catPublic"';
 		}
-		echo	'><label for="catPublic">Public</label></td>',
+		echo	'><label>Public</label></td>',
 				'<td><div style="border: solid 2px #',$catCouleurBordure,';background-color: #',$catCouleurFond,';font-size: 14px;color: #',$textColor,';width: 75px;height: 20px;text-align: center;">Aper&ccedil;u</div></td>',
 				'<td style="padding-left: 20px;"><input type="submit" name="Save" value="',$ID,'" class="boutonCatSav"></td>',
 				'<td style="padding-left: 20px;"><input type="submit" name="Delete" value="',$ID,'" class="boutonCatSupp"></td>',

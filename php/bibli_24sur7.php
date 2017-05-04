@@ -664,9 +664,9 @@ function ec_html_categorie($jour, $mois, $annee) {
 		}
 		if ($prev != $D['utiID']) 
 		{
-			echo 	'<p>',
+			echo 	'<li><p>',
 						'<a class="catSui" href="agenda.php?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">',$D['utiNom'],'</a> ',
-					'</p>';
+					'</p></li>';
 		}
 		
 		echo 			'<li> <div class="categorie categorieSui" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',$D['catNom'];

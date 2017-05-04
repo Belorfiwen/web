@@ -172,13 +172,13 @@ echo
 	if ($idRdv == -1) 
 	{
 		$bouton1 = 'Ajouter';
-		$bouton2 = "<input type='reset' name='btnEffacer' value=\"Annuler\" size=15 class='boutonII' class='boutonIIAnnuler'>";
+		$bouton2 = "<input type='reset' name='btnEffacer' value=\"Annuler\" size=15 class='boutonII'>";
 		echo '<div class="titrerdv">Nouvelle saisie </div>';
 	}
 	else
 	{
 		$bouton1 = 'Mettre &agrave; jour';
-		$bouton2 = "<input type='submit' name='btnDelete' value=\"Supprimer\" size=15 class='boutonII' class='boutonIIAnnuler'>";
+		$bouton2 = "<input type='submit' name='btnDelete' value=\"Supprimer\" size=15 class='boutonII'>";
 		echo '<div class="titrerdv">Modification </div>';
 	}
 
