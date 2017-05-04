@@ -1274,4 +1274,43 @@ function ec_hexToHsl($hex) {
     return array($h, $s, $l);
 }
 
+//___________________________________________________________________
+
+/**
+	* 
+	* Supression ou ajout d'un abonnement
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*
+	*/
+	function ec_abonnement() {
+		fd_bd_connexion();
+
+		//-----------------------------------------------------
+		// supression ou ajout d'un suivi dans la base de données   
+		//-----------------------------------------------------
+
+		
+			if($_POST['valueBtn'] == 1){
+				$S = "INSERT INTO suivi SET
+						suiIDSuiveur = {$_SESSION['utiID']},
+						suiIDSuivi = {$_POST['utiIDAbonne']}";
+
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}
+			else{
+				$S = "DELETE FROM suivi
+ 			 		  WHERE suiIDSuiveur = {$_SESSION['utiID']}
+ 			  		  AND   suiIDSuivi = {$_POST['utiIDAbonne']}";
+
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}	
+
+		
+		// Déconnexion de la base de données
+		mysqli_close($GLOBALS['bd']);
+
+	}
+
 ?>

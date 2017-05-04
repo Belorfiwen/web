@@ -11,14 +11,14 @@ ec_verifie_session();
 // Détermination de la phase de traitement :
 // 1er affichage ou soumission du formulaire
 //-----------------------------------------------------
-if (! isset($_POST['btnRechercher'])) {
+if (!isset($_POST['btnRechercher']) && !isset($_POST['btnAbo'])) {
 	// On n'est dans un premier affichage de la page.
 	// => On intialise les zones de saisie.
 	$_POST['recherche'] = '';
 } 
 
 if (isset($_POST['btnAbo'])) {
-	ecl_abonnement();
+	ec_abonnement();
 }
 
 fd_html_head('24sur7 | Recherche');
@@ -33,7 +33,7 @@ echo '<div id="bcContenu">',
 				'</div>',
 			'</form>';
 
-if (isset($_POST['btnRechercher'])) {
+if (isset($_POST['btnRechercher']) || isset($_POST['btnAbo'])) {
 	ecl_recherche();
 }
 
@@ -68,7 +68,7 @@ function ecl_recherche() {
 	// Vérification du mail
 	$recherche = trim($_POST['recherche']);
 	if ($recherche == '') {
-		echo 'Erreur : Vous devez entrer une recherche';
+		echo '<p class="recherche" style="text-align:center;">Erreur : Vous devez entrer une recherche</p>';
 		return;
 	} 
 
@@ -114,6 +114,7 @@ function ecl_recherche() {
 			}
 
 			echo '<form method="POST" action="recherche.php">',
+				 '<input type="hidden" name="recherche" value="',$_POST['recherche'],'">',
 				 '<input type="hidden" name="utiIDAbonne" value="',$D['utiID'],'">',
 				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
 				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
@@ -131,42 +132,5 @@ function ecl_recherche() {
     mysqli_close($GLOBALS['bd']);
 
 }
-
-	/**
-	* 
-	* Supression ou ajout d'un abonnement
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @global array		$_GLOBALS	base de bonnées 
-	*
-	*/
-	function ecl_abonnement() {
-		fd_bd_connexion();
-
-		//-----------------------------------------------------
-		// supression ou ajout d'un suivi dans la base de données   
-		//-----------------------------------------------------
-
-		
-			if($_POST['valueBtn'] == 1){
-				$S = "INSERT INTO suivi SET
-						suiIDSuiveur = {$_SESSION['utiID']},
-						suiIDSuivi = {$_POST['utiIDAbonne']}";
-
-				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-			}
-			else{
-				$S = "DELETE FROM suivi
- 			 		  WHERE suiIDSuiveur = {$_SESSION['utiID']}
- 			  		  AND   suiIDSuivi = {$_POST['utiIDAbonne']}";
-
-				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-			}	
-
-		
-		// Déconnexion de la base de données
-		mysqli_close($GLOBALS['bd']);
-
-	}
 
 ?>

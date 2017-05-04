@@ -106,50 +106,6 @@ echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : <
 echo '</div>';
 
 fd_html_pied();
-ob_end_flush();
-		
-/** 
-	* ajout d'un abonnement
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @global array		$_GLOBALS	base de bonnées 
-	*/			
-function aj_ajout_abonnement($i){
-	
-	$idSuivi = $_POST['abnID'.$i];
-	$S = "INSERT INTO suivi SET
-			suiIDSuiveur = {$_SESSION['utiID']},
-			suiIDSuivi = '$idSuivi'";
-
-	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-	
-	// Déconnexion de la base de données
-	mysqli_close($GLOBALS['bd']);
-		
-	header ('location: abonnements.php');
-	exit();
-}	
-
-/** 
-	* suppression d'un abonnement
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @global array		$_GLOBALS	base de bonnées 
-	*/			
-function aj_suppression_abonnement($i){
-	
-	$idSuivi = $_POST['abnSuppID'.$i];
-	$S = "DELETE FROM suivi SET
-			suiIDSuiveur = {$_SESSION['utiID']},
-			suiIDSuivi = '$idSuivi'";
-
-	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-	
-	// Déconnexion de la base de données
-	mysqli_close($GLOBALS['bd']);
-		
-	header ('location: abonnements.php');
-	exit();
-}			
+ob_end_flush();	
 		
 ?>
