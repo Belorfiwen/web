@@ -47,9 +47,10 @@ echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrav
 	fd_bd_connexion();
 	
 	$S = "SELECT	utiID, utiNom, utiMail
-			FROM	utilisateur, suivi
-			WHERE	suiIDSuivi = {$_SESSION['utiID']}
-			AND 	suiIDSuiveur = utiID";
+			FROM	utilisateur, suivi AS s1
+			LEFT OUTER JOIN suivi AS s2 ON utilisateur.utiID = suivi.suiIDSuiveur
+			WHERE	s1.suiIDSuivi = {$_SESSION['utiID']}
+			AND 	s1.suiIDSuiveur = utiID";
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	$i=1;
@@ -64,9 +65,9 @@ echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrav
 			}
 		
 			echo '<form method="POST" action="abonnements.php">',
-				 '<input type="hidden" name="abnSuppID',$i,'" value="',$D['utiID'],'">',
+				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
 				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],
-				 '<input type="submit" name="abnSupp',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
+				 '<input type="submit" name="btnAbonnement',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
 			$i++;
 		}
 	}	
@@ -93,9 +94,9 @@ echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : <
 			}
 
 			echo '<form method="POST" action="abonnements.php">',
-				 '<input type="hidden" name="abnSuppID',$i,'" value="',$D['utiID'],'">',
+				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
 				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],
-				 '<input type="submit" name="abnSupp',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
+				 '<input type="submit" name="btnAbonne',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
 			$i++;
 		}
 	}	

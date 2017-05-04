@@ -17,6 +17,17 @@ if (! isset($_POST['btnRechercher'])) {
 	$_POST['recherche'] = '';
 } 
 
+/*if (isset($_POST['btnAbo'])) {
+	if ($_POST['valueBtn'] == 1)
+	{
+			ecl_abonnement();
+	}
+	else 
+	{
+			ecl_desabonnement();
+	}
+}*/
+
 fd_html_head('24sur7 | Recherche');
 
 fd_html_bandeau(APP_PAGE_RECHERCHE);
@@ -26,7 +37,8 @@ echo '<section id="bcContenu">',
 			'<form method="POST" action="recherche.php">',
 				'<div id="zoneRecherche">Entrez le crit&egrave;re de recherche : <form method="POST" action="identification.php">',
 				fd_form_input(APP_Z_TEXT,'recherche', $_POST['recherche'], 30),fd_form_input(APP_Z_SUBMIT,'btnRechercher', 'Rechercher', 15,'class="boutonII"'),
-			'</form></div>';
+				'</div>',
+			'</form>';
 
 if (isset($_POST['btnRechercher'])) {
 	ecl_recherche();
@@ -47,15 +59,14 @@ ob_end_flush();
 //_______________________________________________________________
 
 /**
-* Validation de la saisie et recherche
 *
-* La zone reçue du formulaire de saisie est vérifiée. Si
+* Recherche et affichage en fonction de la chaine saisie
 * 
 * @global array		$_POST		zone de saisie du formulaire
 *
-* @return array 	Tableau des erreurs détectées
 */
 function ecl_recherche() {
+
 	//-----------------------------------------------------
 	// Vérification des zones
 	//-----------------------------------------------------
@@ -75,13 +86,14 @@ function ecl_recherche() {
 
 	$recherche = mysqli_real_escape_string($GLOBALS['bd'], $recherche);
 
-	$S = "SELECT utiNom, utiMail, suiIDSuivi, suiIDSuiveur
-		  FROM utilisateur
-		  LEFT OUTER JOIN suivi
-		  ON utilisateur.utiID = suivi.suiIDSuiveur
-		  WHERE utiNom LIKE '%$recherche%'
-		  AND utiID != {$_SESSION['utiID']}
-		  AND (suiIDSuivi = {$_SESSION['utiID']} OR suiIDSuivi <=> NULL)";
+	$S = "SELECT	utiID, utiNom, utiMail, s1.suiIDSuivi AS s1Suivi,s1.suiIDSuiveur AS s1Suiveur,s2.suiIDSuivi AS s2Suivi,s2.suiIDSuiveur AS s2Suiveur
+			FROM utilisateur
+			LEFT JOIN suivi AS s1
+            ON s1.suiIDSuiveur = {$_SESSION['utiID']} AND s1.suiIDSuivi = utilisateur.utiID
+            LEFT JOIN suivi AS s2
+            ON s2.suiIDSuiveur = utilisateur.utiID AND s2.suiIDSuivi = {$_SESSION['utiID']}
+            WHERE utilisateur.utiNom LIKE '%$recherche%' OR utilisateur.utiMail LIKE '%$recherche%'
+            ORDER BY utilisateur.utiID";
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
@@ -97,17 +109,107 @@ function ecl_recherche() {
 			}
 
 			$abonne = '';
-			if ($D['suiIDSuivi'] != NULL) {
+			if ($D['s2Suivi'] != NULL) {
 				$abonne = '[est abonn&eacute; &agrave; votre agenda]';
 			}
 
-			echo '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' ',$D['utiMail'],' ',$abonne,' ',$D['suiIDSuiveur'],'</p>';
+			$libelleBtn = 'S\'abonner';
+			$valueBtn = 1;
+			if ($D['s1Suiveur'] != NULL) {
+				$libelleBtn = 'Se d&eacute;sabonner';
+				$valueBtn = 0;
+			}
+
+			echo '<form method="POST" action="recherche.php">',
+				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
+				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
+				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo',$i,'" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
 			$count++;
 		}
 	}
 	else
 	{
-		echo 'Aucun resultat trouv&eacute;.';
+		echo '<p class ="recherche" style="text-align:center;">Aucun resultat trouv&eacute;.</p>';
+	}
+	// Libère la mémoire associée au résultat $R
+    mysqli_free_result($R);
+	
+	// Déconnexion de la base de données
+    mysqli_close($GLOBALS['bd']);
+
+}
+
+/**
+*
+* Recherche et affichage en fonction de la chaine saisie
+* 
+* @global array		$_POST		zone de saisie du formulaire
+*
+*/
+function ecl_abonnement() {
+	//-----------------------------------------------------
+	// Vérification des zones
+	//-----------------------------------------------------
+	$erreurs = array();
+
+	// Vérification du mail
+	$recherche = trim($_POST['recherche']);
+	if ($recherche == '') {
+		echo 'Erreur : Vous devez entrer une recherche';
+		return;
+	} 
+
+	//-----------------------------------------------------
+	// Si recherche corrects, requète pour rechercher dans la bd
+	//-----------------------------------------------------
+	fd_bd_connexion();
+
+	$recherche = mysqli_real_escape_string($GLOBALS['bd'], $recherche);
+
+	$S = "SELECT	utiID, utiNom, utiMail, s1.suiIDSuivi AS s1Suivi,s1.suiIDSuiveur AS s1Suiveur,s2.suiIDSuivi AS s2Suivi,s2.suiIDSuiveur AS s2Suiveur
+			FROM utilisateur
+			LEFT JOIN suivi AS s1
+            ON s1.suiIDSuiveur = {$_SESSION['utiID']} AND s1.suiIDSuivi = utilisateur.utiID
+            LEFT JOIN suivi AS s2
+            ON s2.suiIDSuiveur = utilisateur.utiID AND s2.suiIDSuivi = {$_SESSION['utiID']}
+            WHERE utilisateur.utiNom LIKE '%$recherche%' OR utilisateur.utiMail LIKE '%$recherche%'
+            ORDER BY utilisateur.utiID";
+
+	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+
+	if (mysqli_num_rows($R)) 
+	{
+		$count = 0;
+		while ($D = mysqli_fetch_assoc($R)) {
+			ec_htmlProteger($D);
+
+			$color = '#E5ECF6';
+			if ($count%2 == 0) {
+				$color = '#9AC5E7';
+			}
+
+			$abonne = '';
+			if ($D['s2Suivi'] != NULL) {
+				$abonne = '[est abonn&eacute; &agrave; votre agenda]';
+			}
+
+			$libelleBtn = 'S\'abonner';
+			$valueBtn = 1;
+			if ($D['s1Suiveur'] != NULL) {
+				$libelleBtn = 'Se d&eacute;sabonner';
+				$valueBtn = 0;
+			}
+
+			echo '<form method="POST" action="recherche.php">',
+				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
+				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
+				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo',$i,'" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
+			$count++;
+		}
+	}
+	else
+	{
+		echo '<p class ="recherche" style="text-align:center;">Aucun resultat trouv&eacute;.</p>';
 	}
 	// Libère la mémoire associée au résultat $R
     mysqli_free_result($R);
