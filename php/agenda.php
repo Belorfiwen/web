@@ -9,6 +9,8 @@ include('bibli_24sur7.php');	// Inclusion de la bibliothéque
 session_start();
 ec_verifie_session();
 
+
+//Initialisation des variable de date
 $jour = 0;
 $mois = 0;
 $annee = 0;
@@ -25,7 +27,7 @@ if (isset($_GET['annee'])) {
 	$annee = $_GET['annee'];
 }
 
-ec_uti_rdv();
+ec_uti_rdv(); // 
 
 fd_html_head('24sur7 | Agenda');
 

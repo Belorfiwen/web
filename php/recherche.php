@@ -11,13 +11,16 @@ ec_verifie_session();
 // Détermination de la phase de traitement :
 // 1er affichage ou soumission du formulaire
 //-----------------------------------------------------
-if (!isset($_POST['btnRechercher']) && !isset($_POST['btnAbo'])) {
+if (!isset($_POST['btnRechercher']) && !isset($_POST['btnAbo'])) 
+{
 	// On n'est dans un premier affichage de la page.
-	// => On intialise les zones de saisie.
+	// => On intialise la zones de saisie.
 	$_POST['recherche'] = '';
 } 
 
-if (isset($_POST['btnAbo'])) {
+// si bouton "s'abonner/se desabonner" cliqué, on appel la fonction ec_abonnement() qui permet de s'abonner à un utilisateur ou de se desabonner
+if (isset($_POST['btnAbo'])) 
+{
 	ec_abonnement();
 }
 
@@ -25,6 +28,7 @@ fd_html_head('24sur7 | Recherche');
 
 fd_html_bandeau(APP_PAGE_RECHERCHE);
 
+// affichage de la barre de recherche.
 echo '<div id="bcContenu">',
 		'<div>',
 			'<form method="POST" action="recherche.php">',
@@ -33,7 +37,9 @@ echo '<div id="bcContenu">',
 				'</div>',
 			'</form>';
 
-if (isset($_POST['btnRechercher']) || isset($_POST['btnAbo'])) {
+// si bouton "rechercher" cliqué, on appel la fonction ecl_recherche() qui permet d'afficher les resultats de la recherche
+if (isset($_POST['btnRechercher']) || isset($_POST['btnAbo'])) 
+{
 	ecl_recherche();
 }
 
@@ -53,12 +59,14 @@ ob_end_flush();
 
 /**
 *
-* Recherche et affichage en fonction de la chaine saisie
+* Recherche et affichage en fonction de la chaine saisie dans la barre de recherche
 * 
 * @global array		$_POST		zone de saisie du formulaire
+* @global array		$GLOBALS		base de données
 *
 */
-function ecl_recherche() {
+function ecl_recherche() 
+{
 
 	//-----------------------------------------------------
 	// Vérification des zones
@@ -67,7 +75,8 @@ function ecl_recherche() {
 
 	// Vérification du mail
 	$recherche = trim($_POST['recherche']);
-	if ($recherche == '') {
+	if ($recherche == '') 
+	{
 		echo '<p class="recherche" style="text-align:center;">Erreur : Vous devez entrer une recherche</p>';
 		return;
 	} 
@@ -90,35 +99,48 @@ function ecl_recherche() {
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
-	if (mysqli_num_rows($R)) 
+	if (mysqli_num_rows($R))  // on affiche les resultats de la requète si il y en a.
 	{
 		$count = 0;
-		while ($D = mysqli_fetch_assoc($R)) {
+		while ($D = mysqli_fetch_assoc($R)) 
+		{
 			ec_htmlProteger($D);
 
+			// determination de la couleur de la ligne
+
 			$color = '#E5ECF6';
-			if ($count%2 == 0) {
+			if ($count%2 == 0) 
+			{
 				$color = '#9AC5E7';
 			}
 
+			//si l'utilisateur trouvé est abonné à votre compte on affiche "[est abonné à votre agenda]"
+
 			$abonne = '';
-			if ($D['s2Suivi'] != NULL) {
+			if ($D['s2Suivi'] != NULL) 
+			{
 				$abonne = '[est abonn&eacute; &agrave; votre agenda]';
 			}
+
+			//determination du bouton : "s'abonner/se desabonner" ou pas de bouton si le resultat est nous même
 
 			$btn = '<input type="submit" name="btnAbo" value="S\'abonner" size=17 class="boutonII boutonRA">';
 
 			$valueBtn = 1;
 
-			if ($D['s1Suiveur'] != NULL) {
+			if ($D['s1Suiveur'] != NULL) 
+			{
 				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=17 class="boutonII boutonRA">';
 
 				$valueBtn = 0;
 			}
 
-			if ($D['utiID'] == $_SESSION['utiID']) {
+			if ($D['utiID'] == $_SESSION['utiID']) 
+			{
 				$btn = '';
 			}
+
+			// affichage du resultat	
 
 			echo '<form method="POST" action="recherche.php">',
 				 '<input type="hidden" name="recherche" value="',$_POST['recherche'],'">',
@@ -130,8 +152,10 @@ function ecl_recherche() {
 	}
 	else
 	{
+		// si pas des resultat on affiche :
 		echo '<p class ="recherche" style="text-align:center;">Aucun resultat trouv&eacute;.</p>';
 	}
+
 	// Libère la mémoire associée au résultat $R
     mysqli_free_result($R);
 	

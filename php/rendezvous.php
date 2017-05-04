@@ -8,6 +8,7 @@ ec_verifie_session();
 
 $GLOBALS['lienRendezVous']= $_SESSION['utiID'];
 
+//initialisation des variable si premier affichage
 if (isset($_POST['btnValider']) || isset($_POST['btnDelete'])) 
 {
 	$idRdv = $_POST['idRdv'];
@@ -17,31 +18,38 @@ else
 	$idRdv = $_GET['id'];
 }
 
+// initialisation des variables de date
 $jour = 0;
 $mois = 0;
 $annee = 0;
 $heure = 0;
 
-if (isset($_GET['jour'])) {
+if (isset($_GET['jour'])) 
+{
 	$jour = $_GET['jour'];
 }
 
-if (isset($_GET['heure'])) {
+if (isset($_GET['heure'])) 
+{
 	$heure = $_GET['heure'];
 }
 
-if (isset($_GET['mois'])) {
+if (isset($_GET['mois'])) 
+{
 	$mois = $_GET['mois'];
 }
 
-if (isset($_GET['annee'])) {
+if (isset($_GET['annee'])) 
+{
 	$annee = $_GET['annee'];
 }
 
-if (isset($_GET['id']) && !estEntier($_GET['id'])) {
+//protection contre les modifications sauvage de l'url (dans ce cas rdvID qui n'est pas un nombre entier)
+if (isset($_GET['id']) && !estEntier($_GET['id'])) 
+{
 	header ("location: rendezvous.php?id=-1&jour=$jour&mois=$mois&annee=$annee");
 }
-			
+
 		if (!isset($_POST['btnValider']) && !isset($_POST['btnDelete']) && $idRdv == -1) 
 		{
 				// On n'est dans un premier affichage de la page dans le cas de la creation d'un rendezvous.
@@ -56,16 +64,20 @@ if (isset($_GET['id']) && !estEntier($_GET['id'])) {
 				$_POST['rdvDeb_m']=$_POST['rdvFin_m']=00;
 				$idCat = -1;
 
-				if (estEntier($annee) && $annee <= $_POST['rdvDate_a'] +5 && $annee >= $_POST['rdvDate_a'] -7) {
+				if (estEntier($annee) && $annee <= $_POST['rdvDate_a'] +5 && $annee >= $_POST['rdvDate_a'] -7) 
+				{
 					$_POST['rdvDate_a'] = $annee;
 				}
-				if (estEntier($mois) && $mois <= 12 && $mois >= 1) {
+				if (estEntier($mois) && $mois <= 12 && $mois >= 1) 
+				{
 					$_POST['rdvDate_m'] = $mois;
 				}
-				if (estEntier($jour) && $jour <= 31 && $jour >= 1 && checkdate($_POST['rdvDate_m'], $jour, $_POST['rdvDate_a'])) {
+				if (estEntier($jour) && $jour <= 31 && $jour >= 1 && checkdate($_POST['rdvDate_m'], $jour, $_POST['rdvDate_a'])) 
+				{
 					$_POST['rdvDate_j'] = $jour;
 				}
-				if (isset($_GET['heure']) && estEntier($_GET['heure']) && $_GET['heure'] <= 24 && $_GET['heure'] >= 0) {
+				if (isset($_GET['heure']) && estEntier($_GET['heure']) && $_GET['heure'] <= 24 && $_GET['heure'] >= 0) 
+				{
 					$_POST['rdvDeb_h'] = $_GET['heure'];
 					$_POST['rdvFin_h'] = $_GET['heure']+1;
 				}
@@ -86,7 +98,8 @@ if (isset($_GET['id']) && !estEntier($_GET['id'])) {
 			$D = mysqli_fetch_assoc($R);
 			ec_htmlProteger($D);
 
-			if ($D['utiID'] != $_SESSION['utiID']) {
+			if ($D['utiID'] != $_SESSION['utiID']) 
+			{
 				header ("location: rendezvous.php?id=-1&jour=$jour&mois=$mois&annee=$annee");
 			}
 
@@ -127,8 +140,8 @@ if (isset($_GET['id']) && !estEntier($_GET['id'])) {
 		else
 		{
 		// On est dans la phase de soumission du formulaire :
-		// => vérification des valeurs reçues et création utilisateur.
-		// Si aucune erreur n'est détectée, fdl_add_rdv() ou fdl_modifie_rdv()
+		// => vérification des valeurs reçues et création utilisateur ou modification.
+		// Si aucune erreur n'est détectée, ecajl_add_rdv() ou ecajl_modifie_rdv() ou ecl_delete_rdv()
 			$idCat = $_POST['idCat'];
 			if (isset($_POST['rdvCheck'])) 
 			{
@@ -165,8 +178,7 @@ fd_html_calendrier($jour, $mois, $annee,$idRdv);
 
 ec_html_categorie($jour, $mois, $annee);
 		
-echo	
-		'</aside>',
+echo	'</aside>',
 		'<div id="bcCentre">';
 	// Si il y a des erreurs on les affiche
 	if ($nbErr > 0) {
@@ -176,6 +188,7 @@ echo
 		}
 	}
 	
+	//modification du titre et des boutons en fonction d'une insertion ou d'une modification
 	if ($idRdv == -1) 
 	{
 		$bouton1 = 'Ajouter';
@@ -600,7 +613,7 @@ function aj_recup_categorie($idCat){
 		}
 
 		//-----------------------------------------------------
-		// Insertion d'un nouveau rendez-vous dans la base de données   
+		// modification d'un rendez-vous dans la base de données   
 		//-----------------------------------------------------
 		$txtLibelle = mysqli_real_escape_string($GLOBALS['bd'], $txtLibelle);
 
@@ -658,7 +671,7 @@ function aj_recup_categorie($idCat){
 		$annee = $_POST['rdvDate_a'];
 
 		//-----------------------------------------------------
-		// Insertion d'un nouveau rendez-vous dans la base de données   
+		// supression d'un rendez-vous dans la base de données   
 		//-----------------------------------------------------
 
 		$S = "DELETE FROM rendezvous

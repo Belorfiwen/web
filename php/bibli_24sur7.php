@@ -13,9 +13,9 @@ define('APP_TEST', TRUE);
 
 // Gestion des infos base de données
 define('APP_BD_URL', 'localhost');
-define('APP_BD_USER', 'u_cholley');
-define('APP_BD_PASS', 'p_cholley');
-define('APP_BD_NOM', '24sur7_cholley');
+define('APP_BD_USER', 'u_24sur7');
+define('APP_BD_PASS', 'p_24sur7');
+define('APP_BD_NOM', '24sur7');
 /*define('APP_BD_USER', 'u_merlet');
 define('APP_BD_PASS', 'p_merlet');
 define('APP_BD_NOM', '24sur7_merlet');*/
@@ -597,6 +597,10 @@ function fd_html_calendrier($jour = 0, $mois = 0, $annee = 0, $idRdv='') {
 /**
  * Genere le code html pour l'affichage des agendas et categories.
  *
+ * @param integer	$jour		Numéro du jour à afficher
+ * @param integer	$mois		Numéro du mois à afficher
+ * @param integer	$annee		Année à afficher
+ *
  */
 function ec_html_categorie($jour, $mois, $annee) {
 
@@ -606,7 +610,7 @@ function ec_html_categorie($jour, $mois, $annee) {
 	// Connexion à la base de données
 	fd_bd_connexion();
 
-	// Requête de sélection des utilisateurs
+	// Requête de sélection de l'utilisateur courant
 	$sql = "SELECT utiID, utiNom, catNom, catCouleurFond, catCouleurBordure
 			FROM utilisateur LEFT OUTER JOIN categorie
 			ON utilisateur.utiID = catIDUtilisateur
@@ -615,13 +619,13 @@ function ec_html_categorie($jour, $mois, $annee) {
 	// Exécution de la requête
 	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
 
-	// Boucle de traitement
+	// Boucle de traitement 
 	$count = 0;
 	while ($D = mysqli_fetch_assoc($R)) 
 	{
 		ec_htmlProteger ($D);
 
-		if ($count == 0) 
+		if ($count == 0)  // affichage du nom de l'utilisateur courant
 		{
 			echo 	'<p>',
 						'<a href="agenda.php?uti=',$D['utiID'],'&jour=',$jour,'&mois=',$mois,'&annee=',$annee,'">Agenda de ',$D['utiNom'],'</a> ',
@@ -630,6 +634,7 @@ function ec_html_categorie($jour, $mois, $annee) {
 			$count++;
 		}
 
+		// affichage des categorie de l'utilisateur courant
 		echo 			'<li> <div class="categorie" style="border: solid 2px #',$D['catCouleurBordure'],';background-color: #',$D['catCouleurFond'],';"></div>',$D['catNom'];
 	}
 
@@ -637,7 +642,7 @@ function ec_html_categorie($jour, $mois, $annee) {
 
 	mysqli_free_result($R);
 
-// Requête de sélection des utilisateurs
+// Requête de sélection des utilisateurs don l'utilisateur courant est abonné 
 	$sql = "SELECT utiID, utiNom, catNom, catCouleurFond, catCouleurBordure
 			FROM utilisateur, suivi
 			LEFT OUTER JOIN categorie
@@ -656,6 +661,8 @@ function ec_html_categorie($jour, $mois, $annee) {
 	{	
 
 		ec_htmlProteger ($D);
+
+		// affichage des utilisateur et de leur categorie
 
 		if ($count == 0) {
 			echo 	'<p>Agendas suivis :</p>',
@@ -755,7 +762,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 		$affDate = $jourDate1.' au '.$jourDate2.' '.$moisDate1;
 	}
 
-	// Requête de sélection des utilisateurs
+	// Requête de sélection pour recuperer les paramètre d'affichage de l'utilisateur
 	$sql = "SELECT utiJours, utiHeureMin, utiHeureMax
 			FROM utilisateur
 			WHERE utiID = {$_SESSION['utiID']}";
@@ -784,6 +791,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	$count = 0;
 
+	//switch pour selectionner la largeur des jour et rendez-vous en fonction du nombre de jour à afficher
 	switch ($nbJours) {
 		case 1:
 			$classColonne = 'taille1';
@@ -826,6 +834,8 @@ function ec_html_semainier($jour, $mois, $annee) {
 	list($jNeg, $mNeg, $aNeg) = explode('-', date('j-n-Y',mktime(0,0,0,$mois,$jour-$numJourSem-7,$annee)));
 	list($jPos, $mPos, $aPos) = explode('-', date('j-n-Y',mktime(0,0,0,$mois,$jour-$numJourSem+7,$annee)));
 
+
+	// affichage de l'entète du semainier
 	echo 	'<p id="titreAgenda">',
 				'<a href="?uti=',$GLOBALS['lienRendezVous'],'&jour=',$jNeg,'&mois=',$mNeg,'&annee=',$aNeg,'" class="flechegauche"><img src="../images/fleche_gauche.png" alt="picto fleche gauche"></a>',
 				'<strong>Semaine du ',$affDate,'</strong> pour <strong>les L2</strong>',
@@ -836,6 +846,8 @@ function ec_html_semainier($jour, $mois, $annee) {
 	
 
 	$countJour =-1;
+
+	// boucle d'affichage des cases jour
 	for ($i=0; $i < 7; $i++) { 
 		if (mb_substr($utiJours, $i, 1) == 1) 
 		{	
@@ -877,6 +889,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 		}
 	}
 
+	// si on affiche le semainier d'un autre utilisateur on affiche pas les rendez-vous privé sinon on affiche tout
 	if ($GLOBALS['lienRendezVous'] == $_SESSION['utiID']) {
 		$public = '';
 	}
@@ -898,7 +911,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 	// Exécution de la requête
 	$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
 
-	// traitement
+	// traitement et affichage des rendez-vous sur une journée
 		if (mysqli_num_rows($R)) 
 		{
 
@@ -941,6 +954,8 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	echo		'<div id="col-heures">';
 
+
+	// affichage de la colonne des heure
 	for ($i=$utiHeureMin; $i <= $utiHeureMax; $i++) { 
 		echo 		'<div>',$i,'h</div>';
 	}
@@ -948,6 +963,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 	$count = 0;
 
+	//affichage des colonnes des jours ainsi que les rendez vous
 	for ($j=0; $j < 7; $j++) { 
 
 		if (mb_substr($utiJours, $j, 1) == 1) {
@@ -976,6 +992,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 
 			$jourRdv = $jourDate1+$j;
 
+			// selection des rendez vous de la journée
 			$sql = "SELECT rdvID, rdvLibelle, rdvDate, catCouleurFond, catCouleurBordure, catPublic, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur
 					FROM rendezvous, categorie
 					WHERE rendezvous.rdvIDCategorie = categorie.catID
@@ -989,6 +1006,8 @@ function ec_html_semainier($jour, $mois, $annee) {
 			while($D = mysqli_fetch_assoc($R))
 			{
 					ec_htmlProteger($D);
+
+					// multiples verification pour determiner si on affiche ou non le rendez-vous
 
 					if ($D['rdvHeureDebut'] < $heureMin && $D['rdvHeureFin'] > $heureMin) 
 					{
@@ -1010,6 +1029,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 							$minDebut = mb_substr($D['rdvHeureDebut'], 2, 2);
 						}
 
+						// paramètre pour positionner les rendezvous
 						switch ($minDebut) {
 							case 15:
 								$minDebut = 10.25;
@@ -1036,6 +1056,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 							$minFin = mb_substr($D['rdvHeureFin'], 2, 2);
 						}
 
+						// paramètre pour positionner les rendezvous
 						switch ($minFin) {
 							case 15:
 								$minFin = 10.25;
@@ -1052,6 +1073,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 								break;
 						}
 
+						// determination de la couleur du texte du rendez vous suivant la luminosité du bloc
 						$couleurHSL = ec_hexToHsl($D['catCouleurFond']); 
 
 						if ($couleurHSL[2] > 0.5) //0.5 = 50%  
@@ -1070,7 +1092,7 @@ function ec_html_semainier($jour, $mois, $annee) {
 							$balise = 'div';
 							$lienRdv = '';
 						}
-
+						//affichage rendez vous
 						echo '<',$balise,' style="background-color: #',$D['catCouleurFond'],';',
 	    						  'border: solid 2px #',$D['catCouleurBordure'],';',
 								  'color: #',$textColor,';',

@@ -18,8 +18,9 @@ echo '<div id="bcContenu">',
 fd_bd_connexion();
 		
 	
-if (isset($_POST['btnAbo'])) {
-		
+// si bouton "s'abonner/se desabonner" cliqué, on appel la fonction ec_abonnement() qui permet de s'abonner à un utilisateur ou de se desabonner
+if (isset($_POST['btnAbo'])) 
+{
 	// suppression ou ajout d'un suivi
 	ec_abonnement();
 }
@@ -27,8 +28,9 @@ if (isset($_POST['btnAbo'])) {
 		
 echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrave; moi : </div>';
 		
-	fd_bd_connexion();
 	
+	//requète pour selectionner les utilisateurs qui sont abonnés à l'utilisateur courant
+
 	$S = "SELECT	utiID, utiNom, utiMail, s1.suiIDSuivi AS s1Suivi,s1.suiIDSuiveur AS s1Suiveur,s2.suiIDSuivi AS s2Suivi,s2.suiIDSuiveur AS s2Suiveur
 			FROM suivi AS s2, utilisateur
 			LEFT JOIN suivi AS s1
@@ -40,19 +42,27 @@ echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrav
 	$i=1;
 	if (mysqli_num_rows($R)) 
 	{
-		while ($D = mysqli_fetch_assoc($R)) {
+		//traitement de l'affichage des resultats de la requète
+		while ($D = mysqli_fetch_assoc($R)) 
+		{
 			ec_htmlProteger($D);
 
+			// determination de la couleur de la ligne
+
 			$color = '#9AC5E7';
-			if ($i%2 == 0) {
+			if ($i%2 == 0) 
+			{
 				$color = '#E5ECF6';
 			}
 		
+			//determination du bouton : "s'abonner/se desabonner" ou pas de bouton si le resultat est nous même
+
 			$btn = '<input type="submit" name="btnAbo" value="S\'abonner" size=17 class="boutonII boutonRA">';
 
 			$valueBtn = 1;
 
-			if ($D['s1Suiveur'] != NULL) {
+			if ($D['s1Suiveur'] != NULL) 
+			{
 				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=17 class="boutonII boutonRA">';
 
 				$valueBtn = 0;
@@ -68,8 +78,10 @@ echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrav
 	
 	mysqli_free_result($R);
 	
-echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : </div>';
+	echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : </div>';
 	
+	//requète pour selectionner les utilisateurs auqel l'utilisateur courant est abonné
+
 	$S = "SELECT	utiID, utiNom, utiMail, suiIDSuivi
 			FROM	utilisateur, suivi
 			WHERE	suiIDSuivi = utiID
@@ -79,17 +91,24 @@ echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : <
 	$i=1;
 	if (mysqli_num_rows($R)) 
 	{
-		while ($D = mysqli_fetch_assoc($R)) {
+		// affichage des resultats
+		while ($D = mysqli_fetch_assoc($R)) 
+		{
 			ec_htmlProteger($D);
 
+			// determination de la couleur de la ligne
+
 			$color = '#9AC5E7';
-			if ($i%2 == 0) {
+			if ($i%2 == 0) 
+			{
 				$color = '#E5ECF6';
 			}
 
-				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=17 class="boutonII boutonRA">';
+			$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=17 class="boutonII boutonRA">';
 
-				$valueBtn = 0;
+			$valueBtn = 0;
+
+			//affichage du resultat
 
 			echo '<form method="POST" action="abonnements.php">',
 				 '<input type="hidden" name="utiIDAbonne" value="',$D['utiID'],'">',
@@ -102,6 +121,12 @@ echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : <
 	echo '</div>';	
 		
 echo '</div>';
+
+// Libère la mémoire associée au résultat $R
+mysqli_free_result($R);
+	
+// Déconnexion de la base de données
+mysqli_close($GLOBALS['bd']);
 
 fd_html_pied();
 ob_end_flush();	

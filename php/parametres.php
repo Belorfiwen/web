@@ -98,7 +98,7 @@ if (! isset($_POST['btnValider2'])) {
 
 } else {
 	// On est dans la phase de soumission du formulaire :
-	// => vérification des valeurs reçues et création utilisateur.
+	// => vérification des valeurs reçues et modification de l'affichage
 	// Si aucune erreur n'est détectée, fdl_modification_affichage_calendrier()
 	$erreurs2 = fdl_modification_affichage_calendrier();
 	$nbErr2 = count($erreurs2);	
