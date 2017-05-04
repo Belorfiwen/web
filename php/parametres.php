@@ -145,7 +145,7 @@ if ($nbErr3 > 0) {
 echo '<div class="titreparam1 titreParametre"> Informations sur votre compte </div>';
 	// Affichage du formulaire de modification utilisateur
 	echo '<form class="newparamUtilisateur" method="POST" action="parametres.php">',
-			'<table border="1" cellpadding="4" cellspacing="0">',
+			'<table style="border: 1; cellpadding: 4; cellspacing: 0;">',
 			fd_form_ligne('Nom ', 
 				fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			
@@ -176,7 +176,7 @@ echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrie
 
 	// Affichage du formulaire de modification des parametres du calendrier
 	echo '<form class="newparamCalendrier" method="POST" action="parametres.php">',
-			'<table border="1" cellpadding="4" cellspacing="0">',
+			'<table style="border: 1; cellpadding: 4; cellspacing: 0;">',
 			fd_form_ligne('Jours affich&eacute;s ', '<input type=\'checkbox\' name=\'checkLundi\' value=\'1\' '.$lundi.'> Lundi
 												<input type=\'checkbox\' name=\'checkMardi\' value=\'1\' '.$mardi.'> Mardi
 												<input type=\'checkbox\' name=\'checkMercredi\' value=\'1\' '.$mercredi.'> Mercredi
@@ -308,7 +308,7 @@ if(isset($_POST['Save'])){
 	
 	//Afffichage du formulaire d'ajout de categories
 	echo 	'<form class="newparamCategorie" method="POST" action="parametres.php">',
-				'<table border="1" cellpadding="4" cellspacing="0">';
+				'<table style="border: 1; cellpadding: 4; cellspacing: 0;">';
 	
 
 	echo 		fd_form_ligne('<p class="titreParametre">Nouvelle cat&eacute;gorie : </p>','','class=\'titreparam3\'','',''), 
@@ -617,7 +617,7 @@ function aj_form_categorie($ID,$nom,$catCouleurBordure,$catCouleurFond,$public) 
 		}
 		
 		echo	'<form class="newparamCategorie" method="POST" action="parametres.php" >',
-		'<table border="1" cellpadding="4" cellspacing="15">',
+		'<table style="border: 1; cellpadding: 4; cellspacing: 15;">',
 			'<tr>',
 				'<td>Nom :</td>',
 				'<td class="catEspace"><input type="text" name="catNom" size="6"  maxlength="8" value="',$nom,'"></td>',

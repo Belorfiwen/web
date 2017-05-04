@@ -184,7 +184,7 @@ echo
 
 	// Affichage du formulaire
 	echo '<form class="newrdv" method="POST" action="rendezvous.php">',
-			'<table border="1" cellpadding="4" cellspacing="0">',
+			'<table style="border: 1; cellpadding: 4; cellspacing: 0;">',
 			fd_form_ligne('Libell&eacute; : ', 
 				fd_form_input(APP_Z_TEXT,'txtLibelle', $_POST['txtLibelle'], 30),'','class="colonneGauche"','class="boutonIIAnnuler"'),
 			

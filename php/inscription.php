@@ -61,7 +61,7 @@ if ($nbErr > 0) {
 
 // Affichage du formulaire
 echo '<div class="II"><form method="POST" action="inscription.php">',
-		'<table border="1" cellpadding="4" cellspacing="0">',
+		'<table style="border: 1; cellpadding: 4; cellspacing: 0;">',
 		fd_form_ligne('Nom  ', 
             fd_form_input(APP_Z_TEXT,'txtNom', $_POST['txtNom'], 30),'','class="colonneGauche"'),
 		fd_form_ligne('Email  ', 

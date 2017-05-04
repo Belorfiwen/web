@@ -290,7 +290,7 @@ function fd_bd_erreur($sql) {
 			.'<br><br><b>Pile des appels de fonction</b>';
 
 	// Récupération de la pile des appels de fonction
-	$msg .= '<table border="1" cellspacing="0" cellpadding="2">'
+	$msg .= '<table style="border: 1; cellpadding: 2; cellspacing: 0;">'
 			.'<tr><td>Fonction</td><td>Appel&eacute;e ligne</td>'
 			.'<td>Fichier</td></tr>';
 
@@ -401,7 +401,7 @@ function fd_html_bandeau($page="") {
 function fd_html_pied() {
 	echo '<footer id="bcPied">',
 			'<a id="apropos" href="../html/presentation.html">A propos</a>',
-			'<a id="confident" href="../html/presentation.html#confidentialite">Confidentialité</a>',
+			'<a id="confident" href="../html/presentation.html#confidentialite">Confidentialit&eacute;</a>',
 			'<a id="conditions" href="../html/presentation.html#respect">Conditions</a>',
 			'<p id="copyright">24sur7 &amp; Partners &copy; 2012</p>',
 		'</footer>';
