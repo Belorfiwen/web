@@ -139,84 +139,37 @@ function ecl_recherche() {
 
 }
 
-/**
-*
-* Recherche et affichage en fonction de la chaine saisie
-* 
-* @global array		$_POST		zone de saisie du formulaire
-*
-*/
-function ecl_abonnement() {
-	//-----------------------------------------------------
-	// Vérification des zones
-	//-----------------------------------------------------
-	$erreurs = array();
+	/**
+	* Validation de la saisie et suppression d'un rendezvous.
+	*
+	* une suppression est faite du rendezvous selectionné.
+	*
+	* @global array		$_POST		zones de saisie du formulaire
+	* @global array		$_GLOBALS	base de bonnées 
+	*
+	*/
+	function ecl_delete_rdv() {
+		fd_bd_connexion();
+		
+		$jour = $_POST['rdvDate_j'];
+		$mois = $_POST['rdvDate_m'];
+		$annee = $_POST['rdvDate_a'];
 
-	// Vérification du mail
-	$recherche = trim($_POST['recherche']);
-	if ($recherche == '') {
-		echo 'Erreur : Vous devez entrer une recherche';
-		return;
-	} 
+		//-----------------------------------------------------
+		// Insertion d'un nouveau rendez-vous dans la base de données   
+		//-----------------------------------------------------
 
-	//-----------------------------------------------------
-	// Si recherche corrects, requète pour rechercher dans la bd
-	//-----------------------------------------------------
-	fd_bd_connexion();
+		$S = "DELETE FROM rendezvous
+ 			  WHERE rdvID = {$_POST['idRdv']}";
 
-	$recherche = mysqli_real_escape_string($GLOBALS['bd'], $recherche);
+		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
-	$S = "SELECT	utiID, utiNom, utiMail, s1.suiIDSuivi AS s1Suivi,s1.suiIDSuiveur AS s1Suiveur,s2.suiIDSuivi AS s2Suivi,s2.suiIDSuiveur AS s2Suiveur
-			FROM utilisateur
-			LEFT JOIN suivi AS s1
-            ON s1.suiIDSuiveur = {$_SESSION['utiID']} AND s1.suiIDSuivi = utilisateur.utiID
-            LEFT JOIN suivi AS s2
-            ON s2.suiIDSuiveur = utilisateur.utiID AND s2.suiIDSuivi = {$_SESSION['utiID']}
-            WHERE utilisateur.utiNom LIKE '%$recherche%' OR utilisateur.utiMail LIKE '%$recherche%'
-            ORDER BY utilisateur.utiID";
-
-	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-
-	if (mysqli_num_rows($R)) 
-	{
-		$count = 0;
-		while ($D = mysqli_fetch_assoc($R)) {
-			ec_htmlProteger($D);
-
-			$color = '#E5ECF6';
-			if ($count%2 == 0) {
-				$color = '#9AC5E7';
-			}
-
-			$abonne = '';
-			if ($D['s2Suivi'] != NULL) {
-				$abonne = '[est abonn&eacute; &agrave; votre agenda]';
-			}
-
-			$libelleBtn = 'S\'abonner';
-			$valueBtn = 1;
-			if ($D['s1Suiveur'] != NULL) {
-				$libelleBtn = 'Se d&eacute;sabonner';
-				$valueBtn = 0;
-			}
-
-			echo '<form method="POST" action="recherche.php">',
-				 '<input type="hidden" name="utiID" value="',$D['utiID'],'">',
-				 '<input type="hidden" name="valueBtn" value="',$valueBtn,'">',
-				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],' ',$abonne,'<input type="submit" name="btnAbo',$i,'" value="',$libelleBtn,'" size=15 class="boutonII boutonRA"></p></form>';
-			$count++;
-		}
+		mysqli_free_result($R);
+		// Déconnexion de la base de données
+		mysqli_close($GLOBALS['bd']);
+		
+		header ("location: agenda.php?jour=$jour&mois=$mois&annee=$annee");
+		exit();
 	}
-	else
-	{
-		echo '<p class ="recherche" style="text-align:center;">Aucun resultat trouv&eacute;.</p>';
-	}
-	// Libère la mémoire associée au résultat $R
-    mysqli_free_result($R);
-	
-	// Déconnexion de la base de données
-    mysqli_close($GLOBALS['bd']);
-
-}
 
 ?>
