@@ -1064,16 +1064,18 @@ function ec_html_semainier($jour, $mois, $annee) {
 						}
 
 						$balise = 'a';
+						$lienRdv = 'href="rendezvous.php?id='.$D['rdvID'].'"';
 
 						if ($D['rdvIDUtilisateur'] != $_SESSION['utiID']) {
 							$balise = 'div';
+							$lienRdv = '';
 						}
 
 						echo '<',$balise,' style="background-color: #',$D['catCouleurFond'],';',
 	    						  'border: solid 2px #',$D['catCouleurBordure'],';',
 								  'color: #',$textColor,';',
 								  'top: ',$minTopRDV+($heureDebut-$utiHeureMin)*41 + $minDebut,'px;', 
-						          'height: ',32*($heureFin-$heureDebut)+9*($heureFin-$heureDebut-1)+($minFin-$minDebut),'px;" class="rendezvous ',$classeRDV,'" href="rendezvous.php?id=',$D['rdvID'],'">',$D['rdvLibelle'],'</',$balise,'>';
+						          'height: ',32*($heureFin-$heureDebut)+9*($heureFin-$heureDebut-1)+($minFin-$minDebut),'px;" class="rendezvous ',$classeRDV,'" ',$lienRdv,'>',$D['rdvLibelle'],'</',$balise,'>';
 					}
 			}
 
