@@ -103,16 +103,6 @@ if (! isset($_POST['btnValider2'])) {
 	$erreurs2 = fdl_modification_affichage_calendrier();
 	$nbErr2 = count($erreurs2);	
 }
-$alert2=0;
-if ($nbErr2 > 0) {
-	$alert2=1;
-	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
-	for ($i = 0; $i < $nbErr2; $i++) {
-		echo '<br>', $erreurs2[$i];
-	}
-}
-
-
 
 if (! isset($_POST['ajouter'])) {
 	// => On intialise les zones de saisie.
@@ -130,14 +120,6 @@ if (! isset($_POST['ajouter'])) {
 	// Si aucune erreur n'est détectée, fdl_ajout_categorie()
 	$erreurs3 = fdl_ajout_categorie();
 	$nbErr3 = count($erreurs3);	
-}
-
-// Si il y a des erreurs on les affiche
-if ($nbErr3 > 0) {
-	echo '<strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
-	for ($i = 0; $i < $nbErr3; $i++) {
-		echo '<br>', $erreurs3[$i];
-	}
 }
 
 
@@ -165,6 +147,16 @@ if (isset($_POST['btnValider1']) && $alert == 0)
 			
 echo '<div class="titreparam2 titreParametre"> Options d\'affichage du calendrier </div>';
 	
+	// Si il y a des erreurs on les affiche
+	$alert2 = 0;
+	if ($nbErr2 > 0) {
+		$alert2=1;
+		echo '<div class="aligncenter" style="padding-top:10px;"><strong>Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
+		for ($i = 0; $i < $nbErr2; $i++) {
+			echo '<br>', $erreurs2[$i];
+		}
+		echo '</div>';
+	}
 
 	$lundi = (($_POST['checkLundi'] == 1)?'checked':''); 
 	$mardi = (($_POST['checkMardi'] == 1)?'checked':'');
@@ -271,7 +263,8 @@ if(isset($_POST['Save'])){
 		echo'</p>';
 
 	}
-	else {
+	else 
+	{
 		$catNom=mysqli_real_escape_string($GLOBALS['bd'], $_POST['catNom']);
 		$catFond=mysqli_real_escape_string($GLOBALS['bd'], $_POST['catFond']);
 		$catBordure=mysqli_real_escape_string($GLOBALS['bd'], $_POST['catBordure']);
@@ -288,6 +281,15 @@ if(isset($_POST['Save'])){
 		
 	}
 }
+
+	// Si il y a des erreurs on les affiche
+	if ($nbErr3 > 0) {
+		echo '<div class="aligncenter" style="padding-top:10px;"><strong >Les erreurs suivantes ont &eacute;t&eacute; d&eacute;tect&eacute;es</strong>';
+		for ($i = 0; $i < $nbErr3; $i++) {
+			echo '<br>', $erreurs3[$i];
+		}
+		echo '</div>';
+	}
 
 	
 	fd_bd_connexion();
@@ -306,6 +308,11 @@ if(isset($_POST['Save'])){
 	mysqli_free_result($R);
 	
 	
+	if (!isset($_POST['catPublic1'])) 
+	{
+		$_POST['catPublic1'] = 0;
+	}
+
 	//Afffichage du formulaire d'ajout de categories
 	echo 	'<form class="newparamCategorie" method="POST" action="parametres.php">',
 				'<table style="border: 1; cellpadding: 4; cellspacing: 0;">';

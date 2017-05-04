@@ -48,12 +48,12 @@ echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrav
 				$color = '#E5ECF6';
 			}
 		
-			$btn = '<input type="submit" name="btnAbo" value="S\'abonner" size=15 class="boutonII boutonRA">';
+			$btn = '<input type="submit" name="btnAbo" value="S\'abonner" size=17 class="boutonII boutonRA">';
 
 			$valueBtn = 1;
 
 			if ($D['s1Suiveur'] != NULL) {
-				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA">';
+				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=17 class="boutonII boutonRA">';
 
 				$valueBtn = 0;
 			}
@@ -87,7 +87,7 @@ echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : <
 				$color = '#E5ECF6';
 			}
 
-				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA">';
+				$btn = '<input type="submit" name="btnAbo" value="Se d&eacute;sabonner" size=17 class="boutonII boutonRA">';
 
 				$valueBtn = 0;
 

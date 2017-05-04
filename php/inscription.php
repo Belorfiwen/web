@@ -180,7 +180,7 @@ function fdl_add_utilisateur() {
 	$idInscr = mysqli_insert_id($GLOBALS['bd']);
 
 	$S = "INSERT INTO categorie (catNom,catCouleurFond,catCouleurBordure,catIDUtilisateur,catPublic)
-  		VALUES ('D&eacute;faut','FFFFFF','000000',(SELECT utiID FROM utilisateur ORDER BY utiID DESC LIMIT 1),0)";
+  		VALUES ('Défaut','FFFFFF','000000',(SELECT utiID FROM utilisateur ORDER BY utiID DESC LIMIT 1),0)";
 
   	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
