@@ -17,16 +17,9 @@ if (! isset($_POST['btnRechercher'])) {
 	$_POST['recherche'] = '';
 } 
 
-/*if (isset($_POST['btnAbo'])) {
-	if ($_POST['valueBtn'] == 1)
-	{
-			ecl_abonnement();
-	}
-	else 
-	{
-			ecl_desabonnement();
-	}
-}*/
+if (isset($_POST['btnAbo'])) {
+	ecl_abonnement();
+}
 
 fd_html_head('24sur7 | Recherche');
 
@@ -141,36 +134,7 @@ function ecl_recherche() {
 
 	/**
 	* 
-	* Supression d'un abonnement
-	*
-	* @global array		$_POST		zones de saisie du formulaire
-	* @global array		$_GLOBALS	base de bonnées 
-	*
-	*/
-	function ecl_desabonnement() {
-		fd_bd_connexion();
-
-		//-----------------------------------------------------
-		// supression d'un suivi dans la base de données   
-		//-----------------------------------------------------
-
-		$S = "DELETE FROM suivi
- 			  WHERE suiIDSuiveur = {$_SESSION['utiIDAbonne']}
- 			  AND   suiIDSuivi = {$_POST['idRdv']}";
-
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
-
-		mysqli_free_result($R);
-		// Déconnexion de la base de données
-		mysqli_close($GLOBALS['bd']);
-		
-		header ("location: agenda.php?jour=$jour&mois=$mois&annee=$annee");
-		exit();
-	}
-
-	/**
-	* 
-	* Supression d'un abonnement
+	* Supression ou ajout d'un abonnement
 	*
 	* @global array		$_POST		zones de saisie du formulaire
 	* @global array		$_GLOBALS	base de bonnées 
@@ -180,21 +144,29 @@ function ecl_recherche() {
 		fd_bd_connexion();
 
 		//-----------------------------------------------------
-		// supression d'un suivi dans la base de données   
+		// supression ou ajout d'un suivi dans la base de données   
 		//-----------------------------------------------------
 
-		$S = "DELETE FROM suivi
- 			  WHERE suiIDSuiveur = {$_SESSION['utiIDAbonne']}
- 			  AND   suiIDSuivi = {$_POST['idRdv']}";
+		
+			if($_POST['valueBtn'] == 1){
+				$S = "INSERT INTO suivi SET
+						suiIDSuiveur = {$_SESSION['utiID']},
+						suiIDSuivi = {$_POST['utiIDAbonne']}";
 
-		$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}
+			else{
+				$S = "DELETE FROM suivi
+ 			 		  WHERE suiIDSuiveur = {$_SESSION['utiID']}
+ 			  		  AND   suiIDSuivi = {$_POST['utiIDAbonne']}";
 
-		mysqli_free_result($R);
+				$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
+			}	
+
+		
 		// Déconnexion de la base de données
 		mysqli_close($GLOBALS['bd']);
-		
-		header ("location: agenda.php?jour=$jour&mois=$mois&annee=$annee");
-		exit();
+
 	}
 
 ?>
