@@ -38,7 +38,9 @@ if (isset($_GET['annee'])) {
 	$annee = $_GET['annee'];
 }
 
-
+if (!estEntier($_GET['id'])) {
+	header ("location: rendezvous.php?id=-1&jour=$jour&mois=$mois&annee=$annee");
+}
 			
 		if (!isset($_POST['btnValider']) && !isset($_POST['btnDelete']) && $idRdv == -1) 
 		{
