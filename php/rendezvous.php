@@ -75,13 +75,18 @@ if (isset($_GET['annee'])) {
 			// On n'est dans un premier affichage de la page dans le cas de la modification d'un rendezvous.
 			// => On intialise les zones de saisie.
 			fd_bd_connexion();
-			$sql = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur, rdvIDCategorie, rdvLibelle
-					FROM	rendezvous
-					WHERE 	rdvID = $idRdv";
+			$sql = "SELECT	rdvDate, rdvHeureDebut, rdvHeureFin, rdvIDUtilisateur, rdvIDCategorie, rdvLibelle,utiID
+					FROM	rendezvous, utilisateur
+					WHERE 	rendezvous.rdvIDUtilisateur = utilisateur.utiID
+					AND     rdvID = $idRdv";
 
 			$R = mysqli_query($GLOBALS['bd'], $sql) or fd_bd_erreur($sql);
 			$D = mysqli_fetch_assoc($R);
 			ec_htmlProteger($D);
+
+			if ($D['utiID'] != $_SESSION['utiID']) {
+				header ("location: rendezvous.php?id=-1&jour=$jour&mois=$mois&annee=$annee");
+			}
 
 			$nbErr = 0;
 			$_POST['txtLibelle']= $D['rdvLibelle'];
