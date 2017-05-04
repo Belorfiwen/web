@@ -44,7 +44,7 @@ while($D = mysqli_fetch_assoc($R)){
 	$i++;
 }
 		
-echo '<h1>Utilisateurs abonn&eacute;s &agrave; moi : </h1>';
+echo '<div class="titreparam1 titreParametre">Utilisateurs abonn&eacute;s &agrave; moi : </div>';
 		
 	fd_bd_connexion();
 	
@@ -55,17 +55,27 @@ echo '<h1>Utilisateurs abonn&eacute;s &agrave; moi : </h1>';
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	$i=1;
-	while($D = mysqli_fetch_assoc($R)){
+	if (mysqli_num_rows($R)) 
+	{
+		while ($D = mysqli_fetch_assoc($R)) {
+			ec_htmlProteger($D);
+
+			$color = '#9AC5E7';
+			if ($i%2 == 0) {
+				$color = '#E5ECF6';
+			}
 		
-		echo '<input type="hidden" name="abnID',$i,'" value="'.$D['utiID'].'">',
-			htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8'),
-				" <form method='POST' action='abonnements.php' style=\"display: inline-block;\><input type='submit' name='abn$i' value=\"S'abonner\" size=15 class='boutonII'></form></br>";
-		$i++;
+			echo '<form method="POST" action="abonnements.php">',
+				 '<input type="hidden" name="abnSuppID',$i,'" value="',$D['utiID'],'">',
+				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],
+				 '<input type="submit" name="abnSupp',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
+			$i++;
+		}
 	}	
 	
 	mysqli_free_result($R);
 	
-echo '<h1>Je suis abonn&eacute; &agrave; : </h1>';
+echo '<div class="titreparam1 titreParametre">Je suis abonn&eacute; &agrave; : </div>';
 	
 	$S = "SELECT	utiID, utiNom, utiMail
 			FROM	utilisateur, suivi
@@ -74,13 +84,30 @@ echo '<h1>Je suis abonn&eacute; &agrave; : </h1>';
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 	$i=1;
-	while($D = mysqli_fetch_assoc($R)){
-		echo '<input type="hidden" name="abnSuppID',$i,'" value="'.$D['utiID'].'">',
-			htmlentities($D['utiNom'], ENT_COMPAT, 'UTF-8'),' - ',htmlentities($D['utiMail'], ENT_COMPAT, 'UTF-8'),
-				" <form method='POST' action='abonnements.php' style=\"display: inline-block;\"><input type='submit' name='abnSupp$i' value=\"Se d&eacute;sabonner\" size=15 class='boutonII'></form></br>";
-		$i++;
+	if (mysqli_num_rows($R)) 
+	{
+		while ($D = mysqli_fetch_assoc($R)) {
+			ec_htmlProteger($D);
+
+			$color = '#9AC5E7';
+			if ($i%2 == 0) {
+				$color = '#E5ECF6';
+			}
+
+			echo '<form method="POST" action="abonnements.php">',
+				 '<input type="hidden" name="abnSuppID',$i,'" value="',$D['utiID'],'">',
+				 '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' - ',$D['utiMail'],
+				 '<input type="submit" name="abnSupp',$i,'" value="Se d&eacute;sabonner" size=15 class="boutonII boutonRA"></p></form>';
+			$i++;
+		}
 	}	
+
+	echo '</section>';	
 		
+echo '</section>';
+
+fd_html_pied();
+ob_end_flush();
 		
 /** 
 	* ajout d'un abonnement
@@ -126,10 +153,4 @@ function aj_suppression_abonnement($i){
 	exit();
 }			
 		
-	echo '</section>';	
-		
-echo '</section>';
-
-fd_html_pied();
-ob_end_flush();
 ?>

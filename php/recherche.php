@@ -16,7 +16,6 @@ ec_verifie_session();
 if (! isset($_POST['btnRechercher'])) {
 	// On n'est dans un premier affichage de la page.
 	// => On intialise les zones de saisie.
-	$nbErr = 0;
 	$_POST['recherche'] = '';
 } 
 
@@ -25,13 +24,15 @@ fd_html_head('24sur7 | Recherche');
 fd_html_bandeau(APP_PAGE_RECHERCHE);
 
 echo '<section id="bcContenu">',
-		'<section id="bcCentre">',
+		'<section>',
 			'<form method="POST" action="recherche.php">',
-				'Entrez le crit&egrave;re de recherche : <form method="POST" action="identification.php">',
+				'<div id="zoneRecherche">Entrez le crit&egrave;re de recherche : <form method="POST" action="identification.php">',
 				fd_form_input(APP_Z_TEXT,'recherche', $_POST['recherche'], 30),fd_form_input(APP_Z_SUBMIT,'btnRechercher', 'Rechercher', 15,'class="boutonII"'),
-			'</form>';
+			'</form></div>';
 
-ecl_recherche();
+if (isset($_POST['btnRechercher'])) {
+	ecl_recherche();
+}
 
 echo	'</section>',
 	'</section>';
@@ -65,35 +66,45 @@ function ecl_recherche() {
 	// Vérification du mail
 	$recherche = trim($_POST['recherche']);
 	if ($recherche == '') {
-		$erreurs[] = 'Vous devez entrer une recherche';
+		echo 'Erreur : Vous devez entrer une recherche';
+		return;
 	} 
-
-	// Si il y a des erreurs, la fonction renvoie le tableau d'erreurs
-	if (count($erreurs) > 0) {
-		return $erreurs;		// RETURN : des erreurs ont été détectées
-	}
 
 	//-----------------------------------------------------
 	// Si recherche corrects, requète pour rechercher dans la bd
 	//-----------------------------------------------------
 	fd_bd_connexion();
 
-	$passe = mysqli_real_escape_string($GLOBALS['bd'], md5($recherche));
+	$recherche = mysqli_real_escape_string($GLOBALS['bd'], $recherche);
 
-	$S = "SELECT utiNom, utiMail, suiIDSuivi
+	$S = "SELECT utiNom, utiMail, suiIDSuivi, suiIDSuiveur
 		  FROM utilisateur
 		  LEFT OUTER JOIN suivi
 		  ON utilisateur.utiID = suivi.suiIDSuiveur
 		  WHERE utiNom LIKE '%$recherche%'
-		  AND (suiIDSuivi = 1 OR suiIDSuivi <=> NULL)";
+		  AND utiID != {$_SESSION['utiID']}
+		  AND (suiIDSuivi = {$_SESSION['utiID']} OR suiIDSuivi <=> NULL)";
 
 	$R = mysqli_query($GLOBALS['bd'], $S) or fd_bd_erreur($S);
 
 	if (mysqli_num_rows($R)) 
 	{
+		$count = 0;
 		while ($D = mysqli_fetch_assoc($R)) {
 			ec_htmlProteger($D);
-			echo '<p>',$D['utiNom'],' ',$D['utiMail'],' ',$D['suiIDSuivi'],'</p>';
+
+			$color = '#E5ECF6';
+			if ($count%2 == 0) {
+				$color = '#9AC5E7';
+			}
+
+			$abonne = '';
+			if ($D['suiIDSuivi'] != NULL) {
+				$abonne = '[est abonn&eacute; &agrave; votre agenda]';
+			}
+
+			echo '<p class="recherche" style="background-color:',$color,'">',$D['utiNom'],' ',$D['utiMail'],' ',$abonne,' ',$D['suiIDSuiveur'],'</p>';
+			$count++;
 		}
 	}
 	else
